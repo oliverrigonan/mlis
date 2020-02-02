@@ -57,6 +57,12 @@
                     <dd>
                         <input class="form-control" id="inputCustomerContactNumber" />
                     </dd>
+                    <dt id="labelUserName">
+                        Username:
+                    </dt>
+                    <dd id="dataUserName">
+                        <input class="form-control" id="inputCustomerUsername" readonly />
+                    </dd>
                 </dl>
             </div>
             <div class="modal-footer">
@@ -109,7 +115,8 @@
                             Gender: results[i]["Gender"],
                             Address: results[i]["Address"],
                             ContactNumber: results[i]["ContactNumber"],
-                            IsLocked: results[i]["IsLocked"]
+                            IsLocked: results[i]["IsLocked"],
+                            UserName: results[i]["UserName"]
                         });
                     }
                 }
@@ -173,6 +180,12 @@
                     "binding": "ContactNumber",
                     "allowSorting": true,
                     "width": "2*"
+                },
+                {
+                    "header": "Username",
+                    "binding": "UserName",
+                    "allowSorting": true,
+                    "width": "2*"
                 }
             ],
             autoGenerateColumns: false,
@@ -198,6 +211,10 @@
         document.getElementById("selectCustomerGender").value = "Male";
         document.getElementById("inputCustomerAddress").value = "";
         document.getElementById("inputCustomerContactNumber").value = "";
+        document.getElementById("inputCustomerUsername").value = "";
+
+        document.getElementById("labelUserName").style.display = "none";
+        document.getElementById("dataUserName").style.display = "none";
     }
 
     function buttonClickSaveCustomer() {
@@ -289,11 +306,19 @@
         var id = wijmoCollectionViewCustomerList.currentEditItem.Id;
         var fullName = wijmoCollectionViewCustomerList.currentEditItem.FullName;
         var birthDate = new Date(wijmoCollectionViewCustomerList.currentEditItem.BirthDate);
+        var birthDateData = birthDate.getFullYear() + '-' + ('0' + (birthDate.getMonth() + 1)).slice(-2) + '-' + ('0' + birthDate.getDate()).slice(-2);
         var gender = wijmoCollectionViewCustomerList.currentEditItem.Gender;
         var address = wijmoCollectionViewCustomerList.currentEditItem.Address;
         var contactNumber = wijmoCollectionViewCustomerList.currentEditItem.ContactNumber;
+        var userName = wijmoCollectionViewCustomerList.currentEditItem.UserName;
 
-        var birthDateData = birthDate.getFullYear() + '-' + ('0' + (birthDate.getMonth() + 1)).slice(-2) + '-' + ('0' + birthDate.getDate()).slice(-2);
+        if (userName) {
+            document.getElementById("labelUserName").style.display = "block";
+            document.getElementById("dataUserName").style.display = "block";
+        } else {
+            document.getElementById("labelUserName").style.display = "none";
+            document.getElementById("dataUserName").style.display = "none";
+        }
 
         customerId = id;
         document.getElementById("inputCustomerFullName").value = fullName;
@@ -301,6 +326,7 @@
         document.getElementById("selectCustomerGender").value = gender;
         document.getElementById("inputCustomerAddress").value = address;
         document.getElementById("inputCustomerContactNumber").value = contactNumber;
+        document.getElementById("inputCustomerUsername").value = userName;
     }
 
     function buttonClickDeleteCustomer() {

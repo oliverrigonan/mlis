@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.WebPages.Html;
 
 namespace LendingSystem.Models
 {
@@ -66,6 +67,22 @@ namespace LendingSystem.Models
         [Required]
         [Display(Name = "FullName")]
         public string FullName { get; set; }
+
+        [Required]
+        [Display(Name = "Date of Birth")]
+        public string BirthDate { get; set; }
+
+        [Required]
+        [Display(Name = "Gender")]
+        public string Gender { get; set; }
+
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+
+        [Required]
+        [Display(Name = "Contact Number")]
+        public string ContactNumber { get; set; }
 
         [Required]
         [Display(Name = "UserName")]

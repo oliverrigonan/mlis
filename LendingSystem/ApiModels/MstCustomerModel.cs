@@ -14,10 +14,12 @@ namespace LendingSystem.ApiModels
         public String Address { get; set; }
         public String ContactNumber { get; set; }
         public String Photo { get; set; }
+        public Int32? UserId { get; set; }
+        public String UserName { get; set; }
         public Boolean IsLocked { get; set; }
         public Int32 CreatedByUserId { get; set; }
         public String CreatedDateTime { get; set; }
         public Int32 UpdatedByUserId { get; set; }
-        public String UpdatedByDateTime { get; set; }
+        public String UpdatedDateTime { get; set; }
     }
 }

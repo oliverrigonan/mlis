@@ -165,10 +165,30 @@ namespace LendingSystem.Controllers
                         Username = model.UserName,
                         Password = model.Password,
                         FullName = model.FullName,
-                        IsLocked = true
+                        IsLocked = true,
+                        UserType = "Customer"
                     };
 
                     db.MstUsers.InsertOnSubmit(newUser);
+                    db.SubmitChanges();
+
+                    Data.MstCustomer newCustomer = new Data.MstCustomer()
+                    {
+                        FullName = model.FullName,
+                        BirthDate = Convert.ToDateTime(model.BirthDate),
+                        Gender = model.Gender,
+                        Address = model.Address,
+                        ContactNumber = model.ContactNumber,
+                        Photo = "NA",
+                        UserId = newUser.Id,
+                        IsLocked = true,
+                        CreatedByUserId = newUser.Id,
+                        CreatedDateTime = DateTime.Now,
+                        UpdatedByUserId = newUser.Id,
+                        UpdatedDateTime = DateTime.Now
+                    };
+
+                    db.MstCustomers.InsertOnSubmit(newCustomer);
                     db.SubmitChanges();
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771

@@ -204,7 +204,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\ApiMstCustomerController.cs" />
+    <Compile Include="ApiControllers\ApiSysCurrentController.cs" />
+    <Compile Include="ApiControllers\ApiTrnLoanController.cs" />
     <Compile Include="ApiModels\MstCustomerModel.cs" />
+    <Compile Include="ApiModels\TrnLoanModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -215,6 +218,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SoftwareController.cs" />
+    <Compile Include="Data\lendingsystem.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>lendingsystem.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -241,6 +249,11 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\lendingsystem.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>lendingsystem.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -306,10 +319,10 @@
     <Content Include="Views\Software\CollectionDetail.cshtml" />
     <Content Include="Views\Software\UserList.cshtml" />
     <Content Include="Views\Software\UserDetail.cshtml" />
+    <Content Include="Views\Software\CustomerProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -326,6 +339,11 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\lendingsystem.dbml.layout">
+      <DependentUpon>lendingsystem.dbml</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

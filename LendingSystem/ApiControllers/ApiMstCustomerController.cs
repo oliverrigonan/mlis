@@ -25,11 +25,13 @@ namespace LendingSystem.ApiControllers
                                 Address = d.Address,
                                 ContactNumber = d.ContactNumber,
                                 Photo = d.Photo,
+                                UserId = d.UserId,
+                                UserName = d.MstUser2.Username,
                                 IsLocked = d.IsLocked,
                                 CreatedByUserId = d.CreatedByUserId,
                                 CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                                 UpdatedByUserId = d.UpdatedByUserId,
-                                UpdatedByDateTime = d.UpdatedByDateTime.ToShortDateString()
+                                UpdatedDateTime = d.UpdatedDateTime.ToShortDateString()
                             };
 
             return customers.ToList();
@@ -52,11 +54,12 @@ namespace LendingSystem.ApiControllers
                     Address = objCustomer.Address,
                     ContactNumber = objCustomer.ContactNumber,
                     Photo = "NA",
+                    UserId = null,
                     IsLocked = true,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
                     CreatedDateTime = DateTime.Now,
                     UpdatedByUserId = currentUser.FirstOrDefault().Id,
-                    UpdatedByDateTime = DateTime.Now
+                    UpdatedDateTime = DateTime.Now
                 };
 
                 db.MstCustomers.InsertOnSubmit(newCustomer);
@@ -92,7 +95,7 @@ namespace LendingSystem.ApiControllers
                     updateCustomer.Address = objCustomer.Address;
                     updateCustomer.ContactNumber = objCustomer.ContactNumber;
                     updateCustomer.UpdatedByUserId = currentUser.FirstOrDefault().Id;
-                    updateCustomer.UpdatedByDateTime = DateTime.Now;
+                    updateCustomer.UpdatedDateTime = DateTime.Now;
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);
@@ -119,10 +122,17 @@ namespace LendingSystem.ApiControllers
 
                 if (customer.Any())
                 {
-                    db.MstCustomers.DeleteOnSubmit(customer.FirstOrDefault());
-                    db.SubmitChanges();
+                    if (customer.FirstOrDefault().UserId == null)
+                    {
+                        db.MstCustomers.DeleteOnSubmit(customer.FirstOrDefault());
+                        db.SubmitChanges();
 
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NotFound, "Cannot delete customer with user accounts.");
+                    }
                 }
                 else
                 {
