@@ -2813,6 +2813,8 @@ namespace LendingSystem.Data
 		
 		private EntitySet<TrnLoan> _TrnLoans;
 		
+		private EntitySet<MstTerm> _MstTerms;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2828,6 +2830,7 @@ namespace LendingSystem.Data
 		public MstInterest()
 		{
 			this._TrnLoans = new EntitySet<TrnLoan>(new Action<TrnLoan>(this.attach_TrnLoans), new Action<TrnLoan>(this.detach_TrnLoans));
+			this._MstTerms = new EntitySet<MstTerm>(new Action<MstTerm>(this.attach_MstTerms), new Action<MstTerm>(this.detach_MstTerms));
 			OnCreated();
 		}
 		
@@ -2904,6 +2907,19 @@ namespace LendingSystem.Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstInterest_MstTerm", Storage="_MstTerms", ThisKey="Id", OtherKey="DefaultInterestId")]
+		public EntitySet<MstTerm> MstTerms
+		{
+			get
+			{
+				return this._MstTerms;
+			}
+			set
+			{
+				this._MstTerms.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -2931,6 +2947,18 @@ namespace LendingSystem.Data
 		}
 		
 		private void detach_TrnLoans(TrnLoan entity)
+		{
+			this.SendPropertyChanging();
+			entity.MstInterest = null;
+		}
+		
+		private void attach_MstTerms(MstTerm entity)
+		{
+			this.SendPropertyChanging();
+			entity.MstInterest = this;
+		}
+		
+		private void detach_MstTerms(MstTerm entity)
 		{
 			this.SendPropertyChanging();
 			entity.MstInterest = null;
@@ -3063,7 +3091,11 @@ namespace LendingSystem.Data
 		
 		private decimal _NumberOfDays;
 		
+		private int _DefaultInterestId;
+		
 		private EntitySet<TrnLoan> _TrnLoans;
+		
+		private EntityRef<MstInterest> _MstInterest;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3075,11 +3107,14 @@ namespace LendingSystem.Data
     partial void OnTermChanged();
     partial void OnNumberOfDaysChanging(decimal value);
     partial void OnNumberOfDaysChanged();
+    partial void OnDefaultInterestIdChanging(int value);
+    partial void OnDefaultInterestIdChanged();
     #endregion
 		
 		public MstTerm()
 		{
 			this._TrnLoans = new EntitySet<TrnLoan>(new Action<TrnLoan>(this.attach_TrnLoans), new Action<TrnLoan>(this.detach_TrnLoans));
+			this._MstInterest = default(EntityRef<MstInterest>);
 			OnCreated();
 		}
 		
@@ -3143,6 +3178,30 @@ namespace LendingSystem.Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultInterestId", DbType="Int NOT NULL")]
+		public int DefaultInterestId
+		{
+			get
+			{
+				return this._DefaultInterestId;
+			}
+			set
+			{
+				if ((this._DefaultInterestId != value))
+				{
+					if (this._MstInterest.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDefaultInterestIdChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultInterestId = value;
+					this.SendPropertyChanged("DefaultInterestId");
+					this.OnDefaultInterestIdChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstTerm_TrnLoan", Storage="_TrnLoans", ThisKey="Id", OtherKey="TermId")]
 		public EntitySet<TrnLoan> TrnLoans
 		{
@@ -3153,6 +3212,40 @@ namespace LendingSystem.Data
 			set
 			{
 				this._TrnLoans.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstInterest_MstTerm", Storage="_MstInterest", ThisKey="DefaultInterestId", OtherKey="Id", IsForeignKey=true)]
+		public MstInterest MstInterest
+		{
+			get
+			{
+				return this._MstInterest.Entity;
+			}
+			set
+			{
+				MstInterest previousValue = this._MstInterest.Entity;
+				if (((previousValue != value) 
+							|| (this._MstInterest.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MstInterest.Entity = null;
+						previousValue.MstTerms.Remove(this);
+					}
+					this._MstInterest.Entity = value;
+					if ((value != null))
+					{
+						value.MstTerms.Add(this);
+						this._DefaultInterestId = value.Id;
+					}
+					else
+					{
+						this._DefaultInterestId = default(int);
+					}
+					this.SendPropertyChanged("MstInterest");
+				}
 			}
 		}
 		

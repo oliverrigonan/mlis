@@ -119,6 +119,7 @@
       <Column Name="Interest" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="Percentage" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Association Name="MstInterest_TrnLoan" Member="TrnLoans" ThisKey="Id" OtherKey="InterestId" Type="TrnLoan" />
+      <Association Name="MstInterest_MstTerm" Member="MstTerms" ThisKey="Id" OtherKey="DefaultInterestId" Type="MstTerm" />
     </Type>
   </Table>
   <Table Name="dbo.MstPayType" Member="MstPayTypes">
@@ -133,7 +134,9 @@
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Term" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="NumberOfDays" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="DefaultInterestId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="MstTerm_TrnLoan" Member="TrnLoans" ThisKey="Id" OtherKey="TermId" Type="TrnLoan" />
+      <Association Name="MstInterest_MstTerm" Member="MstInterest" ThisKey="DefaultInterestId" OtherKey="Id" Type="MstInterest" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.MstUser" Member="MstUsers">

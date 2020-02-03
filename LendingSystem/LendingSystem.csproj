@@ -207,6 +207,9 @@
     <Compile Include="ApiControllers\ApiSysCurrentController.cs" />
     <Compile Include="ApiControllers\ApiTrnLoanController.cs" />
     <Compile Include="ApiModels\MstCustomerModel.cs" />
+    <Compile Include="ApiModels\MstInterestModel.cs" />
+    <Compile Include="ApiModels\MstTermModel.cs" />
+    <Compile Include="ApiModels\MstUserModel.cs" />
     <Compile Include="ApiModels\TrnLoanModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

@@ -151,8 +151,8 @@ namespace LendingSystem.ApiControllers
                     InterestId = objLoanModel.InterestId,
                     InterestPercentage = objLoanModel.InterestPercentage,
                     InterestAmount = objLoanModel.InterestAmount,
-                    PaidAmount = objLoanModel.PaidAmount,
-                    PenaltyAmount = objLoanModel.PenaltyAmount,
+                    PaidAmount = 0,
+                    PenaltyAmount = 0,
                     BalanceAmount = objLoanModel.BalanceAmount,
                     DailyAmortizationAmount = objLoanModel.DailyAmortizationAmount,
                     Remarks = objLoanModel.Remarks,
@@ -203,6 +203,61 @@ namespace LendingSystem.ApiControllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        [Authorize, HttpGet, Route("api/current/loan/dropdown/list/customer")]
+        public List<ApiModels.MstCustomerModel> DropdownListLoanCustomer()
+        {
+            var customers = from d in db.MstCustomers
+                            select new ApiModels.MstCustomerModel
+                            {
+                                Id = d.Id,
+                                FullName = d.FullName
+                            };
+
+            return customers.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/current/loan/dropdown/list/term")]
+        public List<ApiModels.MstTermModel> DropdownListLoanTerm()
+        {
+            var terms = from d in db.MstTerms
+                        select new ApiModels.MstTermModel
+                        {
+                            Id = d.Id,
+                            Term = d.Term,
+                            NumberOfDays = d.NumberOfDays,
+                            DefaultInterestId = d.DefaultInterestId
+                        };
+
+            return terms.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/current/loan/dropdown/list/interest")]
+        public List<ApiModels.MstInterestModel> DropdownListLoanInterest()
+        {
+            var interests = from d in db.MstInterests
+                            select new ApiModels.MstInterestModel
+                            {
+                                Id = d.Id,
+                                Interest = d.Interest,
+                                Percentage = d.Percentage
+                            };
+
+            return interests.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/current/loan/dropdown/list/user")]
+        public List<ApiModels.MstUserModel> DropdownListLoanUser()
+        {
+            var users = from d in db.MstUsers
+                        select new ApiModels.MstUserModel
+                        {
+                            Id = d.Id,
+                            FullName = d.FullName
+                        };
+
+            return users.ToList();
         }
     }
 }

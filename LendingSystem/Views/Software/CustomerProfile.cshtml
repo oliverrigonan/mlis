@@ -5,7 +5,7 @@
     <hr />
     <div class="row">
         <div class="col-md-2">
-            <img src="https://filbrokerstorage.blob.core.windows.net/priland/df91bca5-d0a5-4c91-b293-6ff0b0836c24" class="img-thumbnail">
+            @*<img src="https://filbrokerstorage.blob.core.windows.net/priland/df91bca5-d0a5-4c91-b293-6ff0b0836c24" class="img-thumbnail">*@
         </div>
         <div class="col-md-10">
 
@@ -46,7 +46,81 @@
                 <h4 class="modal-title" id="modalTitle">Loan Detail</h4>
             </div>
             <div class="modal-body">
-                
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tabLoanDetails">Details</a></li>
+                    <li><a data-toggle="tab" href="#tabLoanRemarks">Remarks</a></li>
+                </ul>
+                <br />
+                <div class="tab-content">
+                    <div id="tabLoanDetails" class="tab-pane fade in active">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Term
+                            </dt>
+                            <dd>
+                                <div id="wijmoComboboxTerm"></div>
+                            </dd>
+                            <dt>
+                                No. of Days
+                            </dt>
+                            <dd>
+                                <input id="inputNumberOfDays" class="form-control text-right" readonly />
+                            </dd>
+                            <dt>
+                                Loan Amount
+                            </dt>
+                            <dd>
+                                <input id="inputLoanAmount" class="form-control text-right" />
+                            </dd>
+                            <dt>
+                                Previous Balance
+                            </dt>
+                            <dd>
+                                <input id="inputPreviousLoanAmount" class="form-control text-right" readonly />
+                            </dd>
+                            <dt>
+                                Interest
+                            </dt>
+                            <dd>
+                                <div id="wijmoComboboxInterest"></div>
+                            </dd>
+                            <dt>
+                                Interest Rate
+                            </dt>
+                            <dd>
+                                <input id="inputInterestPercentage" class="form-control text-right" readonly />
+                            </dd>
+                            <dt>
+                                Interest Amount
+                            </dt>
+                            <dd>
+                                <input id="inputInterestAmount" class="form-control text-right" readonly />
+                            </dd>
+                            <dt>
+                                Amount
+                            </dt>
+                            <dd>
+                                <input id="inputAmount" class="form-control text-right" readonly />
+                            </dd>
+                        </dl>
+                    </div>
+                    <div id="tabLoanRemarks" class="tab-pane fade">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Amortization
+                            </dt>
+                            <dd>
+                                <input id="inputAmortization" class="form-control text-right" readonly />
+                            </dd>
+                            <dt>
+                                Remarks
+                            </dt>
+                            <dd>
+                                <textarea id="inputLoanRemarks" class="form-control" rows="7"></textarea>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" onclick="buttonClickApplyLoan()">Apply</button>
@@ -59,6 +133,9 @@
 <script type="text/javascript">
     var wijmoGridLoanList;
     var wijmoCollectionViewLoanList;
+    var wijmoComboboxTerm;
+    var wijmoComboboxInterest;
+    var defaultInterestId = 0;
 
     function getCurrentUserDetail() {
         $.ajax({
@@ -144,6 +221,15 @@
         });
 
         loanId = 0;
+        createWijmoComboboxTerm();
+        document.getElementById("inputNumberOfDays").value = 0;
+        document.getElementById("inputLoanAmount").value = 0;
+        document.getElementById("inputPreviousLoanAmount").value = 0; // todo: set the latest balance value
+        document.getElementById("inputInterestPercentage").value = 0;
+        document.getElementById("inputInterestAmount").value = 0;
+        document.getElementById("inputAmount").value = 0;
+        document.getElementById("inputAmortization").value = 0;
+        document.getElementById("inputLoanRemarks").value = "";
     }
 
     function buttonClickViewLoan() {
@@ -235,7 +321,91 @@
         });
     }
 
+    function createWijmoComboboxTerm() {
+        var termObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/current/loan/dropdown/list/term',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                var isDisabled = true;
+
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        termObservableArray.push({
+                            Id: results[i]["Id"],
+                            Term: results[i]["Term"],
+                            NumberOfDays: results[i]["NumberOfDays"],
+                            DefaultInterestId: results[i]["DefaultInterestId"]
+                        });
+                    }
+
+                    isDisabled = false;
+                }
+
+                wijmoComboboxTerm.dispose();
+                wijmoComboboxTerm = new wijmo.input.ComboBox('#wijmoComboboxTerm', {
+                    disabled: isDisabled,
+                    isEditable: false,
+                    placeholder: "Select Term",
+                    itemsSource: termObservableArray,
+                    displayMemberPath: "Term",
+                    selectedValuePath: "Id",
+                    onSelectedIndexChanged: function () {
+                        document.getElementById("inputNumberOfDays").value = this.selectedItem["NumberOfDays"];
+                        defaultInterestId = this.selectedItem["DefaultInterestId"];
+                        createWijmoComboboxInterest();
+                    }
+                });
+
+                document.getElementById("inputNumberOfDays").value = wijmoComboboxTerm.selectedItem["NumberOfDays"];
+                defaultInterestId = wijmoComboboxTerm.selectedItem["DefaultInterestId"];
+                createWijmoComboboxInterest();
+            }
+        });
+    }
+
+    function createWijmoComboboxInterest() {
+        var interestObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/current/loan/dropdown/list/interest',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        interestObservableArray.push({
+                            Id: results[i]["Id"],
+                            Interest: results[i]["Interest"],
+                            NumberOfDays: results[i]["NumberOfDays"],
+                        });
+                    }
+                }
+
+                wijmoComboboxInterest.dispose();
+                wijmoComboboxInterest = new wijmo.input.ComboBox('#wijmoComboboxInterest', {
+                    disabled: true,
+                    isEditable: false,
+                    placeholder: "Select Interest",
+                    itemsSource: interestObservableArray,
+                    displayMemberPath: "Interest",
+                    selectedValuePath: "Id",
+                    selectedValue: defaultInterestId,
+                    onSelectedIndexChanged: function () {
+
+                    }
+                });
+
+
+            }
+        });
+    }
+
     window.onload = function () {
         getCurrentUserDetail();
+        wijmoComboboxTerm = new wijmo.input.ComboBox('#wijmoComboboxTerm');
+        wijmoComboboxInterest = new wijmo.input.ComboBox('#wijmoComboboxInterest');
     }
 </script>
