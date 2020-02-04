@@ -25,11 +25,7 @@ namespace LendingSystem.ApiModels
         public Decimal PaidAmount { get; set; }
         public Decimal PenaltyAmount { get; set; }
         public Decimal BalanceAmount { get; set; }
-        public Decimal DailyAmortizationAmount { get; set; }
         public String Remarks { get; set; }
-        public Int32 PreparedByUserId { get; set; }
-        public Int32 CheckedByUserId { get; set; }
-        public Int32 ApprovedByUserId { get; set; }
         public String Status { get; set; }
         public Boolean IsLocked { get; set; }
         public Int32 CreatedByUserId { get; set; }

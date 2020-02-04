@@ -89,18 +89,14 @@ namespace LendingSystem.ApiControllers
                                 PaidAmount = d.PaidAmount,
                                 PenaltyAmount = d.PenaltyAmount,
                                 BalanceAmount = d.BalanceAmount,
-                                DailyAmortizationAmount = d.DailyAmortizationAmount,
                                 Remarks = d.Remarks,
-                                PreparedByUserId = d.PreparedByUserId,
-                                CheckedByUserId = d.CheckedByUserId,
-                                ApprovedByUserId = d.ApprovedByUserId,
                                 Status = d.Status,
                                 IsLocked = d.IsLocked,
                                 CreatedByUserId = d.CreatedByUserId,
-                                CreatedByUser = d.MstUser3.FullName,
+                                CreatedByUser = d.MstUser.FullName,
                                 CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                                 UpdatedByUserId = d.UpdatedByUserId,
-                                UpdatedByUser = d.MstUser4.FullName,
+                                UpdatedByUser = d.MstUser1.FullName,
                                 UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
                             };
 
@@ -154,11 +150,7 @@ namespace LendingSystem.ApiControllers
                     PaidAmount = 0,
                     PenaltyAmount = 0,
                     BalanceAmount = objLoanModel.BalanceAmount,
-                    DailyAmortizationAmount = objLoanModel.DailyAmortizationAmount,
                     Remarks = objLoanModel.Remarks,
-                    PreparedByUserId = currentUser.FirstOrDefault().Id,
-                    CheckedByUserId = objLoanModel.CheckedByUserId,
-                    ApprovedByUserId = objLoanModel.ApprovedByUserId,
                     Status = "Pending",
                     IsLocked = true,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
@@ -178,7 +170,7 @@ namespace LendingSystem.ApiControllers
             }
         }
 
-        [Authorize, HttpDelete, Route("api/current/loan/delete/{id}")]
+        [Authorize, HttpDelete, Route("api/current/loan/cancel/{id}")]
         public HttpResponseMessage DeleteLoan(String id)
         {
             try
@@ -189,10 +181,18 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    db.TrnLoans.DeleteOnSubmit(loan.FirstOrDefault());
-                    db.SubmitChanges();
+                    if (loan.FirstOrDefault().Status == "Cancelled")
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
+                    }
+                    else
+                    {
+                        var cancelLoan = loan.FirstOrDefault();
+                        cancelLoan.Status = "Cancelled";
+                        db.SubmitChanges();
 
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
                 }
                 else
                 {

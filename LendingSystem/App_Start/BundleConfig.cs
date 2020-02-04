@@ -25,7 +25,8 @@ namespace LendingSystem
                       "~/Scripts/wijmo.input.min.js",
                       "~/Scripts/wijmo.grid.min.js",
                       "~/Scripts/wijmo.grid.filter.min.js",
-                      "~/Scripts/toastr.min.js"));
+                      "~/Scripts/toastr.min.js",
+                      "~/Scripts/software.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

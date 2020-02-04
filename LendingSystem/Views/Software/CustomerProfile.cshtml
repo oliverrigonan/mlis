@@ -3,38 +3,31 @@
 <div>
     <h4>Profile</h4>
     <hr />
-    <div class="row">
-        <div class="col-md-2">
-            @*<img src="https://filbrokerstorage.blob.core.windows.net/priland/df91bca5-d0a5-4c91-b293-6ff0b0836c24" class="img-thumbnail">*@
-        </div>
-        <div class="col-md-10">
 
-            <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tabLoan">Loan</a></li>
-                <li><a data-toggle="tab" href="#tabPayments">Payments</a></li>
-                <li><a data-toggle="tab" href="#tabNotification">Notifications</a></li>
-            </ul>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabLoan">Loan</a></li>
+        <li><a data-toggle="tab" href="#tabPayments">Payments</a></li>
+        <li><a data-toggle="tab" href="#tabNotification">Notifications</a></li>
+    </ul>
 
-            <br />
+    <br />
 
-            <div class="tab-content">
-                <div id="tabLoan" class="tab-pane fade in active">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <button class="btn btn-primary" onclick="buttonClickAddLoan()">Apply</button>
-                        </div>
-                        <div class="panel-body">
-                            <div id="wijmoGridLoanList"></div>
-                        </div>
-                    </div>
+    <div class="tab-content">
+        <div id="tabLoan" class="tab-pane fade in active">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button class="btn btn-primary" onclick="buttonClickAddLoan()">Apply</button>
                 </div>
-                <div id="tabPayments" class="tab-pane fade">
-
-                </div>
-                <div id="tabNotification" class="tab-pane fade">
-
+                <div class="panel-body">
+                    <div id="wijmoGridLoanList"></div>
                 </div>
             </div>
+        </div>
+        <div id="tabPayments" class="tab-pane fade">
+
+        </div>
+        <div id="tabNotification" class="tab-pane fade">
+
         </div>
     </div>
 </div>
@@ -46,85 +39,83 @@
                 <h4 class="modal-title" id="modalTitle">Loan Detail</h4>
             </div>
             <div class="modal-body">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#tabLoanDetails">Details</a></li>
-                    <li><a data-toggle="tab" href="#tabLoanRemarks">Remarks</a></li>
-                </ul>
-                <br />
-                <div class="tab-content">
-                    <div id="tabLoanDetails" class="tab-pane fade in active">
-                        <dl class="dl-horizontal">
-                            <dt>
-                                Term
-                            </dt>
-                            <dd>
-                                <div id="wijmoComboboxTerm"></div>
-                            </dd>
-                            <dt>
-                                No. of Days
-                            </dt>
-                            <dd>
-                                <input id="inputNumberOfDays" class="form-control text-right" readonly />
-                            </dd>
-                            <dt>
-                                Loan Amount
-                            </dt>
-                            <dd>
-                                <input id="inputLoanAmount" class="form-control text-right" />
-                            </dd>
-                            <dt>
-                                Previous Balance
-                            </dt>
-                            <dd>
-                                <input id="inputPreviousLoanAmount" class="form-control text-right" readonly />
-                            </dd>
-                            <dt>
-                                Interest
-                            </dt>
-                            <dd>
-                                <div id="wijmoComboboxInterest"></div>
-                            </dd>
-                            <dt>
-                                Interest Rate
-                            </dt>
-                            <dd>
-                                <input id="inputInterestPercentage" class="form-control text-right" readonly />
-                            </dd>
-                            <dt>
-                                Interest Amount
-                            </dt>
-                            <dd>
-                                <input id="inputInterestAmount" class="form-control text-right" readonly />
-                            </dd>
-                            <dt>
-                                Amount
-                            </dt>
-                            <dd>
-                                <input id="inputAmount" class="form-control text-right" readonly />
-                            </dd>
-                        </dl>
-                    </div>
-                    <div id="tabLoanRemarks" class="tab-pane fade">
-                        <dl class="dl-horizontal">
-                            <dt>
-                                Amortization
-                            </dt>
-                            <dd>
-                                <input id="inputAmortization" class="form-control text-right" readonly />
-                            </dd>
-                            <dt>
-                                Remarks
-                            </dt>
-                            <dd>
-                                <textarea id="inputLoanRemarks" class="form-control" rows="7"></textarea>
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        Loan Amount
+                    </dt>
+                    <dd>
+                        <input id="inputLoanAmount" class="form-control text-right number" onkeyup="computeAmouont()" />
+                    </dd>
+                    <dt>
+                        Term
+                    </dt>
+                    <dd>
+                        <div id="wijmoComboboxTerm"></div>
+                    </dd>
+                    <dt>
+                        No. of Days
+                    </dt>
+                    <dd>
+                        <input id="inputNumberOfDays" class="form-control text-right" readonly />
+                    </dd>
+                    <dt>
+                        Previous Balance
+                    </dt>
+                    <dd>
+                        <input id="inputPreviousLoanAmount" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Interest
+                    </dt>
+                    <dd>
+                        <div id="wijmoComboboxInterest"></div>
+                    </dd>
+                    <dt>
+                        Interest Rate
+                    </dt>
+                    <dd>
+                        <input id="inputInterestPercentage" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Interest Amount
+                    </dt>
+                    <dd>
+                        <input id="inputInterestAmount" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Amount
+                    </dt>
+                    <dd>
+                        <input id="inputAmount" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Remarks
+                    </dt>
+                    <dd>
+                        <textarea id="inputLoanRemarks" class="form-control" rows="7"></textarea>
+                    </dd>
+                </dl>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" onclick="buttonClickApplyLoan()">Apply</button>
                 <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fae" id="modalLoanCancelForm" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Loan</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel this loan?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" onclick="buttonClickConfirmCancelLoan()">Cancel</button>
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -165,9 +156,29 @@
                 if (results.length > 0) {
                     for (var i = 0; i < results.length; i++) {
                         loanListObservableArray.push({
-                            ButtonView: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickViewLoan()'>Edit</button>",
-                            ButtonDelete: "<button class='btn btn-danger btn-xs btn-block' onclick='buttonClickDeleteLoan()'>Delete</button>",
-                            Id: results[i]["Id"]
+                            ButtonView: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickViewLoan()'>View</button>",
+                            ButtonCancel: "<button class='btn btn-warning btn-xs btn-block' onclick='buttonClickCancelLoan()'>Cancel</button>",
+                            Id: results[i]["Id"],
+                            LoanNumber: results[i]["LoanNumber"],
+                            LoanDate: results[i]["LoanDate"],
+                            Term: results[i]["Term"],
+                            LoanAmount: results[i]["LoanAmount"],
+                            LoanAmountDisplay: parseFloat(results[i]["LoanAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            PreviousBalanceAmount: results[i]["PreviousBalanceAmount"],
+                            PreviousBalanceAmountDisplay: parseFloat(results[i]["PreviousBalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            Interest: results[i]["Interest"],
+                            InterestPercentage: results[i]["InterestPercentage"],
+                            InterestPercentageDisplay: parseFloat(results[i]["InterestPercentage"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            InterestAmount: results[i]["InterestAmount"],
+                            InterestAmountDisplay: parseFloat(results[i]["InterestAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            PaidAmount: results[i]["PaidAmount"],
+                            PaidAmountDisplay: parseFloat(results[i]["PaidAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            PenaltyAmount: results[i]["PenaltyAmount"],
+                            PenaltyAmountDisplay: parseFloat(results[i]["PenaltyAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            BalanceAmount: results[i]["BalanceAmount"],
+                            BalanceAmountDisplay: parseFloat(results[i]["BalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            Remarks: results[i]["Remarks"],
+                            Status: results[i]["Status"]
                         });
                     }
                 }
@@ -194,13 +205,99 @@
                     "isContentHtml": true
                 },
                 {
-                    "header": "Delete",
-                    "binding": "ButtonDelete",
+                    "header": "Cancel",
+                    "binding": "ButtonCancel",
                     "width": 70,
                     "align": "center",
                     "allowResizing": false,
                     "allowSorting": false,
                     "isContentHtml": true
+                },
+                {
+                    "header": "Number",
+                    "binding": "LoanNumber",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Date",
+                    "binding": "LoanDate",
+                    "allowSorting": true,
+                    "width": 90
+                },
+                {
+                    "header": "Term",
+                    "binding": "Term",
+                    "allowSorting": true,
+                    "width": 150
+                },
+                {
+                    "header": "Loan",
+                    "binding": "LoanAmount",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Previous",
+                    "binding": "PreviousBalanceAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Interest",
+                    "binding": "Interest",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Rate",
+                    "binding": "InterestPercentageDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Interest Amount",
+                    "binding": "InterestAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Paid",
+                    "binding": "PaidAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Penalty",
+                    "binding": "PenaltyAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Balance",
+                    "binding": "BalanceAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Status",
+                    "binding": "Status",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Remarks",
+                    "binding": "Remarks",
+                    "allowSorting": true,
+                    "width": 200
                 },
             ],
             autoGenerateColumns: false,
@@ -208,12 +305,13 @@
             isReadOnly: true,
             autoSizeMode: wijmo.grid.AutoSizeMode.Both,
             allowDragging: wijmo.grid.AllowDragging.None,
-            selectionMode: wijmo.grid.SelectionMode.Row
+            selectionMode: wijmo.grid.SelectionMode.Row,
+            frozenColumns: 2
         });
     }
 
     function buttonClickAddLoan() {
-        document.getElementById("modalTitle").innerHTML = "Add Loan";
+        document.getElementById("modalTitle").innerHTML = "Apply Loan";
 
         $("#modalLoanDetailForm").modal({
             show: true,
@@ -222,18 +320,17 @@
 
         loanId = 0;
         createWijmoComboboxTerm();
-        document.getElementById("inputNumberOfDays").value = 0;
-        document.getElementById("inputLoanAmount").value = 0;
-        document.getElementById("inputPreviousLoanAmount").value = 0; // todo: set the latest balance value
-        document.getElementById("inputInterestPercentage").value = 0;
-        document.getElementById("inputInterestAmount").value = 0;
-        document.getElementById("inputAmount").value = 0;
-        document.getElementById("inputAmortization").value = 0;
+        document.getElementById("inputNumberOfDays").value = formatDecimalValues(0);
+        document.getElementById("inputLoanAmount").value = formatDecimalValues(0);
+        document.getElementById("inputPreviousLoanAmount").value = formatDecimalValues(0); // todo: set the latest balance value
+        document.getElementById("inputInterestPercentage").value = formatDecimalValues(0);
+        document.getElementById("inputInterestAmount").value = formatDecimalValues(0);
+        document.getElementById("inputAmount").value = formatDecimalValues(0);
         document.getElementById("inputLoanRemarks").value = "";
     }
 
     function buttonClickViewLoan() {
-        document.getElementById("modalTitle").innerHTML = "Edit Loan";
+        document.getElementById("modalTitle").innerHTML = "View Loan";
 
         $("#modalLoanDetailForm").modal({
             show: true,
@@ -241,14 +338,20 @@
         });
 
         wijmoCollectionViewLoanList.editItem(wijmoCollectionViewLoanList.currentItem);
-
         var id = wijmoCollectionViewLoanList.currentEditItem.Id;
     }
 
-    function buttonClickSaveLoan() {
-        //var fullName = document.getElementById("inputLoanFullName").value;
-
+    function buttonClickApplyLoan() {
         var loanObject = new Object();
+        loanObject.TermId = wijmoComboboxTerm.selectedValue;
+        loanObject.TermNumberOfDays = document.getElementById("inputNumberOfDays").value;
+        loanObject.LoanAmount = document.getElementById("inputLoanAmount").value;
+        loanObject.PreviousBalanceAmount = document.getElementById("inputPreviousLoanAmount").value;
+        loanObject.InterestId = wijmoComboboxInterest.selectedValue;
+        loanObject.InterestPercentage = document.getElementById("inputInterestPercentage").value;
+        loanObject.InterestAmount = document.getElementById("inputInterestAmount").value;
+        loanObject.BalanceAmount = document.getElementById("inputAmount").value;
+        loanObject.Remarks = document.getElementById("inputLoanRemarks").value;
         var loanData = JSON.stringify(loanObject);
 
         $.ajax({
@@ -281,19 +384,19 @@
         });
     }
 
-    function buttonClickDeleteLoan() {
-        $("#modalLoanDeleteForm").modal({
+    function buttonClickCancelLoan() {
+        $("#modalLoanCancelForm").modal({
             show: true,
             backdrop: "static"
         });
     }
 
-    function buttonClickConfirmDeleteLoan() {
+    function buttonClickConfirmCancelLoan() {
         wijmoCollectionViewLoanList.editItem(wijmoCollectionViewLoanList.currentItem);
         var id = wijmoCollectionViewLoanList.currentEditItem.Id;
 
         $.ajax({
-            url: "/api/loan/delete/" + id,
+            url: "/api/current/loan/cancel/" + id,
             type: "DELETE",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -302,19 +405,19 @@
                     wijmoCollectionViewLoanList = new wijmo.collections.CollectionView(getDataLoanList());
                     wijmoCollectionViewLoanList.canFilter = true;
                     wijmoGridLoanList.itemsSource = wijmoCollectionViewLoanList;
-                    $("#modalLoanDeleteForm").modal("hide");
-                    toastr.success("Delete Successful");
+                    $("#modalLoanCancelForm").modal("hide");
+                    toastr.success("Cancel Successful");
                 },
                 404: function (message) {
-                    $("#modalLoanDeleteForm").modal("hide");
+                    $("#modalLoanCancelForm").modal("hide");
                     toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
                 },
                 400: function (message) {
-                    $("#modalLoanDeleteForm").modal("hide");
+                    $("#modalLoanCancelForm").modal("hide");
                     toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
                 },
                 500: function (message) {
-                    $("#modalLoanDeleteForm").modal("hide");
+                    $("#modalLoanCancelForm").modal("hide");
                     toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
                 }
             }
@@ -379,7 +482,7 @@
                         interestObservableArray.push({
                             Id: results[i]["Id"],
                             Interest: results[i]["Interest"],
-                            NumberOfDays: results[i]["NumberOfDays"],
+                            Percentage: results[i]["Percentage"]
                         });
                     }
                 }
@@ -394,13 +497,26 @@
                     selectedValuePath: "Id",
                     selectedValue: defaultInterestId,
                     onSelectedIndexChanged: function () {
-
+                        document.getElementById("inputInterestPercentage").value = formatDecimalValues(this.selectedItem["Percentage"]);
                     }
                 });
 
-
+                document.getElementById("inputInterestPercentage").value = formatDecimalValues(wijmoComboboxInterest.selectedItem["Percentage"]);
+                computeAmouont();
             }
         });
+    }
+
+    function computeAmouont() {
+        var loanAmount = parseFloat(document.getElementById('inputLoanAmount').value.replace(/\,/g, ''));
+        var previousBalanceAmount = parseFloat(document.getElementById('inputPreviousLoanAmount').value.replace(/\,/g, ''));
+        var interestRate = parseFloat(document.getElementById('inputInterestPercentage').value.replace(/\,/g, ''));
+
+        var interestAmount = loanAmount * (interestRate / 100);
+        var balanceAmouont = (loanAmount + previousBalanceAmount) + interestAmount;
+
+        document.getElementById('inputInterestAmount').value = formatDecimalValues(interestAmount);
+        document.getElementById('inputAmount').value = formatDecimalValues(balanceAmouont);
     }
 
     window.onload = function () {

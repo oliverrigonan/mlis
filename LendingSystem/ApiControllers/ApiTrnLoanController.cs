@@ -49,18 +49,14 @@ namespace LendingSystem.ApiControllers
                             PaidAmount = d.PaidAmount,
                             PenaltyAmount = d.PenaltyAmount,
                             BalanceAmount = d.BalanceAmount,
-                            DailyAmortizationAmount = d.DailyAmortizationAmount,
                             Remarks = d.Remarks,
-                            PreparedByUserId = d.PreparedByUserId,
-                            CheckedByUserId = d.CheckedByUserId,
-                            ApprovedByUserId = d.ApprovedByUserId,
                             Status = d.Status,
                             IsLocked = d.IsLocked,
                             CreatedByUserId = d.CreatedByUserId,
-                            CreatedByUser = d.MstUser3.FullName,
+                            CreatedByUser = d.MstUser.FullName,
                             CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                             UpdatedByUserId = d.UpdatedByUserId,
-                            UpdatedByUser = d.MstUser4.FullName,
+                            UpdatedByUser = d.MstUser1.FullName,
                             UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
                         };
 
@@ -101,11 +97,7 @@ namespace LendingSystem.ApiControllers
                     PaidAmount = objLoanModel.PaidAmount,
                     PenaltyAmount = objLoanModel.PenaltyAmount,
                     BalanceAmount = objLoanModel.BalanceAmount,
-                    DailyAmortizationAmount = objLoanModel.DailyAmortizationAmount,
                     Remarks = objLoanModel.Remarks,
-                    PreparedByUserId = currentUser.FirstOrDefault().Id,
-                    CheckedByUserId = objLoanModel.CheckedByUserId,
-                    ApprovedByUserId = objLoanModel.ApprovedByUserId,
                     Status = objLoanModel.Status,
                     IsLocked = objLoanModel.IsLocked,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
@@ -154,7 +146,6 @@ namespace LendingSystem.ApiControllers
                     lockLoan.PaidAmount = objLoanModel.PaidAmount;
                     lockLoan.PenaltyAmount = objLoanModel.PenaltyAmount;
                     lockLoan.BalanceAmount = objLoanModel.BalanceAmount;
-                    lockLoan.DailyAmortizationAmount = objLoanModel.DailyAmortizationAmount;
                     lockLoan.Remarks = objLoanModel.Remarks;
                     lockLoan.IsLocked = true;
                     lockLoan.UpdatedByUserId = currentUser.FirstOrDefault().Id;
