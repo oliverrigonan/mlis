@@ -25,10 +25,13 @@ namespace LendingSystem.ApiControllers
             return result;
         }
 
-        [Authorize, HttpGet, Route("api/loan/list/{startDate}/{endDate}")]
-        public List<ApiModels.TrnLoanModel> LoanList()
+        [Authorize, HttpGet, Route("api/loan/list/{startDate}/{endDate}/{status}")]
+        public List<ApiModels.TrnLoanModel> LoanList(String startDate, String endDate, String status)
         {
             var loans = from d in db.TrnLoans
+                        where d.LoanDate >= Convert.ToDateTime(startDate)
+                        && d.LoanDate <= Convert.ToDateTime(endDate)
+                        && d.Status == status
                         select new ApiModels.TrnLoanModel
                         {
                             Id = d.Id,
@@ -40,12 +43,16 @@ namespace LendingSystem.ApiControllers
                             TermId = d.TermId,
                             Term = d.LoanNumber,
                             TermNumberOfDays = d.TermNumberOfDays,
-                            LoanAmount = d.LoanAmount,
-                            PreviousBalanceAmount = d.PreviousBalanceAmount,
+                            PrincipalAmount = d.PrincipalAmount,
                             InterestId = d.InterestId,
                             Interest = d.MstInterest.Interest,
                             InterestPercentage = d.InterestPercentage,
                             InterestAmount = d.InterestAmount,
+                            LoanAmount = d.LoanAmount,
+                            PreviousBalanceAmount = d.PreviousBalanceAmount,
+                            CollectibleAmount = d.CollectibleAmount,
+                            ClaimAmount = d.ClaimAmount,
+                            IsAdvanceInterestDeduction = d.IsAdvanceInterestDeduction,
                             PaidAmount = d.PaidAmount,
                             PenaltyAmount = d.PenaltyAmount,
                             BalanceAmount = d.BalanceAmount,
@@ -89,11 +96,15 @@ namespace LendingSystem.ApiControllers
                     CustomerId = objLoanModel.CustomerId,
                     TermId = objLoanModel.TermId,
                     TermNumberOfDays = objLoanModel.TermNumberOfDays,
-                    LoanAmount = objLoanModel.LoanAmount,
-                    PreviousBalanceAmount = objLoanModel.PreviousBalanceAmount,
+                    PrincipalAmount = objLoanModel.PrincipalAmount,
                     InterestId = objLoanModel.InterestId,
                     InterestPercentage = objLoanModel.InterestPercentage,
                     InterestAmount = objLoanModel.InterestAmount,
+                    LoanAmount = objLoanModel.LoanAmount,
+                    PreviousBalanceAmount = objLoanModel.PreviousBalanceAmount,
+                    CollectibleAmount = objLoanModel.CollectibleAmount,
+                    ClaimAmount = objLoanModel.ClaimAmount,
+                    IsAdvanceInterestDeduction = objLoanModel.IsAdvanceInterestDeduction,
                     PaidAmount = objLoanModel.PaidAmount,
                     PenaltyAmount = objLoanModel.PenaltyAmount,
                     BalanceAmount = objLoanModel.BalanceAmount,
@@ -138,11 +149,16 @@ namespace LendingSystem.ApiControllers
                     lockLoan.CustomerId = objLoanModel.CustomerId;
                     lockLoan.TermId = objLoanModel.TermId;
                     lockLoan.TermNumberOfDays = objLoanModel.TermNumberOfDays;
-                    lockLoan.LoanAmount = objLoanModel.LoanAmount;
-                    lockLoan.PreviousBalanceAmount = objLoanModel.PreviousBalanceAmount;
+                    lockLoan.PrincipalAmount = objLoanModel.PrincipalAmount;
                     lockLoan.InterestId = objLoanModel.InterestId;
                     lockLoan.InterestPercentage = objLoanModel.InterestPercentage;
                     lockLoan.InterestAmount = objLoanModel.InterestAmount;
+                    lockLoan.LoanAmount = objLoanModel.LoanAmount;
+                    lockLoan.LoanAmount = objLoanModel.LoanAmount;
+                    lockLoan.PreviousBalanceAmount = objLoanModel.PreviousBalanceAmount;
+                    lockLoan.CollectibleAmount = objLoanModel.CollectibleAmount;
+                    lockLoan.ClaimAmount = objLoanModel.ClaimAmount;
+                    lockLoan.IsAdvanceInterestDeduction = objLoanModel.IsAdvanceInterestDeduction;
                     lockLoan.PaidAmount = objLoanModel.PaidAmount;
                     lockLoan.PenaltyAmount = objLoanModel.PenaltyAmount;
                     lockLoan.BalanceAmount = objLoanModel.BalanceAmount;

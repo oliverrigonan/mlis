@@ -16,12 +16,16 @@ namespace LendingSystem.ApiModels
         public Int32 TermId { get; set; }
         public String Term { get; set; }
         public Decimal TermNumberOfDays { get; set; }
-        public Decimal LoanAmount { get; set; }
-        public Decimal PreviousBalanceAmount { get; set; }
+        public Decimal PrincipalAmount { get; set; }
         public Int32 InterestId { get; set; }
         public String Interest { get; set; }
         public Decimal InterestPercentage { get; set; }
         public Decimal InterestAmount { get; set; }
+        public Decimal LoanAmount { get; set; }
+        public Decimal PreviousBalanceAmount { get; set; }
+        public Decimal CollectibleAmount { get; set; }
+        public Decimal ClaimAmount { get; set; }
+        public Boolean IsAdvanceInterestDeduction { get; set; }
         public Decimal PaidAmount { get; set; }
         public Decimal PenaltyAmount { get; set; }
         public Decimal BalanceAmount { get; set; }

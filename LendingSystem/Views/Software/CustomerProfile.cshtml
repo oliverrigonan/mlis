@@ -41,10 +41,10 @@
             <div class="modal-body">
                 <dl class="dl-horizontal">
                     <dt>
-                        Loan Amount
+                        Principal Amount
                     </dt>
                     <dd>
-                        <input id="inputLoanAmount" class="form-control text-right number" onkeyup="computeAmouont()" />
+                        <input id="inputPrincipalAmount" class="form-control text-right number" onkeyup="computeAmouont()" />
                     </dd>
                     <dt>
                         Term
@@ -57,12 +57,6 @@
                     </dt>
                     <dd>
                         <input id="inputNumberOfDays" class="form-control text-right" readonly />
-                    </dd>
-                    <dt>
-                        Previous Balance
-                    </dt>
-                    <dd>
-                        <input id="inputPreviousLoanAmount" class="form-control text-right number" readonly />
                     </dd>
                     <dt>
                         Interest
@@ -83,10 +77,34 @@
                         <input id="inputInterestAmount" class="form-control text-right number" readonly />
                     </dd>
                     <dt>
-                        Amount
+                        Advance Interest
                     </dt>
                     <dd>
-                        <input id="inputAmount" class="form-control text-right number" readonly />
+                        <input id="inputIsAdvanceInterestDeduction" type="checkbox"  onclick="computeAmouont();"/>
+                    </dd>
+                    <dt>
+                        Loan Amount
+                    </dt>
+                    <dd>
+                        <input id="inputLoanAmount" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Previous Balance
+                    </dt>
+                    <dd>
+                        <input id="inputPreviousLoanAmount" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Collectible
+                    </dt>
+                    <dd>
+                        <input id="inputCollectibleAmount" class="form-control text-right number" readonly />
+                    </dd>
+                    <dt>
+                        Claim
+                    </dt>
+                    <dd>
+                        <input id="inputClaimAmount" class="form-control text-right number" readonly />
                     </dd>
                     <dt>
                         Remarks
@@ -97,7 +115,7 @@
                 </dl>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="buttonClickApplyLoan()">Apply</button>
+                <button class="btn btn-primary" id="buttonClickApplyLoan" onclick="buttonClickApplyLoan()">Apply</button>
                 <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -161,22 +179,31 @@
                             Id: results[i]["Id"],
                             LoanNumber: results[i]["LoanNumber"],
                             LoanDate: results[i]["LoanDate"],
+                            TermId: results[i]["TermId"],
                             Term: results[i]["Term"],
-                            LoanAmount: results[i]["LoanAmount"],
-                            LoanAmountDisplay: parseFloat(results[i]["LoanAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-                            PreviousBalanceAmount: results[i]["PreviousBalanceAmount"],
-                            PreviousBalanceAmountDisplay: parseFloat(results[i]["PreviousBalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            PrincipalAmount: results[i]["PrincipalAmount"],
+                            PrincipalAmountDisplay: parseFloat(results[i]["PrincipalAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            InterestId: results[i]["InterestId"],
                             Interest: results[i]["Interest"],
                             InterestPercentage: results[i]["InterestPercentage"],
                             InterestPercentageDisplay: parseFloat(results[i]["InterestPercentage"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             InterestAmount: results[i]["InterestAmount"],
                             InterestAmountDisplay: parseFloat(results[i]["InterestAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            LoanAmount: results[i]["LoanAmount"],
+                            LoanAmountDisplay: parseFloat(results[i]["LoanAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            PreviousBalanceAmount: results[i]["PreviousBalanceAmount"],
+                            PreviousBalanceAmountDisplay: parseFloat(results[i]["PreviousBalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            CollectibleAmount: results[i]["CollectibleAmount"],
+                            CollectibleAmountDisplay: parseFloat(results[i]["CollectibleAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            ClaimAmount: results[i]["ClaimAmount"],
+                            ClaimAmountDisplay: parseFloat(results[i]["ClaimAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             PaidAmount: results[i]["PaidAmount"],
                             PaidAmountDisplay: parseFloat(results[i]["PaidAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             PenaltyAmount: results[i]["PenaltyAmount"],
                             PenaltyAmountDisplay: parseFloat(results[i]["PenaltyAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             BalanceAmount: results[i]["BalanceAmount"],
                             BalanceAmountDisplay: parseFloat(results[i]["BalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            IsAdvanceInterestDeduction: results[i]["IsAdvanceInterestDeduction"],
                             Remarks: results[i]["Remarks"],
                             Status: results[i]["Status"]
                         });
@@ -232,15 +259,8 @@
                     "width": 150
                 },
                 {
-                    "header": "Loan",
-                    "binding": "LoanAmount",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Previous",
-                    "binding": "PreviousBalanceAmountDisplay",
+                    "header": "Principal",
+                    "binding": "PrincipalAmountDisplay",
                     "allowSorting": true,
                     "align": "right",
                     "width": 100
@@ -262,6 +282,40 @@
                 {
                     "header": "Interest Amount",
                     "binding": "InterestAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "A",
+                    "binding": "IsAdvanceInterestDeduction",
+                    "allowSorting": true,
+                    "width": 50
+                },
+                {
+                    "header": "Loan",
+                    "binding": "LoanAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Previous",
+                    "binding": "PreviousBalanceAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Collectible",
+                    "binding": "CollectibleAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Claim",
+                    "binding": "ClaimAmountDisplay",
                     "allowSorting": true,
                     "align": "right",
                     "width": 100
@@ -319,14 +373,17 @@
         });
 
         loanId = 0;
-        createWijmoComboboxTerm();
-        document.getElementById("inputNumberOfDays").value = formatDecimalValues(0);
-        document.getElementById("inputLoanAmount").value = formatDecimalValues(0);
-        document.getElementById("inputPreviousLoanAmount").value = formatDecimalValues(0); // todo: set the latest balance value
-        document.getElementById("inputInterestPercentage").value = formatDecimalValues(0);
-        document.getElementById("inputInterestAmount").value = formatDecimalValues(0);
-        document.getElementById("inputAmount").value = formatDecimalValues(0);
+        createWijmoComboboxTerm(false);
+        document.getElementById("inputPrincipalAmount").value = formatDecimalValues(0);
+        document.getElementById("inputPreviousLoanAmount").value = formatDecimalValues(0); 
         document.getElementById("inputLoanRemarks").value = "";
+        computeAmouont();
+
+        document.getElementById("inputPrincipalAmount").disabled = false;
+        document.getElementById("inputIsAdvanceInterestDeduction").disabled = false;
+        document.getElementById("inputLoanRemarks").disabled = false;
+
+        document.getElementById("buttonClickApplyLoan").style.display = "";
     }
 
     function buttonClickViewLoan() {
@@ -337,20 +394,44 @@
             backdrop: "static"
         });
 
+        createWijmoComboboxTerm(true);
+
         wijmoCollectionViewLoanList.editItem(wijmoCollectionViewLoanList.currentItem);
-        var id = wijmoCollectionViewLoanList.currentEditItem.Id;
+        var currentLoan = wijmoCollectionViewLoanList.currentEditItem;
+        wijmoComboboxTerm.selectedValue = currentLoan.TermId;
+        document.getElementById("inputNumberOfDays").value = formatDecimalValues(currentLoan.TermNumberOfDays);
+        document.getElementById("inputPrincipalAmount").value = formatDecimalValues(currentLoan.PrincipalAmount);
+        wijmoComboboxInterest.selectedValue = currentLoan.InterestId;
+        document.getElementById("inputInterestPercentage").value = formatDecimalValues(currentLoan.InterestPercentage);
+        document.getElementById("inputInterestAmount").value = formatDecimalValues(currentLoan.InterestAmount);
+        document.getElementById("inputLoanAmount").value = formatDecimalValues(currentLoan.LoanAmount);
+        document.getElementById("inputPreviousLoanAmount").value = formatDecimalValues(currentLoan.PreviousBalanceAmount);
+        document.getElementById("inputCollectibleAmount").value = formatDecimalValues(currentLoan.CollectibleAmount);
+        document.getElementById("inputClaimAmount").value = formatDecimalValues(currentLoan.ClaimAmount);
+        document.getElementById("inputIsAdvanceInterestDeduction").checked = currentLoan.IsAdvanceInterestDeduction;
+        document.getElementById("inputLoanRemarks").value = currentLoan.Remarks;
+
+        document.getElementById("inputPrincipalAmount").disabled = true;
+        document.getElementById("inputIsAdvanceInterestDeduction").disabled = true;
+        document.getElementById("inputLoanRemarks").disabled = true;
+
+        document.getElementById("buttonClickApplyLoan").style.display = "none";
+
     }
 
     function buttonClickApplyLoan() {
         var loanObject = new Object();
         loanObject.TermId = wijmoComboboxTerm.selectedValue;
         loanObject.TermNumberOfDays = document.getElementById("inputNumberOfDays").value;
-        loanObject.LoanAmount = document.getElementById("inputLoanAmount").value;
-        loanObject.PreviousBalanceAmount = document.getElementById("inputPreviousLoanAmount").value;
+        loanObject.PrincipalAmount = document.getElementById("inputPrincipalAmount").value;
         loanObject.InterestId = wijmoComboboxInterest.selectedValue;
         loanObject.InterestPercentage = document.getElementById("inputInterestPercentage").value;
         loanObject.InterestAmount = document.getElementById("inputInterestAmount").value;
-        loanObject.BalanceAmount = document.getElementById("inputAmount").value;
+        loanObject.LoanAmount = document.getElementById("inputLoanAmount").value;
+        loanObject.PreviousBalanceAmount = document.getElementById("inputPreviousLoanAmount").value;
+        loanObject.CollectibleAmount = document.getElementById("inputCollectibleAmount").value;
+        loanObject.ClaimAmount = document.getElementById("inputClaimAmount").value;
+        loanObject.IsAdvanceInterestDeduction = document.getElementById("inputIsAdvanceInterestDeduction").checked;
         loanObject.Remarks = document.getElementById("inputLoanRemarks").value;
         var loanData = JSON.stringify(loanObject);
 
@@ -424,7 +505,7 @@
         });
     }
 
-    function createWijmoComboboxTerm() {
+    function createWijmoComboboxTerm(isDisalbed) {
         var termObservableArray = new wijmo.collections.ObservableArray();
         $.ajax({
             url: '/api/current/loan/dropdown/list/term',
@@ -432,8 +513,6 @@
             type: 'GET',
             contentType: 'application/json; charset=utf-8',
             success: function (results) {
-                var isDisabled = true;
-
                 if (results.length > 0) {
                     for (i = 0; i < results.length; i++) {
                         termObservableArray.push({
@@ -443,14 +522,11 @@
                             DefaultInterestId: results[i]["DefaultInterestId"]
                         });
                     }
-
-                    isDisabled = false;
                 }
 
                 wijmoComboboxTerm.dispose();
                 wijmoComboboxTerm = new wijmo.input.ComboBox('#wijmoComboboxTerm', {
-                    disabled: isDisabled,
-                    isEditable: false,
+                    disabled: isDisalbed,
                     placeholder: "Select Term",
                     itemsSource: termObservableArray,
                     displayMemberPath: "Term",
@@ -508,15 +584,28 @@
     }
 
     function computeAmouont() {
-        var loanAmount = parseFloat(document.getElementById('inputLoanAmount').value.replace(/\,/g, ''));
-        var previousBalanceAmount = parseFloat(document.getElementById('inputPreviousLoanAmount').value.replace(/\,/g, ''));
+        var principalAmount = parseFloat(document.getElementById('inputPrincipalAmount').value.replace(/\,/g, ''));
         var interestRate = parseFloat(document.getElementById('inputInterestPercentage').value.replace(/\,/g, ''));
+        var isAdvanceInterestDeduction = document.getElementById('inputIsAdvanceInterestDeduction').checked;
 
-        var interestAmount = loanAmount * (interestRate / 100);
-        var balanceAmouont = (loanAmount + previousBalanceAmount) + interestAmount;
+        var interestAmount = formatDecimalValues(principalAmount * (interestRate / 100));
+        document.getElementById('inputInterestAmount').value = interestAmount;
 
-        document.getElementById('inputInterestAmount').value = formatDecimalValues(interestAmount);
-        document.getElementById('inputAmount').value = formatDecimalValues(balanceAmouont);
+        var loanAmount = formatDecimalValues(principalAmount + parseFloat(interestAmount.replace(/\,/g, '')));
+        document.getElementById('inputLoanAmount').value = loanAmount;
+
+        var previousBalanceAmount = parseFloat(document.getElementById('inputPreviousLoanAmount').value.replace(/\,/g, ''));
+
+        var collectibleAmount = formatDecimalValues(parseFloat(loanAmount.replace(/\,/g, '')) - previousBalanceAmount);
+        var claimAmount = formatDecimalValues(principalAmount);
+
+        if (isAdvanceInterestDeduction == true) {
+            collectibleAmount = formatDecimalValues(parseFloat(collectibleAmount.replace(/\,/g, '')) - parseFloat(interestAmount.replace(/\,/g, '')));
+            claimAmount = formatDecimalValues(principalAmount - parseFloat(interestAmount.replace(/\,/g, '')));
+        }
+
+        document.getElementById('inputCollectibleAmount').value = collectibleAmount;
+        document.getElementById('inputClaimAmount').value = claimAmount;
     }
 
     window.onload = function () {

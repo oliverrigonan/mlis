@@ -340,15 +340,23 @@ namespace LendingSystem.Data
 		
 		private decimal _TermNumberOfDays;
 		
-		private decimal _LoanAmount;
-		
-		private decimal _PreviousBalanceAmount;
+		private decimal _PrincipalAmount;
 		
 		private int _InterestId;
 		
 		private decimal _InterestPercentage;
 		
 		private decimal _InterestAmount;
+		
+		private decimal _LoanAmount;
+		
+		private decimal _PreviousBalanceAmount;
+		
+		private decimal _CollectibleAmount;
+		
+		private decimal _ClaimAmount;
+		
+		private bool _IsAdvanceInterestDeduction;
 		
 		private decimal _PaidAmount;
 		
@@ -400,16 +408,24 @@ namespace LendingSystem.Data
     partial void OnTermIdChanged();
     partial void OnTermNumberOfDaysChanging(decimal value);
     partial void OnTermNumberOfDaysChanged();
-    partial void OnLoanAmountChanging(decimal value);
-    partial void OnLoanAmountChanged();
-    partial void OnPreviousBalanceAmountChanging(decimal value);
-    partial void OnPreviousBalanceAmountChanged();
+    partial void OnPrincipalAmountChanging(decimal value);
+    partial void OnPrincipalAmountChanged();
     partial void OnInterestIdChanging(int value);
     partial void OnInterestIdChanged();
     partial void OnInterestPercentageChanging(decimal value);
     partial void OnInterestPercentageChanged();
     partial void OnInterestAmountChanging(decimal value);
     partial void OnInterestAmountChanged();
+    partial void OnLoanAmountChanging(decimal value);
+    partial void OnLoanAmountChanged();
+    partial void OnPreviousBalanceAmountChanging(decimal value);
+    partial void OnPreviousBalanceAmountChanged();
+    partial void OnCollectibleAmountChanging(decimal value);
+    partial void OnCollectibleAmountChanged();
+    partial void OnClaimAmountChanging(decimal value);
+    partial void OnClaimAmountChanged();
+    partial void OnIsAdvanceInterestDeductionChanging(bool value);
+    partial void OnIsAdvanceInterestDeductionChanged();
     partial void OnPaidAmountChanging(decimal value);
     partial void OnPaidAmountChanged();
     partial void OnPenaltyAmountChanging(decimal value);
@@ -591,42 +607,22 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LoanAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal LoanAmount
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PrincipalAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal PrincipalAmount
 		{
 			get
 			{
-				return this._LoanAmount;
+				return this._PrincipalAmount;
 			}
 			set
 			{
-				if ((this._LoanAmount != value))
+				if ((this._PrincipalAmount != value))
 				{
-					this.OnLoanAmountChanging(value);
+					this.OnPrincipalAmountChanging(value);
 					this.SendPropertyChanging();
-					this._LoanAmount = value;
-					this.SendPropertyChanged("LoanAmount");
-					this.OnLoanAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousBalanceAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal PreviousBalanceAmount
-		{
-			get
-			{
-				return this._PreviousBalanceAmount;
-			}
-			set
-			{
-				if ((this._PreviousBalanceAmount != value))
-				{
-					this.OnPreviousBalanceAmountChanging(value);
-					this.SendPropertyChanging();
-					this._PreviousBalanceAmount = value;
-					this.SendPropertyChanged("PreviousBalanceAmount");
-					this.OnPreviousBalanceAmountChanged();
+					this._PrincipalAmount = value;
+					this.SendPropertyChanged("PrincipalAmount");
+					this.OnPrincipalAmountChanged();
 				}
 			}
 		}
@@ -691,6 +687,106 @@ namespace LendingSystem.Data
 					this._InterestAmount = value;
 					this.SendPropertyChanged("InterestAmount");
 					this.OnInterestAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LoanAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal LoanAmount
+		{
+			get
+			{
+				return this._LoanAmount;
+			}
+			set
+			{
+				if ((this._LoanAmount != value))
+				{
+					this.OnLoanAmountChanging(value);
+					this.SendPropertyChanging();
+					this._LoanAmount = value;
+					this.SendPropertyChanged("LoanAmount");
+					this.OnLoanAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousBalanceAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal PreviousBalanceAmount
+		{
+			get
+			{
+				return this._PreviousBalanceAmount;
+			}
+			set
+			{
+				if ((this._PreviousBalanceAmount != value))
+				{
+					this.OnPreviousBalanceAmountChanging(value);
+					this.SendPropertyChanging();
+					this._PreviousBalanceAmount = value;
+					this.SendPropertyChanged("PreviousBalanceAmount");
+					this.OnPreviousBalanceAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CollectibleAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal CollectibleAmount
+		{
+			get
+			{
+				return this._CollectibleAmount;
+			}
+			set
+			{
+				if ((this._CollectibleAmount != value))
+				{
+					this.OnCollectibleAmountChanging(value);
+					this.SendPropertyChanging();
+					this._CollectibleAmount = value;
+					this.SendPropertyChanged("CollectibleAmount");
+					this.OnCollectibleAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClaimAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal ClaimAmount
+		{
+			get
+			{
+				return this._ClaimAmount;
+			}
+			set
+			{
+				if ((this._ClaimAmount != value))
+				{
+					this.OnClaimAmountChanging(value);
+					this.SendPropertyChanging();
+					this._ClaimAmount = value;
+					this.SendPropertyChanged("ClaimAmount");
+					this.OnClaimAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsAdvanceInterestDeduction", DbType="Bit NOT NULL")]
+		public bool IsAdvanceInterestDeduction
+		{
+			get
+			{
+				return this._IsAdvanceInterestDeduction;
+			}
+			set
+			{
+				if ((this._IsAdvanceInterestDeduction != value))
+				{
+					this.OnIsAdvanceInterestDeductionChanging(value);
+					this.SendPropertyChanging();
+					this._IsAdvanceInterestDeduction = value;
+					this.SendPropertyChanged("IsAdvanceInterestDeduction");
+					this.OnIsAdvanceInterestDeductionChanged();
 				}
 			}
 		}
