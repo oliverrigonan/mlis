@@ -25,49 +25,149 @@ namespace LendingSystem.ApiControllers
             return result;
         }
 
+        [Authorize, HttpGet, Route("api/loan/dropdown/list/customer")]
+        public List<ApiModels.MstCustomerModel> DropdownListLoanCustomer()
+        {
+            var customers = from d in db.MstCustomers
+                            select new ApiModels.MstCustomerModel
+                            {
+                                Id = d.Id,
+                                FullName = d.FullName
+                            };
+
+            return customers.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/loan/dropdown/list/term")]
+        public List<ApiModels.MstTermModel> DropdownListLoanTerm()
+        {
+            var terms = from d in db.MstTerms
+                        select new ApiModels.MstTermModel
+                        {
+                            Id = d.Id,
+                            Term = d.Term,
+                            NumberOfDays = d.NumberOfDays,
+                            DefaultInterestId = d.DefaultInterestId
+                        };
+
+            return terms.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/loan/dropdown/list/interest")]
+        public List<ApiModels.MstInterestModel> DropdownListLoanInterest()
+        {
+            var interests = from d in db.MstInterests
+                            select new ApiModels.MstInterestModel
+                            {
+                                Id = d.Id,
+                                Interest = d.Interest,
+                                Percentage = d.Percentage
+                            };
+
+            return interests.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/loan/dropdown/list/user")]
+        public List<ApiModels.MstUserModel> DropdownListLoanUser()
+        {
+            var users = from d in db.MstUsers
+                        select new ApiModels.MstUserModel
+                        {
+                            Id = d.Id,
+                            FullName = d.FullName
+                        };
+
+            return users.ToList();
+        }
+
         [Authorize, HttpGet, Route("api/loan/list/{startDate}/{endDate}/{status}")]
         public List<ApiModels.TrnLoanModel> LoanList(String startDate, String endDate, String status)
         {
-            var loans = from d in db.TrnLoans
-                        where d.LoanDate >= Convert.ToDateTime(startDate)
-                        && d.LoanDate <= Convert.ToDateTime(endDate)
-                        && d.Status == status
-                        select new ApiModels.TrnLoanModel
-                        {
-                            Id = d.Id,
-                            LoanNumber = d.LoanNumber,
-                            LoanDate = d.LoanDate.ToShortDateString(),
-                            ManualLoanNumber = d.ManualLoanNumber,
-                            CustomerId = d.CustomerId,
-                            Customer = d.MstCustomer.FullName,
-                            TermId = d.TermId,
-                            Term = d.LoanNumber,
-                            TermNumberOfDays = d.TermNumberOfDays,
-                            PrincipalAmount = d.PrincipalAmount,
-                            InterestId = d.InterestId,
-                            Interest = d.MstInterest.Interest,
-                            InterestPercentage = d.InterestPercentage,
-                            InterestAmount = d.InterestAmount,
-                            LoanAmount = d.LoanAmount,
-                            PreviousBalanceAmount = d.PreviousBalanceAmount,
-                            CollectibleAmount = d.CollectibleAmount,
-                            ClaimAmount = d.ClaimAmount,
-                            IsAdvanceInterestDeduction = d.IsAdvanceInterestDeduction,
-                            PaidAmount = d.PaidAmount,
-                            PenaltyAmount = d.PenaltyAmount,
-                            BalanceAmount = d.BalanceAmount,
-                            Remarks = d.Remarks,
-                            Status = d.Status,
-                            IsLocked = d.IsLocked,
-                            CreatedByUserId = d.CreatedByUserId,
-                            CreatedByUser = d.MstUser.FullName,
-                            CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
-                            UpdatedByUserId = d.UpdatedByUserId,
-                            UpdatedByUser = d.MstUser1.FullName,
-                            UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
-                        };
+            if (status == "All")
+            {
+                var loans = from d in db.TrnLoans
+                            where d.LoanDate >= Convert.ToDateTime(startDate)
+                            && d.LoanDate <= Convert.ToDateTime(endDate)
+                            select new ApiModels.TrnLoanModel
+                            {
+                                Id = d.Id,
+                                LoanNumber = d.LoanNumber,
+                                LoanDate = d.LoanDate.ToShortDateString(),
+                                ManualLoanNumber = d.ManualLoanNumber,
+                                CustomerId = d.CustomerId,
+                                Customer = d.MstCustomer.FullName,
+                                TermId = d.TermId,
+                                Term = d.LoanNumber,
+                                TermNumberOfDays = d.TermNumberOfDays,
+                                PrincipalAmount = d.PrincipalAmount,
+                                InterestId = d.InterestId,
+                                Interest = d.MstInterest.Interest,
+                                InterestPercentage = d.InterestPercentage,
+                                InterestAmount = d.InterestAmount,
+                                LoanAmount = d.LoanAmount,
+                                PreviousBalanceAmount = d.PreviousBalanceAmount,
+                                CollectibleAmount = d.CollectibleAmount,
+                                ClaimAmount = d.ClaimAmount,
+                                IsAdvanceInterestDeduction = d.IsAdvanceInterestDeduction,
+                                PaidAmount = d.PaidAmount,
+                                PenaltyAmount = d.PenaltyAmount,
+                                BalanceAmount = d.BalanceAmount,
+                                Remarks = d.Remarks,
+                                Status = d.Status,
+                                IsLocked = d.IsLocked,
+                                CreatedByUserId = d.CreatedByUserId,
+                                CreatedByUser = d.MstUser.FullName,
+                                CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
+                                UpdatedByUserId = d.UpdatedByUserId,
+                                UpdatedByUser = d.MstUser1.FullName,
+                                UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                            };
 
-            return loans.ToList();
+                return loans.ToList();
+            }
+            else
+            {
+                var loans = from d in db.TrnLoans
+                            where d.LoanDate >= Convert.ToDateTime(startDate)
+                            && d.LoanDate <= Convert.ToDateTime(endDate)
+                            && d.Status == status
+                            select new ApiModels.TrnLoanModel
+                            {
+                                Id = d.Id,
+                                LoanNumber = d.LoanNumber,
+                                LoanDate = d.LoanDate.ToShortDateString(),
+                                ManualLoanNumber = d.ManualLoanNumber,
+                                CustomerId = d.CustomerId,
+                                Customer = d.MstCustomer.FullName,
+                                TermId = d.TermId,
+                                Term = d.LoanNumber,
+                                TermNumberOfDays = d.TermNumberOfDays,
+                                PrincipalAmount = d.PrincipalAmount,
+                                InterestId = d.InterestId,
+                                Interest = d.MstInterest.Interest,
+                                InterestPercentage = d.InterestPercentage,
+                                InterestAmount = d.InterestAmount,
+                                LoanAmount = d.LoanAmount,
+                                PreviousBalanceAmount = d.PreviousBalanceAmount,
+                                CollectibleAmount = d.CollectibleAmount,
+                                ClaimAmount = d.ClaimAmount,
+                                IsAdvanceInterestDeduction = d.IsAdvanceInterestDeduction,
+                                PaidAmount = d.PaidAmount,
+                                PenaltyAmount = d.PenaltyAmount,
+                                BalanceAmount = d.BalanceAmount,
+                                Remarks = d.Remarks,
+                                Status = d.Status,
+                                IsLocked = d.IsLocked,
+                                CreatedByUserId = d.CreatedByUserId,
+                                CreatedByUser = d.MstUser.FullName,
+                                CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
+                                UpdatedByUserId = d.UpdatedByUserId,
+                                UpdatedByUser = d.MstUser1.FullName,
+                                UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                            };
+
+                return loans.ToList();
+            }
         }
 
         [Authorize, HttpPost, Route("api/loan/save")]
