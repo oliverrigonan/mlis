@@ -338,7 +338,7 @@ namespace LendingSystem.Data
 		
 		private int _TermId;
 		
-		private decimal _TermNumberOfDays;
+		private decimal _TermNumberOfMonths;
 		
 		private decimal _PrincipalAmount;
 		
@@ -350,13 +350,13 @@ namespace LendingSystem.Data
 		
 		private decimal _LoanAmount;
 		
-		private decimal _PreviousBalanceAmount;
+		private decimal _PreviousAmount;
 		
-		private decimal _CollectibleAmount;
+		private decimal _Amount;
 		
-		private decimal _ClaimAmount;
+		private decimal _NetAmount;
 		
-		private bool _IsAdvanceInterestDeduction;
+		private decimal _AmortizationAmount;
 		
 		private decimal _PaidAmount;
 		
@@ -406,8 +406,8 @@ namespace LendingSystem.Data
     partial void OnCustomerIdChanged();
     partial void OnTermIdChanging(int value);
     partial void OnTermIdChanged();
-    partial void OnTermNumberOfDaysChanging(decimal value);
-    partial void OnTermNumberOfDaysChanged();
+    partial void OnTermNumberOfMonthsChanging(decimal value);
+    partial void OnTermNumberOfMonthsChanged();
     partial void OnPrincipalAmountChanging(decimal value);
     partial void OnPrincipalAmountChanged();
     partial void OnInterestIdChanging(int value);
@@ -418,14 +418,14 @@ namespace LendingSystem.Data
     partial void OnInterestAmountChanged();
     partial void OnLoanAmountChanging(decimal value);
     partial void OnLoanAmountChanged();
-    partial void OnPreviousBalanceAmountChanging(decimal value);
-    partial void OnPreviousBalanceAmountChanged();
-    partial void OnCollectibleAmountChanging(decimal value);
-    partial void OnCollectibleAmountChanged();
-    partial void OnClaimAmountChanging(decimal value);
-    partial void OnClaimAmountChanged();
-    partial void OnIsAdvanceInterestDeductionChanging(bool value);
-    partial void OnIsAdvanceInterestDeductionChanged();
+    partial void OnPreviousAmountChanging(decimal value);
+    partial void OnPreviousAmountChanged();
+    partial void OnAmountChanging(decimal value);
+    partial void OnAmountChanged();
+    partial void OnNetAmountChanging(decimal value);
+    partial void OnNetAmountChanged();
+    partial void OnAmortizationAmountChanging(decimal value);
+    partial void OnAmortizationAmountChanged();
     partial void OnPaidAmountChanging(decimal value);
     partial void OnPaidAmountChanged();
     partial void OnPenaltyAmountChanging(decimal value);
@@ -587,22 +587,22 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TermNumberOfDays", DbType="Decimal(18,2) NOT NULL")]
-		public decimal TermNumberOfDays
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TermNumberOfMonths", DbType="Decimal(18,2) NOT NULL")]
+		public decimal TermNumberOfMonths
 		{
 			get
 			{
-				return this._TermNumberOfDays;
+				return this._TermNumberOfMonths;
 			}
 			set
 			{
-				if ((this._TermNumberOfDays != value))
+				if ((this._TermNumberOfMonths != value))
 				{
-					this.OnTermNumberOfDaysChanging(value);
+					this.OnTermNumberOfMonthsChanging(value);
 					this.SendPropertyChanging();
-					this._TermNumberOfDays = value;
-					this.SendPropertyChanged("TermNumberOfDays");
-					this.OnTermNumberOfDaysChanged();
+					this._TermNumberOfMonths = value;
+					this.SendPropertyChanged("TermNumberOfMonths");
+					this.OnTermNumberOfMonthsChanged();
 				}
 			}
 		}
@@ -711,82 +711,82 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousBalanceAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal PreviousBalanceAmount
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal PreviousAmount
 		{
 			get
 			{
-				return this._PreviousBalanceAmount;
+				return this._PreviousAmount;
 			}
 			set
 			{
-				if ((this._PreviousBalanceAmount != value))
+				if ((this._PreviousAmount != value))
 				{
-					this.OnPreviousBalanceAmountChanging(value);
+					this.OnPreviousAmountChanging(value);
 					this.SendPropertyChanging();
-					this._PreviousBalanceAmount = value;
-					this.SendPropertyChanged("PreviousBalanceAmount");
-					this.OnPreviousBalanceAmountChanged();
+					this._PreviousAmount = value;
+					this.SendPropertyChanged("PreviousAmount");
+					this.OnPreviousAmountChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CollectibleAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal CollectibleAmount
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal Amount
 		{
 			get
 			{
-				return this._CollectibleAmount;
+				return this._Amount;
 			}
 			set
 			{
-				if ((this._CollectibleAmount != value))
+				if ((this._Amount != value))
 				{
-					this.OnCollectibleAmountChanging(value);
+					this.OnAmountChanging(value);
 					this.SendPropertyChanging();
-					this._CollectibleAmount = value;
-					this.SendPropertyChanged("CollectibleAmount");
-					this.OnCollectibleAmountChanged();
+					this._Amount = value;
+					this.SendPropertyChanged("Amount");
+					this.OnAmountChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClaimAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal ClaimAmount
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NetAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal NetAmount
 		{
 			get
 			{
-				return this._ClaimAmount;
+				return this._NetAmount;
 			}
 			set
 			{
-				if ((this._ClaimAmount != value))
+				if ((this._NetAmount != value))
 				{
-					this.OnClaimAmountChanging(value);
+					this.OnNetAmountChanging(value);
 					this.SendPropertyChanging();
-					this._ClaimAmount = value;
-					this.SendPropertyChanged("ClaimAmount");
-					this.OnClaimAmountChanged();
+					this._NetAmount = value;
+					this.SendPropertyChanged("NetAmount");
+					this.OnNetAmountChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsAdvanceInterestDeduction", DbType="Bit NOT NULL")]
-		public bool IsAdvanceInterestDeduction
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AmortizationAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal AmortizationAmount
 		{
 			get
 			{
-				return this._IsAdvanceInterestDeduction;
+				return this._AmortizationAmount;
 			}
 			set
 			{
-				if ((this._IsAdvanceInterestDeduction != value))
+				if ((this._AmortizationAmount != value))
 				{
-					this.OnIsAdvanceInterestDeductionChanging(value);
+					this.OnAmortizationAmountChanging(value);
 					this.SendPropertyChanging();
-					this._IsAdvanceInterestDeduction = value;
-					this.SendPropertyChanged("IsAdvanceInterestDeduction");
-					this.OnIsAdvanceInterestDeductionChanged();
+					this._AmortizationAmount = value;
+					this.SendPropertyChanged("AmortizationAmount");
+					this.OnAmortizationAmountChanged();
 				}
 			}
 		}
@@ -2966,9 +2966,11 @@ namespace LendingSystem.Data
 		
 		private string _Term;
 		
-		private decimal _NumberOfDays;
+		private decimal _NumberOfMonths;
 		
 		private int _DefaultInterestId;
+		
+		private decimal _LimitAmount;
 		
 		private EntitySet<TrnLoan> _TrnLoans;
 		
@@ -2982,10 +2984,12 @@ namespace LendingSystem.Data
     partial void OnIdChanged();
     partial void OnTermChanging(string value);
     partial void OnTermChanged();
-    partial void OnNumberOfDaysChanging(decimal value);
-    partial void OnNumberOfDaysChanged();
+    partial void OnNumberOfMonthsChanging(decimal value);
+    partial void OnNumberOfMonthsChanged();
     partial void OnDefaultInterestIdChanging(int value);
     partial void OnDefaultInterestIdChanged();
+    partial void OnLimitAmountChanging(decimal value);
+    partial void OnLimitAmountChanged();
     #endregion
 		
 		public MstTerm()
@@ -3035,22 +3039,22 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfDays", DbType="Decimal(18,2) NOT NULL")]
-		public decimal NumberOfDays
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfMonths", DbType="Decimal(18,2) NOT NULL")]
+		public decimal NumberOfMonths
 		{
 			get
 			{
-				return this._NumberOfDays;
+				return this._NumberOfMonths;
 			}
 			set
 			{
-				if ((this._NumberOfDays != value))
+				if ((this._NumberOfMonths != value))
 				{
-					this.OnNumberOfDaysChanging(value);
+					this.OnNumberOfMonthsChanging(value);
 					this.SendPropertyChanging();
-					this._NumberOfDays = value;
-					this.SendPropertyChanged("NumberOfDays");
-					this.OnNumberOfDaysChanged();
+					this._NumberOfMonths = value;
+					this.SendPropertyChanged("NumberOfMonths");
+					this.OnNumberOfMonthsChanged();
 				}
 			}
 		}
@@ -3075,6 +3079,26 @@ namespace LendingSystem.Data
 					this._DefaultInterestId = value;
 					this.SendPropertyChanged("DefaultInterestId");
 					this.OnDefaultInterestIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LimitAmount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal LimitAmount
+		{
+			get
+			{
+				return this._LimitAmount;
+			}
+			set
+			{
+				if ((this._LimitAmount != value))
+				{
+					this.OnLimitAmountChanging(value);
+					this.SendPropertyChanging();
+					this._LimitAmount = value;
+					this.SendPropertyChanged("LimitAmount");
+					this.OnLimitAmountChanged();
 				}
 			}
 		}
