@@ -43,6 +43,22 @@ namespace LendingSystem.Controllers
             }
         }
 
+        public ActionResult CustomerLoanDetail()
+        {
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Admin")
+            {
+                return Redirect("/Software");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
         public ActionResult CustomerList()
         {
             return View();

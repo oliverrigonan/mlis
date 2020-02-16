@@ -15,7 +15,6 @@
             <button class="btn btn-primary" onclick="buttonClickViewPayments()">View Payments</button>
             <button class="btn btn-primary" onclick="buttonClickPrintLoan()">Print Loan</button>
             <button class="btn btn-primary" onclick="buttonClickPrintLoan()">Terms and Conditions</button>
-            <button class="btn btn-warning" onclick="buttonClickCancelLoan()">Cancel</button>
         </div>
         <div class="panel-body">
             <div class="alert alert-info text-center">
@@ -63,7 +62,7 @@
                     </div>
                 </form>
                 <div class="alert alert-info">
-                    <strong>For your info!</strong> You're previous balance will be deducted to your current loan.
+                    <strong>Info.</strong> Your previous balance will be deducted to your current loan.
                 </div>
             </div>
             <div class="modal-footer">
@@ -515,12 +514,13 @@
             dataType: "json",
             data: loanData,
             statusCode: {
-                200: function () {
-                    wijmoCollectionViewLoanDraftList = new wijmo.collections.CollectionView(getDataLoanDraftList());
-                    wijmoCollectionViewLoanDraftList.canFilter = true;
-                    wijmoGridLoanDraftList.itemsSource = wijmoCollectionViewLoanDraftList;
+                200: function (loanId) {
                     $("#modalLoanDetailForm").modal("hide");
                     toastr.success("Save Successful");
+
+                    setTimeout(function () {
+                        window.location = "/Software/CustomerLoanDetail?loanId=" + loanId;
+                    }, 1000);
                 },
                 404: function (message) {
                     toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");

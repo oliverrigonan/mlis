@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "CustomerLoanDetail";
+}
+
+<h2>Loan Detail</h2>
+<div>
+    <h4>Your loan transaction is ready to process.</h4>
+    <hr />
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/Software/CustomerProfile" class="btn btn-default">Back</a>
+            <button class="btn btn-success" onclick="buttonClickAddSubmit()">Submit</button>
+            <button class="btn btn-primary" onclick="buttonClickAddPrint)">Print</button>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td class="col-md-2"><b>Loan Number:</b></td>
+                <td class="col-md-10">
+                    <span id="spanLoanNumber"></span>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Customer Name:</b></td>
+                <td>
+                    <span id="spanCustomerName"></span>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Term:</b></td>
+                <td>
+                    <span id="spanTerm"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form-horizontal" role="form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Principal Amount</label>
+                            <div class="col-sm-8">
+                                <input id="inputPrincipalAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Interest Percentage</label>
+                            <div class="col-sm-8">
+                                <input id="inputInterestPercentage" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Interest Amount</label>
+                            <div class="col-sm-8">
+                                <input id="inputInterestAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loan Amount</label>
+                            <div class="col-sm-8">
+                                <input id="inputLoanAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Previous Loan</label>
+                            <div class="col-sm-8">
+                                <input id="inputPreviousAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Amount</label>
+                            <div class="col-sm-8">
+                                <input id="inputAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Net Amount</label>
+                            <div class="col-sm-8">
+                                <input id="inputNetAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Amortization</label>
+                            <div class="col-sm-8">
+                                <input id="inputAmortizationAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Total Paid</label>
+                            <div class="col-sm-8">
+                                <input id="inputTotalPaidAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Total Penalty</label>
+                            <div class="col-sm-8">
+                                <input id="inputTotalPenaltyAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ending Balance</label>
+                            <div class="col-sm-8">
+                                <input id="inputEndingBalanceAmount" class="form-control text-right number" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Remarks</label>
+                            <div class="col-sm-8">
+                                <textarea id="inputRemarks" class="form-control" rows="5" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <input id="inputStatus" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function getURLParameterValue(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+
+        var results = regex.exec(window.location.href);
+        if (results == null) {
+            return "";
+        } else {
+            return results[1];
+        }
+    }
+
+    function getLoanDetail() {
+        if (document.location.search.length > 0) {
+            var loanId = getURLParameterValue("loanId");
+
+            $.ajax({
+                url: '/api/current/loan/detail/' + loanId,
+                cache: false,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                success: function (results) {
+                    if (results != null) {
+                        document.getElementById("spanLoanNumber").innerHTML = results.LoanNumber;
+                        document.getElementById("spanCustomerName").innerHTML = results.Customer;
+                        document.getElementById("spanTerm").innerHTML = results.Term;
+                        document.getElementById("inputPrincipalAmount").value = parseFloat(results.PrincipalAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputInterestPercentage").value = parseFloat(results.InterestPercentage).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputInterestAmount").value = parseFloat(results.InterestAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputLoanAmount").value = parseFloat(results.LoanAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputPreviousAmount").value = parseFloat(results.PreviousAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputAmount").value = parseFloat(results.Amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputNetAmount").value = parseFloat(results.NetAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputAmortizationAmount").value = parseFloat(results.AmortizationAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputTotalPaidAmount").value = parseFloat(results.PaidAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputTotalPenaltyAmount").value = parseFloat(results.PenaltyAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputEndingBalanceAmount").value = parseFloat(results.BalanceAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("inputRemarks").value = results.Remarks;
+                        document.getElementById("inputStatus").value = results.Status;
+                    } else {
+                        alert("No Data");
+                        window.location = "/Software/CustomerProfile";
+                    }
+                }
+            });
+        } else {
+            alert("No Id Parameter Value");
+            window.location = "/Software/Collection";
+        }
+    }
+
+    window.onload = function () {
+        getLoanDetail();
+    }
+</script>

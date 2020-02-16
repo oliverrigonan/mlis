@@ -324,6 +324,7 @@
     <Content Include="Views\Software\UserList.cshtml" />
     <Content Include="Views\Software\UserDetail.cshtml" />
     <Content Include="Views\Software\CustomerProfile.cshtml" />
+    <Content Include="Views\Software\CustomerLoanDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
