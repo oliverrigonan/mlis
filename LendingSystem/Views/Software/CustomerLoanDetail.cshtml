@@ -5,15 +5,21 @@
 
 <h2>Loan Detail</h2>
 <div>
-    <h4>Your loan transaction is ready to process.</h4>
+    <h4>Your loan transaction</h4>
     <hr />
 
     <div class="panel panel-default">
         <div class="panel-heading">
             <a href="/Software/CustomerProfile" class="btn btn-default">Back</a>
-            <button class="btn btn-success" onclick="buttonClickAddSubmit()">Submit</button>
-            <button class="btn btn-primary" onclick="buttonClickAddPrint)">Print</button>
+            <button class="btn btn-primary" id="buttonClickEdit" onclick="buttonClickEdit()">Change</button>
+            <button class="btn btn-success" id="buttonClickSubmit" onclick="buttonClickSubmit()">Submit</button>
+            <button class="btn btn-primary" id="buttonClickPrint" onclick="buttonClickPrint()">Print</button>
+            <button class="btn btn-warning" id="buttonClickCancel" onclick="buttonClickCancel()">Cancel</button>
         </div>
+    </div>
+
+    <div class="alert alert-info text-center">
+        <span id="spanRemarks"></span>
     </div>
 
     <table class="table table-striped">
@@ -39,99 +45,174 @@
         </tbody>
     </table>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <form class="form-horizontal" role="form">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Principal Amount</label>
-                            <div class="col-sm-8">
-                                <input id="inputPrincipalAmount" class="form-control text-right number" readonly />
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabComputations">Computations</a></li>
+    </ul>
+
+    <br />
+
+    <div class="tab-content">
+        <div id="tabComputations" class="tab-pane fade in active">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Principal Amount</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputPrincipalAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Interest Percentage</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputInterestPercentage" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Interest Amount</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputInterestAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Loan Amount</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputLoanAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Net Amount</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputNetAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Amortization</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputAmortizationAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Total Paid</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputTotalPaidAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Total Penalty</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputTotalPenaltyAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Ending Balance</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputEndingBalanceAmount" class="form-control text-right number" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Status</label>
+                                    <div class="col-sm-8">
+                                        <input id="inputStatus" class="form-control" readonly />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Interest Percentage</label>
-                            <div class="col-sm-8">
-                                <input id="inputInterestPercentage" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Interest Amount</label>
-                            <div class="col-sm-8">
-                                <input id="inputInterestAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Loan Amount</label>
-                            <div class="col-sm-8">
-                                <input id="inputLoanAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Previous Loan</label>
-                            <div class="col-sm-8">
-                                <input id="inputPreviousAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Amount</label>
-                            <div class="col-sm-8">
-                                <input id="inputAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Net Amount</label>
-                            <div class="col-sm-8">
-                                <input id="inputNetAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Amortization</label>
-                            <div class="col-sm-8">
-                                <input id="inputAmortizationAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Total Paid</label>
-                            <div class="col-sm-8">
-                                <input id="inputTotalPaidAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Total Penalty</label>
-                            <div class="col-sm-8">
-                                <input id="inputTotalPenaltyAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Ending Balance</label>
-                            <div class="col-sm-8">
-                                <input id="inputEndingBalanceAmount" class="form-control text-right number" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Remarks</label>
-                            <div class="col-sm-8">
-                                <textarea id="inputRemarks" class="form-control" rows="5" readonly></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Status</label>
-                            <div class="col-sm-8">
-                                <input id="inputStatus" class="form-control" readonly />
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabPayments">Payments and Penalties</a></li>
+    </ul>
+
+    <br />
+
+    <div class="tab-content">
+        <div id="tabPayments" class="tab-pane fade in active">
+            <div id=""></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fae" id="modalLoanSubmitForm" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Submit Loan</h4>
+            </div>
+            <div class="modal-body">
+                You are about to submit this loan for approval. Once this loan is approved, you will receive an email for instruction and requirement details.
+
+                <br />
+                <br />
+                Are you sure you want to submit this application?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="buttonClickConfirmSubmitLoan()">Submit</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fae" id="modalLoanDetailForm" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Edit Loan</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Principal Amount:</label>
+                        <input id="inputEditPrincipalAmount" class="form-control text-right number input-lg" />
+                    </div>
+                    <div class="form-group">
+                        <label>Term:</label>
+                        <div id="wijmoComboboxTerm"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="buttonClickUpdateLoan" onclick="buttonClickUpdateLoan()">Update</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fae" id="modalLoanCancelForm" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Cancel Loan</h4>
+            </div>
+            <div class="modal-body">
+                You are about to cancel this loan application. This cannot be undone once this processed.
+
+                <br />
+                <br />
+                Are you sure you want to cancel this application?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" onclick="buttonClickConfirmCancelLoan()">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
+    var wijmoComboboxTerm;
+
     function getURLParameterValue(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 
@@ -164,15 +245,31 @@
                         document.getElementById("inputInterestPercentage").value = parseFloat(results.InterestPercentage).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputInterestAmount").value = parseFloat(results.InterestAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputLoanAmount").value = parseFloat(results.LoanAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        document.getElementById("inputPreviousAmount").value = parseFloat(results.PreviousAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        document.getElementById("inputAmount").value = parseFloat(results.Amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputNetAmount").value = parseFloat(results.NetAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputAmortizationAmount").value = parseFloat(results.AmortizationAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputTotalPaidAmount").value = parseFloat(results.PaidAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputTotalPenaltyAmount").value = parseFloat(results.PenaltyAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         document.getElementById("inputEndingBalanceAmount").value = parseFloat(results.BalanceAmount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        document.getElementById("inputRemarks").value = results.Remarks;
                         document.getElementById("inputStatus").value = results.Status;
+                        document.getElementById("spanRemarks").innerHTML = results.Remarks;
+
+                        if (results.Status == "Open") {
+                            document.getElementById("buttonClickCancel").disabled = true;
+                            document.getElementById("buttonClickPrint").disabled = true;
+                        }
+
+                        if (results.Status == "Submitted") {
+                            document.getElementById("buttonClickSubmit").disabled = true;
+                            document.getElementById("buttonClickEdit").disabled = true;
+                        }
+
+                        if (results.Status == "Cancelled") {
+                            document.getElementById("buttonClickSubmit").disabled = true;
+                            document.getElementById("buttonClickCancel").disabled = true;
+                            document.getElementById("buttonClickPrint").disabled = true;
+                            document.getElementById("buttonClickEdit").disabled = true;
+                        }
+
                     } else {
                         alert("No Data");
                         window.location = "/Software/CustomerProfile";
@@ -185,7 +282,176 @@
         }
     }
 
+    function buttonClickSubmit() {
+        $("#modalLoanSubmitForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+    }
+
+    function buttonClickConfirmSubmitLoan() {
+        if (document.location.search.length > 0) {
+            var loanId = getURLParameterValue("loanId");
+
+            $.ajax({
+                url: "/api/current/loan/submit/" + loanId,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                statusCode: {
+                    200: function () {
+                        $("#modalLoanSubmitForm").modal("hide");
+                        toastr.success("Submit Successful");
+
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    },
+                    404: function (message) {
+                        $("#modalLoanDeleteForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        $("#modalLoanDeleteForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        $("#modalLoanDeleteForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        } else {
+            toastr.error("Invalid URL parameter value.", "Error 400 - Bad Request");
+        }
+    }
+
+    function buttonClickEdit() {
+        $("#modalLoanDetailForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+
+        createWijmoComboboxTerm();
+        document.getElementById("inputEditPrincipalAmount").value = formatDecimalValues(0);
+    }
+
+    function buttonClickUpdateLoan() {
+        if (document.location.search.length > 0) {
+            var loanId = getURLParameterValue("loanId");
+
+            var loanObject = new Object();
+            loanObject.TermId = wijmoComboboxTerm.selectedValue;
+            loanObject.PrincipalAmount = document.getElementById("inputEditPrincipalAmount").value;
+            var loanData = JSON.stringify(loanObject);
+
+            $.ajax({
+                url: "/api/current/loan/update/" + loanId,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: loanData,
+                statusCode: {
+                    200: function (loanId) {
+                        toastr.success("Update Successful");
+
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    },
+                    404: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        } else {
+            toastr.error("Invalid URL parameter value.", "Error 400 - Bad Request");
+        }
+    }
+
+    function buttonClickCancel() {
+        $("#modalLoanCancelForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+    }
+
+    function buttonClickConfirmCancelLoan() {
+        if (document.location.search.length > 0) {
+            var loanId = getURLParameterValue("loanId");
+
+            $.ajax({
+                url: "/api/current/loan/cancel/" + loanId,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                statusCode: {
+                    200: function () {
+                        $("#modalLoanCancelForm").modal("hide");
+                        toastr.success("Cancel Successful");
+
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    },
+                    404: function (message) {
+                        $("#modalLoanDeleteForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        $("#modalLoanDeleteForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        $("#modalLoanDeleteForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        } else {
+            toastr.error("Invalid URL parameter value.", "Error 400 - Bad Request");
+        }
+    }
+
+    function createWijmoComboboxTerm() {
+        var termObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/current/loan/dropdown/list/term',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        termObservableArray.push({
+                            Id: results[i]["Id"],
+                            Term: results[i]["Term"],
+                            NumberOfMonths: results[i]["NumberOfMonths"],
+                            DefaultInterestId: results[i]["DefaultInterestId"],
+                            LimitAmount: results[i]["LimitAmount"]
+                        });
+                    }
+                }
+
+                wijmoComboboxTerm.dispose();
+                wijmoComboboxTerm = new wijmo.input.ComboBox('#wijmoComboboxTerm', {
+                    placeholder: "Select Term",
+                    itemsSource: termObservableArray,
+                    displayMemberPath: "Term",
+                    selectedValuePath: "Id"
+                });
+            }
+        });
+    }
+
     window.onload = function () {
         getLoanDetail();
+        wijmoComboboxTerm = new wijmo.input.ComboBox('#wijmoComboboxTerm');
     }
 </script>

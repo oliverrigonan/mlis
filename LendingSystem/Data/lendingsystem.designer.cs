@@ -350,10 +350,6 @@ namespace LendingSystem.Data
 		
 		private decimal _LoanAmount;
 		
-		private decimal _PreviousAmount;
-		
-		private decimal _Amount;
-		
 		private decimal _NetAmount;
 		
 		private decimal _AmortizationAmount;
@@ -418,10 +414,6 @@ namespace LendingSystem.Data
     partial void OnInterestAmountChanged();
     partial void OnLoanAmountChanging(decimal value);
     partial void OnLoanAmountChanged();
-    partial void OnPreviousAmountChanging(decimal value);
-    partial void OnPreviousAmountChanged();
-    partial void OnAmountChanging(decimal value);
-    partial void OnAmountChanged();
     partial void OnNetAmountChanging(decimal value);
     partial void OnNetAmountChanged();
     partial void OnAmortizationAmountChanging(decimal value);
@@ -707,46 +699,6 @@ namespace LendingSystem.Data
 					this._LoanAmount = value;
 					this.SendPropertyChanged("LoanAmount");
 					this.OnLoanAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal PreviousAmount
-		{
-			get
-			{
-				return this._PreviousAmount;
-			}
-			set
-			{
-				if ((this._PreviousAmount != value))
-				{
-					this.OnPreviousAmountChanging(value);
-					this.SendPropertyChanging();
-					this._PreviousAmount = value;
-					this.SendPropertyChanged("PreviousAmount");
-					this.OnPreviousAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal Amount
-		{
-			get
-			{
-				return this._Amount;
-			}
-			set
-			{
-				if ((this._Amount != value))
-				{
-					this.OnAmountChanging(value);
-					this.SendPropertyChanging();
-					this._Amount = value;
-					this.SendPropertyChanged("Amount");
-					this.OnAmountChanged();
 				}
 			}
 		}

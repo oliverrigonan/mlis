@@ -22,8 +22,6 @@ namespace LendingSystem.ApiModels
         public Decimal InterestPercentage { get; set; }
         public Decimal InterestAmount { get; set; }
         public Decimal LoanAmount { get; set; }
-        public Decimal PreviousAmount { get; set; }
-        public Decimal Amount { get; set; }
         public Decimal NetAmount { get; set; }
         public Decimal AmortizationAmount { get; set; }
         public Decimal PaidAmount { get; set; }

@@ -105,8 +105,6 @@ namespace LendingSystem.ApiControllers
                                 InterestPercentage = d.InterestPercentage,
                                 InterestAmount = d.InterestAmount,
                                 LoanAmount = d.LoanAmount,
-                                PreviousAmount = d.PreviousAmount,
-                                Amount = d.Amount,
                                 NetAmount = d.NetAmount,
                                 PaidAmount = d.PaidAmount,
                                 PenaltyAmount = d.PenaltyAmount,
@@ -147,8 +145,6 @@ namespace LendingSystem.ApiControllers
                                 InterestPercentage = d.InterestPercentage,
                                 InterestAmount = d.InterestAmount,
                                 LoanAmount = d.LoanAmount,
-                                PreviousAmount = d.PreviousAmount,
-                                Amount = d.Amount,
                                 NetAmount = d.NetAmount,
                                 PaidAmount = d.PaidAmount,
                                 PenaltyAmount = d.PenaltyAmount,
@@ -199,8 +195,6 @@ namespace LendingSystem.ApiControllers
                     InterestPercentage = objLoanModel.InterestPercentage,
                     InterestAmount = objLoanModel.InterestAmount,
                     LoanAmount = objLoanModel.LoanAmount,
-                    PreviousAmount = objLoanModel.PreviousAmount,
-                    Amount = objLoanModel.Amount,
                     NetAmount = objLoanModel.NetAmount,
                     PaidAmount = objLoanModel.PaidAmount,
                     PenaltyAmount = objLoanModel.PenaltyAmount,
@@ -252,8 +246,6 @@ namespace LendingSystem.ApiControllers
                     lockLoan.InterestAmount = objLoanModel.InterestAmount;
                     lockLoan.LoanAmount = objLoanModel.LoanAmount;
                     lockLoan.LoanAmount = objLoanModel.LoanAmount;
-                    lockLoan.PreviousAmount = objLoanModel.PreviousAmount;
-                    lockLoan.Amount = objLoanModel.Amount;
                     lockLoan.NetAmount = objLoanModel.NetAmount;
                     lockLoan.AmortizationAmount = objLoanModel.AmortizationAmount;
                     lockLoan.PaidAmount = objLoanModel.PaidAmount;

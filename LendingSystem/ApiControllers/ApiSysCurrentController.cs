@@ -54,8 +54,8 @@ namespace LendingSystem.ApiControllers
             return customer.FirstOrDefault();
         }
 
-        [Authorize, HttpGet, Route("api/current/loan/list/{status}")]
-        public List<ApiModels.TrnLoanModel> LoanHistoryList(String status)
+        [Authorize, HttpGet, Route("api/current/loan/list/{transactionType}")]
+        public List<ApiModels.TrnLoanModel> LoanHistoryList(String transactionType)
         {
             var currentUser = from d in db.MstUsers
                               where d.AspNetUserId == User.Identity.GetUserId()
@@ -67,11 +67,13 @@ namespace LendingSystem.ApiControllers
 
             if (customer.Any())
             {
-                if (status == "History")
+                if (transactionType == "Activity")
                 {
                     var loans = from d in db.TrnLoans
                                 where d.CustomerId == customer.FirstOrDefault().Id
-                                && d.Status != "Draft"
+                                && (d.Status == "Open" ||
+                                    d.Status == "Submitted" ||
+                                    d.Status == "Approved")
                                 select new ApiModels.TrnLoanModel
                                 {
                                     Id = d.Id,
@@ -89,8 +91,48 @@ namespace LendingSystem.ApiControllers
                                     InterestPercentage = d.InterestPercentage,
                                     InterestAmount = d.InterestAmount,
                                     LoanAmount = d.LoanAmount,
-                                    PreviousAmount = d.PreviousAmount,
-                                    Amount = d.Amount,
+                                    NetAmount = d.NetAmount,
+                                    AmortizationAmount = d.AmortizationAmount,
+                                    PaidAmount = d.PaidAmount,
+                                    PenaltyAmount = d.PenaltyAmount,
+                                    BalanceAmount = d.BalanceAmount,
+                                    Remarks = d.Remarks,
+                                    Status = d.Status,
+                                    IsLocked = d.IsLocked,
+                                    CreatedByUserId = d.CreatedByUserId,
+                                    CreatedByUser = d.MstUser.FullName,
+                                    CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
+                                    UpdatedByUserId = d.UpdatedByUserId,
+                                    UpdatedByUser = d.MstUser1.FullName,
+                                    UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                                };
+
+                    return loans.OrderByDescending(d => d.Id).ToList();
+                }
+                else if (transactionType == "History")
+                {
+                    var loans = from d in db.TrnLoans
+                                where d.CustomerId == customer.FirstOrDefault().Id
+                                && d.Status != "Open"
+                                && d.Status != "Submitted"
+                                && d.Status != "Approved"
+                                select new ApiModels.TrnLoanModel
+                                {
+                                    Id = d.Id,
+                                    LoanNumber = d.LoanNumber,
+                                    LoanDate = d.LoanDate.ToShortDateString(),
+                                    ManualLoanNumber = d.ManualLoanNumber,
+                                    CustomerId = d.CustomerId,
+                                    Customer = d.MstCustomer.FullName,
+                                    TermId = d.TermId,
+                                    Term = d.MstTerm.Term,
+                                    TermNumberOfMonths = d.TermNumberOfMonths,
+                                    PrincipalAmount = d.PrincipalAmount,
+                                    InterestId = d.InterestId,
+                                    Interest = d.MstInterest.Interest,
+                                    InterestPercentage = d.InterestPercentage,
+                                    InterestAmount = d.InterestAmount,
+                                    LoanAmount = d.LoanAmount,
                                     NetAmount = d.NetAmount,
                                     AmortizationAmount = d.AmortizationAmount,
                                     PaidAmount = d.PaidAmount,
@@ -111,45 +153,7 @@ namespace LendingSystem.ApiControllers
                 }
                 else
                 {
-                    var loans = from d in db.TrnLoans
-                                where d.CustomerId == customer.FirstOrDefault().Id
-                                && d.Status == status
-                                select new ApiModels.TrnLoanModel
-                                {
-                                    Id = d.Id,
-                                    LoanNumber = d.LoanNumber,
-                                    LoanDate = d.LoanDate.ToShortDateString(),
-                                    ManualLoanNumber = d.ManualLoanNumber,
-                                    CustomerId = d.CustomerId,
-                                    Customer = d.MstCustomer.FullName,
-                                    TermId = d.TermId,
-                                    Term = d.MstTerm.Term,
-                                    TermNumberOfMonths = d.TermNumberOfMonths,
-                                    PrincipalAmount = d.PrincipalAmount,
-                                    InterestId = d.InterestId,
-                                    Interest = d.MstInterest.Interest,
-                                    InterestPercentage = d.InterestPercentage,
-                                    InterestAmount = d.InterestAmount,
-                                    LoanAmount = d.LoanAmount,
-                                    PreviousAmount = d.PreviousAmount,
-                                    Amount = d.Amount,
-                                    NetAmount = d.NetAmount,
-                                    AmortizationAmount = d.AmortizationAmount,
-                                    PaidAmount = d.PaidAmount,
-                                    PenaltyAmount = d.PenaltyAmount,
-                                    BalanceAmount = d.BalanceAmount,
-                                    Remarks = d.Remarks,
-                                    Status = d.Status,
-                                    IsLocked = d.IsLocked,
-                                    CreatedByUserId = d.CreatedByUserId,
-                                    CreatedByUser = d.MstUser.FullName,
-                                    CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
-                                    UpdatedByUserId = d.UpdatedByUserId,
-                                    UpdatedByUser = d.MstUser1.FullName,
-                                    UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
-                                };
-
-                    return loans.OrderByDescending(d => d.Id).ToList();
+                    return new List<ApiModels.TrnLoanModel>();
                 }
             }
             else
@@ -180,8 +184,6 @@ namespace LendingSystem.ApiControllers
                            InterestPercentage = d.InterestPercentage,
                            InterestAmount = d.InterestAmount,
                            LoanAmount = d.LoanAmount,
-                           PreviousAmount = d.PreviousAmount,
-                           Amount = d.Amount,
                            NetAmount = d.NetAmount,
                            AmortizationAmount = d.AmortizationAmount,
                            PaidAmount = d.PaidAmount,
@@ -243,29 +245,26 @@ namespace LendingSystem.ApiControllers
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Sorry, you cannot loan when the principal amount exceeds at " + term.FirstOrDefault().LimitAmount.ToString("#,##0.00"));
                 }
 
+                var getLastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id)
+                                  where d.CustomerId == customer.FirstOrDefault().Id
+                                  && (
+                                        d.Status == "Open" ||
+                                        d.Status == "Submitted" ||
+                                        d.Status == "Approved"
+                                     )
+                                  && d.BalanceAmount > 0
+                                  select d;
+
+                if (getLastLoan.Any())
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot proceed if you have open or pending transactions.");
+                }
+
                 Decimal principalAmount = objLoanModel.PrincipalAmount;
                 Decimal interestAmount = principalAmount * (term.FirstOrDefault().MstInterest.Percentage / 100);
                 Decimal loanAmount = principalAmount + interestAmount;
-
-                Decimal previousAmount = 0;
-                var customerLastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id)
-                                       where d.CustomerId == customer.FirstOrDefault().Id
-                                       && d.Status == "Current"
-                                       select d;
-
-                if (customerLastLoan.Any())
-                {
-                    previousAmount = customerLastLoan.FirstOrDefault().BalanceAmount;
-                }
-
-                if (previousAmount > principalAmount)
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Sorry, you cannot loan because you still have previous balance.");
-                }
-
-                Decimal amount = loanAmount - previousAmount;
-                Decimal netAmount = (principalAmount - previousAmount) - interestAmount;
-                Decimal balanceAmount = principalAmount - previousAmount;
+                Decimal netAmount = principalAmount - interestAmount;
+                Decimal balanceAmount = principalAmount;
                 Decimal amortizationAmount = term.FirstOrDefault().NumberOfMonths > 0 ? principalAmount / term.FirstOrDefault().NumberOfMonths : principalAmount;
 
                 Data.TrnLoan newLoan = new Data.TrnLoan()
@@ -281,15 +280,13 @@ namespace LendingSystem.ApiControllers
                     InterestPercentage = term.FirstOrDefault().MstInterest.Percentage,
                     InterestAmount = interestAmount,
                     LoanAmount = loanAmount,
-                    PreviousAmount = previousAmount,
-                    Amount = amount,
                     NetAmount = netAmount,
                     AmortizationAmount = amortizationAmount,
                     PaidAmount = 0,
                     PenaltyAmount = 0,
                     BalanceAmount = balanceAmount,
-                    Remarks = " ",
-                    Status = "Draft",
+                    Remarks = "Your loan application is ready to process. To continue your transactions, you can click Submit button to proceed.",
+                    Status = "Open",
                     IsLocked = true,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
                     CreatedDateTime = DateTime.Now,
@@ -308,8 +305,94 @@ namespace LendingSystem.ApiControllers
             }
         }
 
-        [Authorize, HttpPost, Route("api/current/loan/update")]
-        public HttpResponseMessage UpdateLoan(ApiModels.TrnLoanModel objLoanModel)
+        [Authorize, HttpPut, Route("api/current/loan/submit/{id}")]
+        public HttpResponseMessage SubmitLoan(String id, ApiModels.TrnLoanModel objLoanModel)
+        {
+            try
+            {
+                var currentUser = from d in db.MstUsers
+                                  where d.AspNetUserId == User.Identity.GetUserId()
+                                  select d;
+
+                var loan = from d in db.TrnLoans
+                           where d.Id == Convert.ToInt32(id)
+                           select d;
+
+                if (loan.Any())
+                {
+                    if (loan.FirstOrDefault().Status == "Submitted")
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already submitted.");
+                    }
+
+                    if (loan.FirstOrDefault().Status == "Cancelled")
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot submit when the application has been cancelled.");
+                    }
+
+                    var submitLoan = loan.FirstOrDefault();
+                    submitLoan.Status = "Submitted";
+                    submitLoan.Remarks = "Waiting for approval";
+                    db.SubmitChanges();
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize, HttpPut, Route("api/current/loan/cancel/{id}")]
+        public HttpResponseMessage CancelLoan(String id, ApiModels.TrnLoanModel objLoanModel)
+        {
+            try
+            {
+                var currentUser = from d in db.MstUsers
+                                  where d.AspNetUserId == User.Identity.GetUserId()
+                                  select d;
+
+                var loan = from d in db.TrnLoans
+                           where d.Id == Convert.ToInt32(id)
+                           select d;
+
+                if (loan.Any())
+                {
+                    if (loan.FirstOrDefault().Status == "Cancelled")
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
+                    }
+
+                    if (loan.FirstOrDefault().Status == "Open")
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot cancel open or pending transactions.");
+                    }
+
+                    var submitLoan = loan.FirstOrDefault();
+                    submitLoan.Status = "Cancelled";
+                    submitLoan.Remarks = "This loan has been cancelled.";
+                    db.SubmitChanges();
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize, HttpPut, Route("api/current/loan/update/{id}")]
+        public HttpResponseMessage UpdateLoan(String id, ApiModels.TrnLoanModel objLoanModel)
         {
             try
             {
@@ -347,51 +430,48 @@ namespace LendingSystem.ApiControllers
 
                 if (objLoanModel.PrincipalAmount > term.FirstOrDefault().LimitAmount)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Sorry, you cannot loan when the principal amount exceeds at " + term.FirstOrDefault().LimitAmount.ToString("#,##0.00"));
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Sorry, you cannot loan when the principal amount exceeds at " + term.FirstOrDefault().LimitAmount.ToString("#,##0.00"));
                 }
 
                 Decimal principalAmount = objLoanModel.PrincipalAmount;
-                Decimal interestAmount = principalAmount * term.FirstOrDefault().MstInterest.Percentage;
+                Decimal interestAmount = principalAmount * (term.FirstOrDefault().MstInterest.Percentage / 100);
                 Decimal loanAmount = principalAmount + interestAmount;
-                Decimal previousAmount = 0;
-                Decimal amount = loanAmount - previousAmount;
                 Decimal netAmount = principalAmount - interestAmount;
                 Decimal balanceAmount = principalAmount;
                 Decimal amortizationAmount = term.FirstOrDefault().NumberOfMonths > 0 ? principalAmount / term.FirstOrDefault().NumberOfMonths : principalAmount;
 
-                Data.TrnLoan newLoan = new Data.TrnLoan()
+                var loan = from d in db.TrnLoans
+                           where d.Id == Convert.ToInt32(id)
+                           select d;
+
+                if (loan.Any())
                 {
-                    LoanNumber = loanNumber,
-                    LoanDate = DateTime.Today,
-                    ManualLoanNumber = loanNumber,
-                    CustomerId = customer.FirstOrDefault().Id,
-                    TermId = term.FirstOrDefault().Id,
-                    TermNumberOfMonths = term.FirstOrDefault().NumberOfMonths,
-                    PrincipalAmount = principalAmount,
-                    InterestId = term.FirstOrDefault().DefaultInterestId,
-                    InterestPercentage = term.FirstOrDefault().MstInterest.Percentage,
-                    InterestAmount = interestAmount,
-                    LoanAmount = loanAmount,
-                    PreviousAmount = previousAmount,
-                    Amount = amount,
-                    NetAmount = netAmount,
-                    AmortizationAmount = amortizationAmount,
-                    PaidAmount = 0,
-                    PenaltyAmount = 0,
-                    BalanceAmount = balanceAmount,
-                    Remarks = " ",
-                    Status = "Loan Application",
-                    IsLocked = true,
-                    CreatedByUserId = currentUser.FirstOrDefault().Id,
-                    CreatedDateTime = DateTime.Now,
-                    UpdatedByUserId = currentUser.FirstOrDefault().Id,
-                    UpdatedDateTime = DateTime.Now
-                };
+                    if (loan.FirstOrDefault().Status == "Submitted")
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot change when loan application is already submitted.");
+                    }
 
-                db.TrnLoans.InsertOnSubmit(newLoan);
-                db.SubmitChanges();
+                    var submitLoan = loan.FirstOrDefault();
+                    submitLoan.TermId = term.FirstOrDefault().Id;
+                    submitLoan.TermNumberOfMonths = term.FirstOrDefault().NumberOfMonths;
+                    submitLoan.PrincipalAmount = principalAmount;
+                    submitLoan.InterestId = term.FirstOrDefault().DefaultInterestId;
+                    submitLoan.InterestPercentage = term.FirstOrDefault().MstInterest.Percentage;
+                    submitLoan.InterestAmount = interestAmount;
+                    submitLoan.LoanAmount = loanAmount;
+                    submitLoan.NetAmount = netAmount;
+                    submitLoan.AmortizationAmount = amortizationAmount;
+                    submitLoan.BalanceAmount = balanceAmount;
+                    submitLoan.UpdatedByUserId = currentUser.FirstOrDefault().Id;
+                    submitLoan.UpdatedDateTime = DateTime.Now;
+                    db.SubmitChanges();
 
-                return Request.CreateResponse(HttpStatusCode.OK);
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
+                }
             }
             catch (Exception ex)
             {
@@ -410,7 +490,7 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    if (loan.FirstOrDefault().Status == "Draft")
+                    if (loan.FirstOrDefault().Status == "Open")
                     {
                         var deleteLoan = loan.FirstOrDefault();
                         db.TrnLoans.DeleteOnSubmit(deleteLoan);
@@ -420,7 +500,7 @@ namespace LendingSystem.ApiControllers
                     }
                     else
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Loan history cannot be deleted.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Only open loans can be deleted.");
                     }
                 }
                 else
