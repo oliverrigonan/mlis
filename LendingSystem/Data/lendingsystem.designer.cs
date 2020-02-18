@@ -364,6 +364,16 @@ namespace LendingSystem.Data
 		
 		private string _Status;
 		
+		private bool _IsSubmitted;
+		
+		private bool _IsApproved;
+		
+		private bool _IsFullyPaid;
+		
+		private bool _IsCancelled;
+		
+		private bool _IsClosed;
+		
 		private bool _IsLocked;
 		
 		private int _CreatedByUserId;
@@ -428,6 +438,16 @@ namespace LendingSystem.Data
     partial void OnRemarksChanged();
     partial void OnStatusChanging(string value);
     partial void OnStatusChanged();
+    partial void OnIsSubmittedChanging(bool value);
+    partial void OnIsSubmittedChanged();
+    partial void OnIsApprovedChanging(bool value);
+    partial void OnIsApprovedChanged();
+    partial void OnIsFullyPaidChanging(bool value);
+    partial void OnIsFullyPaidChanged();
+    partial void OnIsCancelledChanging(bool value);
+    partial void OnIsCancelledChanged();
+    partial void OnIsClosedChanging(bool value);
+    partial void OnIsClosedChanged();
     partial void OnIsLockedChanging(bool value);
     partial void OnIsLockedChanged();
     partial void OnCreatedByUserIdChanging(int value);
@@ -839,6 +859,106 @@ namespace LendingSystem.Data
 					this._Status = value;
 					this.SendPropertyChanged("Status");
 					this.OnStatusChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSubmitted", DbType="Bit NOT NULL")]
+		public bool IsSubmitted
+		{
+			get
+			{
+				return this._IsSubmitted;
+			}
+			set
+			{
+				if ((this._IsSubmitted != value))
+				{
+					this.OnIsSubmittedChanging(value);
+					this.SendPropertyChanging();
+					this._IsSubmitted = value;
+					this.SendPropertyChanged("IsSubmitted");
+					this.OnIsSubmittedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsApproved", DbType="Bit NOT NULL")]
+		public bool IsApproved
+		{
+			get
+			{
+				return this._IsApproved;
+			}
+			set
+			{
+				if ((this._IsApproved != value))
+				{
+					this.OnIsApprovedChanging(value);
+					this.SendPropertyChanging();
+					this._IsApproved = value;
+					this.SendPropertyChanged("IsApproved");
+					this.OnIsApprovedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsFullyPaid", DbType="Bit NOT NULL")]
+		public bool IsFullyPaid
+		{
+			get
+			{
+				return this._IsFullyPaid;
+			}
+			set
+			{
+				if ((this._IsFullyPaid != value))
+				{
+					this.OnIsFullyPaidChanging(value);
+					this.SendPropertyChanging();
+					this._IsFullyPaid = value;
+					this.SendPropertyChanged("IsFullyPaid");
+					this.OnIsFullyPaidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCancelled", DbType="Bit NOT NULL")]
+		public bool IsCancelled
+		{
+			get
+			{
+				return this._IsCancelled;
+			}
+			set
+			{
+				if ((this._IsCancelled != value))
+				{
+					this.OnIsCancelledChanging(value);
+					this.SendPropertyChanging();
+					this._IsCancelled = value;
+					this.SendPropertyChanged("IsCancelled");
+					this.OnIsCancelledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsClosed", DbType="Bit NOT NULL")]
+		public bool IsClosed
+		{
+			get
+			{
+				return this._IsClosed;
+			}
+			set
+			{
+				if ((this._IsClosed != value))
+				{
+					this.OnIsClosedChanging(value);
+					this.SendPropertyChanging();
+					this._IsClosed = value;
+					this.SendPropertyChanged("IsClosed");
+					this.OnIsClosedChanged();
 				}
 			}
 		}

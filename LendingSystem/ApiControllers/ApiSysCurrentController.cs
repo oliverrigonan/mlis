@@ -71,9 +71,7 @@ namespace LendingSystem.ApiControllers
                 {
                     var loans = from d in db.TrnLoans
                                 where d.CustomerId == customer.FirstOrDefault().Id
-                                && (d.Status == "Open" ||
-                                    d.Status == "Submitted" ||
-                                    d.Status == "Approved")
+                                && d.IsClosed == false
                                 select new ApiModels.TrnLoanModel
                                 {
                                     Id = d.Id,
@@ -98,6 +96,11 @@ namespace LendingSystem.ApiControllers
                                     BalanceAmount = d.BalanceAmount,
                                     Remarks = d.Remarks,
                                     Status = d.Status,
+                                    IsSubmitted = d.IsSubmitted,
+                                    IsApproved = d.IsApproved,
+                                    IsFullyPaid = d.IsFullyPaid,
+                                    IsCancelled = d.IsCancelled,
+                                    IsClosed = d.IsClosed,
                                     IsLocked = d.IsLocked,
                                     CreatedByUserId = d.CreatedByUserId,
                                     CreatedByUser = d.MstUser.FullName,
@@ -113,9 +116,7 @@ namespace LendingSystem.ApiControllers
                 {
                     var loans = from d in db.TrnLoans
                                 where d.CustomerId == customer.FirstOrDefault().Id
-                                && d.Status != "Open"
-                                && d.Status != "Submitted"
-                                && d.Status != "Approved"
+                                && d.IsClosed == true
                                 select new ApiModels.TrnLoanModel
                                 {
                                     Id = d.Id,
@@ -140,6 +141,11 @@ namespace LendingSystem.ApiControllers
                                     BalanceAmount = d.BalanceAmount,
                                     Remarks = d.Remarks,
                                     Status = d.Status,
+                                    IsSubmitted = d.IsSubmitted,
+                                    IsApproved = d.IsApproved,
+                                    IsFullyPaid = d.IsFullyPaid,
+                                    IsCancelled = d.IsCancelled,
+                                    IsClosed = d.IsClosed,
                                     IsLocked = d.IsLocked,
                                     CreatedByUserId = d.CreatedByUserId,
                                     CreatedByUser = d.MstUser.FullName,
@@ -191,6 +197,11 @@ namespace LendingSystem.ApiControllers
                            BalanceAmount = d.BalanceAmount,
                            Remarks = d.Remarks,
                            Status = d.Status,
+                           IsSubmitted = d.IsSubmitted,
+                           IsApproved = d.IsApproved,
+                           IsFullyPaid = d.IsFullyPaid,
+                           IsCancelled = d.IsCancelled,
+                           IsClosed = d.IsClosed,
                            IsLocked = d.IsLocked,
                            CreatedByUserId = d.CreatedByUserId,
                            CreatedByUser = d.MstUser.FullName,
@@ -247,12 +258,8 @@ namespace LendingSystem.ApiControllers
 
                 var getLastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id)
                                   where d.CustomerId == customer.FirstOrDefault().Id
-                                  && (
-                                        d.Status == "Open" ||
-                                        d.Status == "Submitted" ||
-                                        d.Status == "Approved"
-                                     )
                                   && d.BalanceAmount > 0
+                                  && d.IsClosed == false
                                   select d;
 
                 if (getLastLoan.Any())
@@ -285,8 +292,13 @@ namespace LendingSystem.ApiControllers
                     PaidAmount = 0,
                     PenaltyAmount = 0,
                     BalanceAmount = balanceAmount,
-                    Remarks = "Your loan application is ready to process. To continue your transactions, you can click Submit button to proceed.",
+                    Remarks = "Your loan application is ready to process. To continue this transaction, please click the Submit button to proceed.",
                     Status = "Open",
+                    IsSubmitted = false,
+                    IsApproved = false,
+                    IsFullyPaid = false,
+                    IsCancelled = false,
+                    IsClosed = false,
                     IsLocked = true,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
                     CreatedDateTime = DateTime.Now,
@@ -298,92 +310,6 @@ namespace LendingSystem.ApiControllers
                 db.SubmitChanges();
 
                 return Request.CreateResponse(HttpStatusCode.OK, newLoan.Id);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-        [Authorize, HttpPut, Route("api/current/loan/submit/{id}")]
-        public HttpResponseMessage SubmitLoan(String id, ApiModels.TrnLoanModel objLoanModel)
-        {
-            try
-            {
-                var currentUser = from d in db.MstUsers
-                                  where d.AspNetUserId == User.Identity.GetUserId()
-                                  select d;
-
-                var loan = from d in db.TrnLoans
-                           where d.Id == Convert.ToInt32(id)
-                           select d;
-
-                if (loan.Any())
-                {
-                    if (loan.FirstOrDefault().Status == "Submitted")
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already submitted.");
-                    }
-
-                    if (loan.FirstOrDefault().Status == "Cancelled")
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot submit when the application has been cancelled.");
-                    }
-
-                    var submitLoan = loan.FirstOrDefault();
-                    submitLoan.Status = "Submitted";
-                    submitLoan.Remarks = "Waiting for approval";
-                    db.SubmitChanges();
-
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-        [Authorize, HttpPut, Route("api/current/loan/cancel/{id}")]
-        public HttpResponseMessage CancelLoan(String id, ApiModels.TrnLoanModel objLoanModel)
-        {
-            try
-            {
-                var currentUser = from d in db.MstUsers
-                                  where d.AspNetUserId == User.Identity.GetUserId()
-                                  select d;
-
-                var loan = from d in db.TrnLoans
-                           where d.Id == Convert.ToInt32(id)
-                           select d;
-
-                if (loan.Any())
-                {
-                    if (loan.FirstOrDefault().Status == "Cancelled")
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
-                    }
-
-                    if (loan.FirstOrDefault().Status == "Open")
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot cancel open or pending transactions.");
-                    }
-
-                    var submitLoan = loan.FirstOrDefault();
-                    submitLoan.Status = "Cancelled";
-                    submitLoan.Remarks = "This loan has been cancelled.";
-                    db.SubmitChanges();
-
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
-                }
             }
             catch (Exception ex)
             {
@@ -446,9 +372,19 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    if (loan.FirstOrDefault().Status == "Submitted")
+                    if (loan.FirstOrDefault().IsSubmitted == true)
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot change when loan application is already submitted.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot update submitted loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsCancelled == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot update cancelled loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsClosed == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
                     }
 
                     var submitLoan = loan.FirstOrDefault();
@@ -479,6 +415,105 @@ namespace LendingSystem.ApiControllers
             }
         }
 
+        [Authorize, HttpPut, Route("api/current/loan/submit/{id}")]
+        public HttpResponseMessage SubmitLoan(String id, ApiModels.TrnLoanModel objLoanModel)
+        {
+            try
+            {
+                var currentUser = from d in db.MstUsers
+                                  where d.AspNetUserId == User.Identity.GetUserId()
+                                  select d;
+
+                var loan = from d in db.TrnLoans
+                           where d.Id == Convert.ToInt32(id)
+                           select d;
+
+                if (loan.Any())
+                {
+                    if (loan.FirstOrDefault().IsSubmitted == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already submitted.");
+                    }
+
+                    if (loan.FirstOrDefault().IsCancelled == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot submit cancelled loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsClosed == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
+                    }
+
+                    var submitLoan = loan.FirstOrDefault();
+                    submitLoan.IsSubmitted = true;
+                    submitLoan.Status = "Submitted";
+                    submitLoan.Remarks = "Your loan application has been successfully submitted for an approval. You will receive an email once your loan application has been approved.";
+                    db.SubmitChanges();
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize, HttpPut, Route("api/current/loan/cancel/{id}")]
+        public HttpResponseMessage CancelLoan(String id, ApiModels.TrnLoanModel objLoanModel)
+        {
+            try
+            {
+                var currentUser = from d in db.MstUsers
+                                  where d.AspNetUserId == User.Identity.GetUserId()
+                                  select d;
+
+                var loan = from d in db.TrnLoans
+                           where d.Id == Convert.ToInt32(id)
+                           select d;
+
+                if (loan.Any())
+                {
+                    if (loan.FirstOrDefault().IsSubmitted != true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot cancel unsubmitted loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsCancelled == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
+                    }
+
+                    if (loan.FirstOrDefault().IsClosed == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
+                    }
+
+                    var cancelLoan = loan.FirstOrDefault();
+                    cancelLoan.IsCancelled = true;
+                    cancelLoan.IsClosed = true;
+                    cancelLoan.Status = "Cancelled";
+                    cancelLoan.Remarks = "Your loan application has been cancelled.";
+                    db.SubmitChanges();
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         [Authorize, HttpDelete, Route("api/current/loan/delete/{id}")]
         public HttpResponseMessage DeleteLoan(String id)
         {
@@ -490,53 +525,26 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    if (loan.FirstOrDefault().Status == "Open")
+                    if (loan.FirstOrDefault().IsSubmitted == true)
                     {
-                        var deleteLoan = loan.FirstOrDefault();
-                        db.TrnLoans.DeleteOnSubmit(deleteLoan);
-                        db.SubmitChanges();
-
-                        return Request.CreateResponse(HttpStatusCode.OK);
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot delete submitted loan application.");
                     }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Only open loans can be deleted.");
-                    }
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
 
-        [Authorize, HttpDelete, Route("api/current/loan/cancel/{id}")]
-        public HttpResponseMessage CancelLoan(String id)
-        {
-            try
-            {
-                var loan = from d in db.TrnLoans
-                           where d.Id == Convert.ToInt32(id)
-                           select d;
-
-                if (loan.Any())
-                {
-                    if (loan.FirstOrDefault().Status == "Cancelled")
+                    if (loan.FirstOrDefault().IsCancelled == true)
                     {
                         return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
                     }
-                    else
-                    {
-                        var cancelLoan = loan.FirstOrDefault();
-                        cancelLoan.Status = "Cancelled";
-                        db.SubmitChanges();
 
-                        return Request.CreateResponse(HttpStatusCode.OK);
+                    if (loan.FirstOrDefault().IsClosed == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
                     }
+
+                    var deleteLoan = loan.FirstOrDefault();
+                    db.TrnLoans.DeleteOnSubmit(deleteLoan);
+                    db.SubmitChanges();
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
                 }
                 else
                 {

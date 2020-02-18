@@ -166,15 +166,14 @@
                 if (results.length > 0) {
                     for (var i = 0; i < results.length; i++) {
                         loanListObservableArray.push({
-                            ButtonView: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickViewLoan()'>View</button>",
+                            ButtonOpen: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickOpenLoan()'>View</button>",
                             ButtonApprove: "<button class='btn btn-success btn-xs btn-block' onclick='buttonClickApproveLoan()'>Approve</button>",
                             ButtonDisapproved: "<button class='btn btn-danger btn-xs btn-block' onclick='buttonClickDisapproveLoan()'>Disapprove</button>",
                             Id: results[i]["Id"],
                             LoanNumber: results[i]["LoanNumber"],
                             LoanDate: results[i]["LoanDate"],
-                            Term: results[i]["Term"],
                             TermId: results[i]["TermId"],
-                            Customer: results[i]["Customer"],
+                            Term: results[i]["Term"],
                             PrincipalAmount: results[i]["PrincipalAmount"],
                             PrincipalAmountDisplay: parseFloat(results[i]["PrincipalAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             InterestId: results[i]["InterestId"],
@@ -185,19 +184,16 @@
                             InterestAmountDisplay: parseFloat(results[i]["InterestAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             LoanAmount: results[i]["LoanAmount"],
                             LoanAmountDisplay: parseFloat(results[i]["LoanAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-                            PreviousBalanceAmount: results[i]["PreviousBalanceAmount"],
-                            PreviousBalanceAmountDisplay: parseFloat(results[i]["PreviousBalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-                            CollectibleAmount: results[i]["CollectibleAmount"],
-                            CollectibleAmountDisplay: parseFloat(results[i]["CollectibleAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-                            ClaimAmount: results[i]["ClaimAmount"],
-                            ClaimAmountDisplay: parseFloat(results[i]["ClaimAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            NetAmount: results[i]["NetAmount"],
+                            NetAmountDisplay: parseFloat(results[i]["NetAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            AmortizationAmount: results[i]["AmortizationAmount"],
+                            AmortizationAmountDisplay: parseFloat(results[i]["AmortizationAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             PaidAmount: results[i]["PaidAmount"],
                             PaidAmountDisplay: parseFloat(results[i]["PaidAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             PenaltyAmount: results[i]["PenaltyAmount"],
                             PenaltyAmountDisplay: parseFloat(results[i]["PenaltyAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             BalanceAmount: results[i]["BalanceAmount"],
                             BalanceAmountDisplay: parseFloat(results[i]["BalanceAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-                            IsAdvanceInterestDeduction: results[i]["IsAdvanceInterestDeduction"],
                             Remarks: results[i]["Remarks"],
                             Status: results[i]["Status"]
                         });
@@ -218,7 +214,7 @@
             columns: [
                 {
                     "header": "View",
-                    "binding": "ButtonView",
+                    "binding": "ButtonOpen",
                     "width": 70,
                     "align": "center",
                     "allowResizing": false,
@@ -256,12 +252,6 @@
                     "width": 90
                 },
                 {
-                    "header": "Customer",
-                    "binding": "Customer",
-                    "allowSorting": true,
-                    "width": 200
-                },
-                {
                     "header": "Term",
                     "binding": "Term",
                     "allowSorting": true,
@@ -276,30 +266,10 @@
                 },
                 {
                     "header": "Interest",
-                    "binding": "Interest",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Rate",
-                    "binding": "InterestPercentageDisplay",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Interest Amount",
                     "binding": "InterestAmountDisplay",
                     "allowSorting": true,
                     "align": "right",
                     "width": 100
-                },
-                {
-                    "header": "A",
-                    "binding": "IsAdvanceInterestDeduction",
-                    "allowSorting": true,
-                    "width": 50
                 },
                 {
                     "header": "Loan",
@@ -309,22 +279,8 @@
                     "width": 100
                 },
                 {
-                    "header": "Previous",
-                    "binding": "PreviousBalanceAmountDisplay",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Collectible",
-                    "binding": "CollectibleAmountDisplay",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Claim",
-                    "binding": "ClaimAmountDisplay",
+                    "header": "Net",
+                    "binding": "NetAmountDisplay",
                     "allowSorting": true,
                     "align": "right",
                     "width": 100
@@ -355,13 +311,7 @@
                     "binding": "Status",
                     "allowSorting": true,
                     "width": 100
-                },
-                {
-                    "header": "Remarks",
-                    "binding": "Remarks",
-                    "allowSorting": true,
-                    "width": 200
-                },
+                }
             ],
             autoGenerateColumns: false,
             itemsSource: wijmoCollectionViewLoanList,
@@ -482,7 +432,7 @@
         });
     }
 
-    function buttonClickViewLoan() {
+    function buttonClickOpenLoan() {
         document.getElementById("modalTitle").innerHTML = "View Loan";
 
         $("#modalLoanDetailForm").modal({
@@ -538,10 +488,8 @@
 
         var statusObservableArray = new wijmo.collections.ObservableArray();
         statusObservableArray.push("All");
-        statusObservableArray.push("Pending");
-        statusObservableArray.push("Approved");
-        statusObservableArray.push("Disapproved");
-        statusObservableArray.push("Cancelled");
+        statusObservableArray.push("Open");
+        statusObservableArray.push("Close");
 
         wijmoComboboxStatus = new wijmo.input.ComboBox('#wijmoComboboxStatus', {
             placeholder: "Select Status",

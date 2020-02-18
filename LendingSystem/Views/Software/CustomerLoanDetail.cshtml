@@ -142,20 +142,40 @@
 </div>
 
 <div class="modal fae" id="modalLoanSubmitForm" role="dialog">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="modalTitle">Submit Loan</h4>
             </div>
             <div class="modal-body">
-                You are about to submit this loan for approval. Once this loan is approved, you will receive an email for instruction and requirement details.
-
+                <p class="lead"><b>TERMS AND CONDITIONS</b></p>
+                <p>1. LENDING  company is duly organized and existing under and by virtue of the laws of the Philippines, with principal office address at cebu eastern college.</p>
+                <p>2. AMOUNT OF LOAN. The LENDER hereby extends to the BORROWER a cash loan.</p>
+                <p>3. INTEREST. The LOAN shall bear interest depending by the selected term.</p>
+                <p>4. TERM. The BORROWER hereby agrees to pay the LENDER the LOAN plus the Interest Rate, according by selected term counted from the date of receipt of LOAN, or any portion thereof.</p>
+                <p>5. PRE-PAYMENT. The BORROWER may fully pre-pay the LOAN, including the interests before the DUE DATE.</p>
+                <p>7. LOAN TERM EXTENSION. The Loan Term may be extended subject to additional terms and conditions set by the LENDER, such as, but not limited to, the following:</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.1. The BORROWER may request for a Loan Term extension from the LENDER on or before the DUE DATE;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.2. The BORROWER must have paid at least: (i) three percent (3%) of the LOAN with the term of One (1) calendar month; (ii) six percent (6%) of the LOAN with the term of two (2) calendar month;(iii) nine percent (9%) of the LOAN with the term of three (3) calendar month;(iv) twilve percent (12%) of the LOAN with the term of four (4) calendar month;(v)  (15%) of the LOAN with the term of five(5) calendar month; and (vi)(18%) of the LOAN with the term of six(six) months.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.3. Every request for Loan is subject for approval.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.4. BORROWER shall not pay processing fee.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.5. The Loan Term extension shall commence from the date the BORROWER complies with all the terms and conditions set forth in this Section; and</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.6. BORROWER may request for additional Loan Term extension/s over and above the initial Loan Term extension subject to payment of forty percent (18%) of the LOAN with any initial term and subject to the same terms and conditions as imposed for the initial Loan Term extension under Clauses 7.1, 7.3 to 7.5 hereof.</p>
+                <p>8. LOAN RELEASE. The LOAN shall be released to the BORROWER through pick up in the office. BORROWER hereby acknowledges receipt of the LOAN upon release.</p>
+                <p>9. PAYMENT. The Borrower hereby agrees to pay the LOAN, including applicable  interests, in full, on or before the DUE DATE, without need of further notice or demand from the LENDER. Should the BORROWER fails to pay the LOAN on the DUE DATE for the first time, the LENDER may grant the BORROWER a one-time grace period of three (3) days within which to pay the LOAN, or the balance thereof.</p>
+                <p>10. APPLICATION OF PAYMENT. Any payment by the BORROWER to the LENDER shall be applied in the following order:</p>
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Against reasonable costs, expenses and indemnities due hereunder, if any,<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Against Loan Term Extension Fee/s, if any;<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Against the principal amount of LOAN; and<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Against Late Payment Fee/s, if any.<br />
+                </p>
                 <br />
                 <br />
                 Are you sure you want to submit this application?
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="buttonClickConfirmSubmitLoan()">Submit</button>
+                <button class="btn btn-primary" onclick="buttonClickConfirmSubmitLoan()">Accept and Submit</button>
                 <button class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -253,21 +273,20 @@
                         document.getElementById("inputStatus").value = results.Status;
                         document.getElementById("spanRemarks").innerHTML = results.Remarks;
 
-                        if (results.Status == "Open") {
-                            document.getElementById("buttonClickCancel").disabled = true;
-                            document.getElementById("buttonClickPrint").disabled = true;
-                        }
-
-                        if (results.Status == "Submitted") {
-                            document.getElementById("buttonClickSubmit").disabled = true;
-                            document.getElementById("buttonClickEdit").disabled = true;
-                        }
-
-                        if (results.Status == "Cancelled") {
+                        if (results.IsCancelled == true) {
                             document.getElementById("buttonClickSubmit").disabled = true;
                             document.getElementById("buttonClickCancel").disabled = true;
                             document.getElementById("buttonClickPrint").disabled = true;
                             document.getElementById("buttonClickEdit").disabled = true;
+                        } else {
+                            if (results.IsSubmitted == true) {
+                                document.getElementById("buttonClickSubmit").disabled = true;
+                                document.getElementById("buttonClickEdit").disabled = true;
+                            }
+                            else {
+                                document.getElementById("buttonClickCancel").disabled = true;
+                                document.getElementById("buttonClickPrint").disabled = true;
+                            }
                         }
 
                     } else {
