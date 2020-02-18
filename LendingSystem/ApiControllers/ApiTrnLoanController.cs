@@ -80,47 +80,106 @@ namespace LendingSystem.ApiControllers
             return users.ToList();
         }
 
-        [Authorize, HttpGet, Route("api/loan/list/{startDate}/{endDate}/{status}")]
-        public List<ApiModels.TrnLoanModel> LoanList(String startDate, String endDate, String status)
+        [Authorize, HttpGet, Route("api/loan/list/{startDate}/{endDate}/{transactionType}")]
+        public List<ApiModels.TrnLoanModel> LoanList(String startDate, String endDate, String transactionType)
         {
-            var loans = from d in db.TrnLoans
-                        where d.LoanDate >= Convert.ToDateTime(startDate)
-                        && d.LoanDate <= Convert.ToDateTime(endDate)
-                        && d.Status != "Open"
-                        && d.Status != "Cancelled"
-                        select new ApiModels.TrnLoanModel
-                        {
-                            Id = d.Id,
-                            LoanNumber = d.LoanNumber,
-                            LoanDate = d.LoanDate.ToShortDateString(),
-                            ManualLoanNumber = d.ManualLoanNumber,
-                            CustomerId = d.CustomerId,
-                            Customer = d.MstCustomer.FullName,
-                            TermId = d.TermId,
-                            Term = d.LoanNumber,
-                            TermNumberOfMonths = d.TermNumberOfMonths,
-                            PrincipalAmount = d.PrincipalAmount,
-                            InterestId = d.InterestId,
-                            Interest = d.MstInterest.Interest,
-                            InterestPercentage = d.InterestPercentage,
-                            InterestAmount = d.InterestAmount,
-                            LoanAmount = d.LoanAmount,
-                            NetAmount = d.NetAmount,
-                            PaidAmount = d.PaidAmount,
-                            PenaltyAmount = d.PenaltyAmount,
-                            BalanceAmount = d.BalanceAmount,
-                            Remarks = d.Remarks,
-                            Status = d.Status,
-                            IsLocked = d.IsLocked,
-                            CreatedByUserId = d.CreatedByUserId,
-                            CreatedByUser = d.MstUser.FullName,
-                            CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
-                            UpdatedByUserId = d.UpdatedByUserId,
-                            UpdatedByUser = d.MstUser1.FullName,
-                            UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
-                        };
+            Boolean isClosed = false;
+            if (transactionType == "Close")
+            {
+                isClosed = true;
+            }
 
-            return loans.ToList();
+            if (transactionType == "All")
+            {
+                var loans = from d in db.TrnLoans
+                            where d.LoanDate >= Convert.ToDateTime(startDate)
+                            && d.LoanDate <= Convert.ToDateTime(endDate)
+                            select new ApiModels.TrnLoanModel
+                            {
+                                Id = d.Id,
+                                LoanNumber = d.LoanNumber,
+                                LoanDate = d.LoanDate.ToShortDateString(),
+                                ManualLoanNumber = d.ManualLoanNumber,
+                                CustomerId = d.CustomerId,
+                                Customer = d.MstCustomer.FullName,
+                                TermId = d.TermId,
+                                Term = d.MstTerm.Term,
+                                TermNumberOfMonths = d.TermNumberOfMonths,
+                                PrincipalAmount = d.PrincipalAmount,
+                                InterestId = d.InterestId,
+                                Interest = d.MstInterest.Interest,
+                                InterestPercentage = d.InterestPercentage,
+                                InterestAmount = d.InterestAmount,
+                                LoanAmount = d.LoanAmount,
+                                NetAmount = d.NetAmount,
+                                AmortizationAmount = d.AmortizationAmount,
+                                PaidAmount = d.PaidAmount,
+                                PenaltyAmount = d.PenaltyAmount,
+                                BalanceAmount = d.BalanceAmount,
+                                Remarks = d.Remarks,
+                                Status = d.Status,
+                                IsSubmitted = d.IsSubmitted,
+                                IsApproved = d.IsApproved,
+                                IsFullyPaid = d.IsFullyPaid,
+                                IsCancelled = d.IsCancelled,
+                                IsClosed = d.IsClosed,
+                                IsLocked = d.IsLocked,
+                                CreatedByUserId = d.CreatedByUserId,
+                                CreatedByUser = d.MstUser.FullName,
+                                CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
+                                UpdatedByUserId = d.UpdatedByUserId,
+                                UpdatedByUser = d.MstUser1.FullName,
+                                UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                            };
+
+                return loans.ToList();
+            }
+            else
+            {
+                var loans = from d in db.TrnLoans
+                            where d.LoanDate >= Convert.ToDateTime(startDate)
+                            && d.LoanDate <= Convert.ToDateTime(endDate)
+                            && d.IsClosed == isClosed
+                            select new ApiModels.TrnLoanModel
+                            {
+                                Id = d.Id,
+                                LoanNumber = d.LoanNumber,
+                                LoanDate = d.LoanDate.ToShortDateString(),
+                                ManualLoanNumber = d.ManualLoanNumber,
+                                CustomerId = d.CustomerId,
+                                Customer = d.MstCustomer.FullName,
+                                TermId = d.TermId,
+                                Term = d.MstTerm.Term,
+                                TermNumberOfMonths = d.TermNumberOfMonths,
+                                PrincipalAmount = d.PrincipalAmount,
+                                InterestId = d.InterestId,
+                                Interest = d.MstInterest.Interest,
+                                InterestPercentage = d.InterestPercentage,
+                                InterestAmount = d.InterestAmount,
+                                LoanAmount = d.LoanAmount,
+                                NetAmount = d.NetAmount,
+                                AmortizationAmount = d.AmortizationAmount,
+                                PaidAmount = d.PaidAmount,
+                                PenaltyAmount = d.PenaltyAmount,
+                                BalanceAmount = d.BalanceAmount,
+                                Remarks = d.Remarks,
+                                Status = d.Status,
+                                IsSubmitted = d.IsSubmitted,
+                                IsApproved = d.IsApproved,
+                                IsFullyPaid = d.IsFullyPaid,
+                                IsCancelled = d.IsCancelled,
+                                IsClosed = d.IsClosed,
+                                IsLocked = d.IsLocked,
+                                CreatedByUserId = d.CreatedByUserId,
+                                CreatedByUser = d.MstUser.FullName,
+                                CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
+                                UpdatedByUserId = d.UpdatedByUserId,
+                                UpdatedByUser = d.MstUser1.FullName,
+                                UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                            };
+
+                return loans.ToList();
+            }
         }
 
         [Authorize, HttpPost, Route("api/loan/save")]
@@ -133,34 +192,82 @@ namespace LendingSystem.ApiControllers
                                   select d;
 
                 var loanNumber = "0000000001";
-                var lastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id) select d;
+                var lastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id)
+                               select d;
+
                 if (lastLoan.Any())
                 {
                     var lastLoanNumber = Convert.ToInt32(lastLoan.FirstOrDefault().LoanNumber) + 0000000001;
                     loanNumber = LeadingZeroes(lastLoanNumber, 10);
                 }
 
+                var customer = from d in db.MstCustomers
+                               where d.Id == objLoanModel.CustomerId
+                               select d;
+
+                if (customer.Any() == false)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Customer not found.");
+                }
+
+                var term = from d in db.MstTerms
+                           where d.Id == objLoanModel.TermId
+                           select d;
+
+                if (term.Any() == false)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Term not found.");
+                }
+
+                if (objLoanModel.PrincipalAmount > term.FirstOrDefault().LimitAmount)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Sorry, you cannot loan when the principal amount exceeds at " + term.FirstOrDefault().LimitAmount.ToString("#,##0.00"));
+                }
+
+                var getLastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id)
+                                  where d.CustomerId == customer.FirstOrDefault().Id
+                                  && d.BalanceAmount > 0
+                                  && d.IsClosed == false
+                                  select d;
+
+                if (getLastLoan.Any())
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot proceed if you have open or pending transactions.");
+                }
+
+                Decimal principalAmount = objLoanModel.PrincipalAmount;
+                Decimal interestAmount = principalAmount * (term.FirstOrDefault().MstInterest.Percentage / 100);
+                Decimal loanAmount = principalAmount + interestAmount;
+                Decimal netAmount = principalAmount - interestAmount;
+                Decimal balanceAmount = principalAmount;
+                Decimal amortizationAmount = term.FirstOrDefault().NumberOfMonths > 0 ? principalAmount / term.FirstOrDefault().NumberOfMonths : principalAmount;
+
                 Data.TrnLoan newLoan = new Data.TrnLoan()
                 {
-                    Id = objLoanModel.Id,
                     LoanNumber = loanNumber,
-                    LoanDate = Convert.ToDateTime(objLoanModel.LoanDate),
-                    ManualLoanNumber = objLoanModel.ManualLoanNumber,
-                    CustomerId = objLoanModel.CustomerId,
-                    TermId = objLoanModel.TermId,
-                    TermNumberOfMonths = objLoanModel.TermNumberOfMonths,
-                    PrincipalAmount = objLoanModel.PrincipalAmount,
-                    InterestId = objLoanModel.InterestId,
-                    InterestPercentage = objLoanModel.InterestPercentage,
-                    InterestAmount = objLoanModel.InterestAmount,
-                    LoanAmount = objLoanModel.LoanAmount,
-                    NetAmount = objLoanModel.NetAmount,
-                    PaidAmount = objLoanModel.PaidAmount,
-                    PenaltyAmount = objLoanModel.PenaltyAmount,
-                    BalanceAmount = objLoanModel.BalanceAmount,
-                    Remarks = objLoanModel.Remarks,
-                    Status = objLoanModel.Status,
-                    IsLocked = objLoanModel.IsLocked,
+                    LoanDate = DateTime.Today,
+                    ManualLoanNumber = loanNumber,
+                    CustomerId = customer.FirstOrDefault().Id,
+                    TermId = term.FirstOrDefault().Id,
+                    TermNumberOfMonths = term.FirstOrDefault().NumberOfMonths,
+                    PrincipalAmount = principalAmount,
+                    InterestId = term.FirstOrDefault().DefaultInterestId,
+                    InterestPercentage = term.FirstOrDefault().MstInterest.Percentage,
+                    InterestAmount = interestAmount,
+                    LoanAmount = loanAmount,
+                    NetAmount = netAmount,
+                    AmortizationAmount = amortizationAmount,
+                    PaidAmount = 0,
+                    PenaltyAmount = 0,
+                    BalanceAmount = balanceAmount,
+                    Remarks = "Your loan application was manually processed.",
+                    Status = "Open",
+                    IsSubmitted = true,
+                    IsApproved = true,
+                    IsFullyPaid = false,
+                    IsCancelled = false,
+                    IsClosed = false,
+                    IsLocked = false,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
                     CreatedDateTime = DateTime.Now,
                     UpdatedByUserId = currentUser.FirstOrDefault().Id,
@@ -193,24 +300,12 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
+                    if (loan.FirstOrDefault().IsLocked == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is already locked.");
+                    }
+
                     var lockLoan = loan.FirstOrDefault();
-                    lockLoan.LoanDate = Convert.ToDateTime(objLoanModel.LoanDate);
-                    lockLoan.ManualLoanNumber = objLoanModel.ManualLoanNumber;
-                    lockLoan.CustomerId = objLoanModel.CustomerId;
-                    lockLoan.TermId = objLoanModel.TermId;
-                    lockLoan.TermNumberOfMonths = objLoanModel.TermNumberOfMonths;
-                    lockLoan.PrincipalAmount = objLoanModel.PrincipalAmount;
-                    lockLoan.InterestId = objLoanModel.InterestId;
-                    lockLoan.InterestPercentage = objLoanModel.InterestPercentage;
-                    lockLoan.InterestAmount = objLoanModel.InterestAmount;
-                    lockLoan.LoanAmount = objLoanModel.LoanAmount;
-                    lockLoan.LoanAmount = objLoanModel.LoanAmount;
-                    lockLoan.NetAmount = objLoanModel.NetAmount;
-                    lockLoan.AmortizationAmount = objLoanModel.AmortizationAmount;
-                    lockLoan.PaidAmount = objLoanModel.PaidAmount;
-                    lockLoan.PenaltyAmount = objLoanModel.PenaltyAmount;
-                    lockLoan.BalanceAmount = objLoanModel.BalanceAmount;
-                    lockLoan.Remarks = objLoanModel.Remarks;
                     lockLoan.IsLocked = true;
                     lockLoan.UpdatedByUserId = currentUser.FirstOrDefault().Id;
                     lockLoan.UpdatedDateTime = DateTime.Now;
@@ -220,7 +315,7 @@ namespace LendingSystem.ApiControllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan not found.");
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
                 }
             }
             catch (Exception ex)
@@ -244,17 +339,22 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    var unlockLoan = loan.FirstOrDefault();
-                    unlockLoan.IsLocked = false;
-                    unlockLoan.UpdatedByUserId = currentUser.FirstOrDefault().Id;
-                    unlockLoan.UpdatedDateTime = DateTime.Now;
+                    if (loan.FirstOrDefault().IsLocked == false)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is already unlocked.");
+                    }
+
+                    var lockLoan = loan.FirstOrDefault();
+                    lockLoan.IsLocked = false;
+                    lockLoan.UpdatedByUserId = currentUser.FirstOrDefault().Id;
+                    lockLoan.UpdatedDateTime = DateTime.Now;
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan not found.");
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
                 }
             }
             catch (Exception ex)
@@ -274,6 +374,11 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
+                    if (loan.FirstOrDefault().IsLocked == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot delete locked transactions.");
+                    }
+
                     db.TrnLoans.DeleteOnSubmit(loan.FirstOrDefault());
                     db.SubmitChanges();
 
@@ -281,7 +386,7 @@ namespace LendingSystem.ApiControllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan not found.");
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Loan transaction not found.");
                 }
             }
             catch (Exception ex)

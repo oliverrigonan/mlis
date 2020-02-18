@@ -326,16 +326,6 @@ namespace LendingSystem.ApiControllers
                                   where d.AspNetUserId == User.Identity.GetUserId()
                                   select d;
 
-                var loanNumber = "0000000001";
-                var lastLoan = from d in db.TrnLoans.OrderByDescending(d => d.Id)
-                               select d;
-
-                if (lastLoan.Any())
-                {
-                    var lastLoanNumber = Convert.ToInt32(lastLoan.FirstOrDefault().LoanNumber) + 0000000001;
-                    loanNumber = LeadingZeroes(lastLoanNumber, 10);
-                }
-
                 var customer = from d in db.MstCustomers
                                where d.UserId == currentUser.FirstOrDefault().Id
                                select d;
