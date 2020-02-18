@@ -81,7 +81,7 @@ namespace LendingSystem.ApiControllers
         }
 
         [Authorize, HttpGet, Route("api/loan/list/{startDate}/{endDate}/{transactionType}")]
-        public List<ApiModels.TrnLoanModel> LoanList(String startDate, String endDate, String transactionType)
+        public List<ApiModels.TrnLoanModel> LoanList(String startDate, String endDate, String transactionType, String customerName)
         {
             Boolean isClosed = false;
             if (transactionType == "Close")
@@ -89,11 +89,19 @@ namespace LendingSystem.ApiControllers
                 isClosed = true;
             }
 
+            String customer = "";
+            if (String.IsNullOrEmpty(customerName) == false)
+            {
+                customer = customerName;
+            }
+
             if (transactionType == "All")
             {
                 var loans = from d in db.TrnLoans
                             where d.LoanDate >= Convert.ToDateTime(startDate)
                             && d.LoanDate <= Convert.ToDateTime(endDate)
+                            && d.IsCancelled == false
+                            && d.MstCustomer.FullName.Contains(customer)
                             select new ApiModels.TrnLoanModel
                             {
                                 Id = d.Id,
@@ -139,7 +147,9 @@ namespace LendingSystem.ApiControllers
                 var loans = from d in db.TrnLoans
                             where d.LoanDate >= Convert.ToDateTime(startDate)
                             && d.LoanDate <= Convert.ToDateTime(endDate)
+                            && d.IsCancelled == false
                             && d.IsClosed == isClosed
+                            && d.MstCustomer.FullName.Contains(customer)
                             select new ApiModels.TrnLoanModel
                             {
                                 Id = d.Id,

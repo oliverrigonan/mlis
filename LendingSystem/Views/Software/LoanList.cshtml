@@ -1,8 +1,5 @@
-﻿@{
-    ViewBag.Title = "Loan List";
-}
+﻿<h2>Loan List</h2>
 
-<h2>@ViewBag.Title</h2>
 <div>
     <h4>List of all loans</h4>
     <hr />
@@ -11,41 +8,53 @@
         <div class="panel-heading">
             <a href="/Software" class="btn btn-default">Back</a>
             <button class="btn btn-primary" onclick="buttonClickAddCreate()">Create</button>
-            <button class="btn btn-success" onclick="buttonReferesh()">Refresh</button>
             <button class="btn btn-success" onclick="buttonDownload()">Download</button>
-        </div>
-        <div class="panel-body">
-
-            <form role="form">
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label>Date Start</label>
-                            <div id="wijmoInputDateStartDate"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label>Date End</label>
-                            <div id="wijmoInputDateEndDate"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div id="wijmoComboboxStatus"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-
-                    </div>
-                </div>
-            </form>
-
-            <div id="wijmoGridLoanList"></div>
         </div>
     </div>
 
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabActivity">Transactions (Activities)</a></li>
+    </ul>
+
+    <br />
+
+    <div class="tab-content">
+        <div id="tabActivity" class="tab-pane fade in active">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Filters
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>Date Start</label>
+                                <div id="wijmoInputDateStartDate"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Date End</label>
+                                <div id="wijmoInputDateEndDate"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Transaction</label>
+                                <div id="wijmoComboboxTransactionType"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Customer</label>
+                                <input class="form-control" id="filterCustomer" placeholder="Customer Name (If any)" />
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-success btn-block" onclick="buttonGetData()">Refresh (Get Data)</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div id="wijmoGridLoanList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fae" id="modalLoanDetailForm" role="dialog">
@@ -142,23 +151,23 @@
 <script type="text/javascript">
     var wijmoInputDateStartDate;
     var wijmoInputDateEndDate;
-    var wijmoComboboxStatus;
+    var wijmoComboboxTransactionType;
 
-    var wijmoGridLoanList;
     var wijmoCollectionViewLoanList;
+    var wijmoGridLoanList;
+
     var wijmoComboboxTerm;
-    var wijmoComboboxInterest;
-    var defaultInterestId = 0;
 
     function getDataLoanList() {
         var loanListObservableArray = new wijmo.collections.ObservableArray;
 
         var startDate = wijmoInputDateStartDate.value.toLocaleDateString().replace(/\//g, '-');
         var endDate = wijmoInputDateEndDate.value.toLocaleDateString().replace(/\//g, '-');
-        var status = wijmoComboboxStatus.text;
+        var transactionType = wijmoComboboxTransactionType.text;
+        var customerName = document.getElementById("filterCustomer").value;
 
         $.ajax({
-            url: "/api/loan/list/" + startDate + "/ " + endDate + "/" + status,
+            url: "/api/loan/list/" + startDate + "/ " + endDate + "/" + transactionType + "?customerName=" + customerName,
             cache: false,
             type: "GET",
             contentType: "application/json; charset=utf-8",
@@ -166,12 +175,12 @@
                 if (results.length > 0) {
                     for (var i = 0; i < results.length; i++) {
                         loanListObservableArray.push({
-                            ButtonOpen: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickOpenLoan()'>View</button>",
-                            ButtonApprove: "<button class='btn btn-success btn-xs btn-block' onclick='buttonClickApproveLoan()'>Approve</button>",
-                            ButtonDisapproved: "<button class='btn btn-danger btn-xs btn-block' onclick='buttonClickDisapproveLoan()'>Disapprove</button>",
+                            ButtonOptions: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickOptions()'>Options</button>",
                             Id: results[i]["Id"],
                             LoanNumber: results[i]["LoanNumber"],
                             LoanDate: results[i]["LoanDate"],
+                            CustomerId: results[i]["CustomerId"],
+                            Customer: results[i]["Customer"],
                             TermId: results[i]["TermId"],
                             Term: results[i]["Term"],
                             PrincipalAmount: results[i]["PrincipalAmount"],
@@ -213,34 +222,16 @@
         wijmoGridLoanList.initialize({
             columns: [
                 {
-                    "header": "View",
-                    "binding": "ButtonOpen",
-                    "width": 70,
+                    "header": "Options",
+                    "binding": "ButtonOptions",
+                    "width": 90,
                     "align": "center",
                     "allowResizing": false,
                     "allowSorting": false,
                     "isContentHtml": true
                 },
                 {
-                    "header": "Approve",
-                    "binding": "ButtonApprove",
-                    "width": 100,
-                    "align": "center",
-                    "allowResizing": false,
-                    "allowSorting": false,
-                    "isContentHtml": true
-                },
-                {
-                    "header": "Disapprove",
-                    "binding": "ButtonDisapproved",
-                    "width": 100,
-                    "align": "center",
-                    "allowResizing": false,
-                    "allowSorting": false,
-                    "isContentHtml": true
-                },
-                {
-                    "header": "Number",
+                    "header": "Loan No.",
                     "binding": "LoanNumber",
                     "allowSorting": true,
                     "width": 100
@@ -252,35 +243,14 @@
                     "width": 90
                 },
                 {
-                    "header": "Term",
-                    "binding": "Term",
+                    "header": "Customer",
+                    "binding": "Customer",
                     "allowSorting": true,
-                    "width": 150
+                    "width": 200
                 },
                 {
                     "header": "Principal",
                     "binding": "PrincipalAmountDisplay",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Interest",
-                    "binding": "InterestAmountDisplay",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Loan",
-                    "binding": "LoanAmountDisplay",
-                    "allowSorting": true,
-                    "align": "right",
-                    "width": 100
-                },
-                {
-                    "header": "Net",
-                    "binding": "NetAmountDisplay",
                     "allowSorting": true,
                     "align": "right",
                     "width": 100
@@ -319,39 +289,8 @@
             autoSizeMode: wijmo.grid.AutoSizeMode.Both,
             allowDragging: wijmo.grid.AllowDragging.None,
             selectionMode: wijmo.grid.SelectionMode.Row,
-            frozenColumns: 3
+            frozenColumns: 1
         });
-    }
-
-    function computeAmouont() {
-        var principalAmount = parseFloat(document.getElementById('inputPrincipalAmount').value.replace(/\,/g, ''));
-        var interestRate = parseFloat(document.getElementById('inputInterestPercentage').value.replace(/\,/g, ''));
-        var isAdvanceInterestDeduction = document.getElementById('inputIsAdvanceInterestDeduction').checked;
-
-        var interestAmount = formatDecimalValues(principalAmount * (interestRate / 100));
-        document.getElementById('inputInterestAmount').value = interestAmount;
-
-        var loanAmount = formatDecimalValues(principalAmount + parseFloat(interestAmount.replace(/\,/g, '')));
-        document.getElementById('inputLoanAmount').value = loanAmount;
-
-        var previousBalanceAmount = parseFloat(document.getElementById('inputPreviousLoanAmount').value.replace(/\,/g, ''));
-
-        var collectibleAmount = formatDecimalValues(parseFloat(loanAmount.replace(/\,/g, '')) - previousBalanceAmount);
-        var claimAmount = formatDecimalValues(principalAmount);
-
-        if (isAdvanceInterestDeduction == true) {
-            collectibleAmount = formatDecimalValues(parseFloat(collectibleAmount.replace(/\,/g, '')) - parseFloat(interestAmount.replace(/\,/g, '')));
-            claimAmount = formatDecimalValues(principalAmount - parseFloat(interestAmount.replace(/\,/g, '')));
-        }
-
-        document.getElementById('inputCollectibleAmount').value = collectibleAmount;
-        document.getElementById('inputClaimAmount').value = claimAmount;
-    }
-
-    function buttonReferesh() {
-        wijmoCollectionViewLoanList = new wijmo.collections.CollectionView(getDataLoanList());
-        wijmoCollectionViewLoanList.canFilter = true;
-        wijmoGridLoanList.itemsSource = wijmoCollectionViewLoanList;
     }
 
     function createWijmoComboboxTerm(isDisalbed) {
@@ -366,9 +305,7 @@
                     for (i = 0; i < results.length; i++) {
                         termObservableArray.push({
                             Id: results[i]["Id"],
-                            Term: results[i]["Term"],
-                            NumberOfDays: results[i]["NumberOfDays"],
-                            DefaultInterestId: results[i]["DefaultInterestId"]
+                            Term: results[i]["Term"]
                         });
                     }
                 }
@@ -379,57 +316,14 @@
                     placeholder: "Select Term",
                     itemsSource: termObservableArray,
                     displayMemberPath: "Term",
-                    selectedValuePath: "Id",
-                    onSelectedIndexChanged: function () {
-                        document.getElementById("inputNumberOfDays").value = this.selectedItem["NumberOfDays"];
-                        defaultInterestId = this.selectedItem["DefaultInterestId"];
-                        createWijmoComboboxInterest();
-                    }
+                    selectedValuePath: "Id"
                 });
-
-                document.getElementById("inputNumberOfDays").value = wijmoComboboxTerm.selectedItem["NumberOfDays"];
-                defaultInterestId = wijmoComboboxTerm.selectedItem["DefaultInterestId"];
-                createWijmoComboboxInterest();
             }
         });
     }
 
-    function createWijmoComboboxInterest() {
-        var interestObservableArray = new wijmo.collections.ObservableArray();
-        $.ajax({
-            url: '/api/current/loan/dropdown/list/interest',
-            cache: false,
-            type: 'GET',
-            contentType: 'application/json; charset=utf-8',
-            success: function (results) {
-                if (results.length > 0) {
-                    for (i = 0; i < results.length; i++) {
-                        interestObservableArray.push({
-                            Id: results[i]["Id"],
-                            Interest: results[i]["Interest"],
-                            Percentage: results[i]["Percentage"]
-                        });
-                    }
-                }
+    function buttonClickOptions() {
 
-                wijmoComboboxInterest.dispose();
-                wijmoComboboxInterest = new wijmo.input.ComboBox('#wijmoComboboxInterest', {
-                    disabled: true,
-                    isEditable: false,
-                    placeholder: "Select Interest",
-                    itemsSource: interestObservableArray,
-                    displayMemberPath: "Interest",
-                    selectedValuePath: "Id",
-                    selectedValue: defaultInterestId,
-                    onSelectedIndexChanged: function () {
-                        document.getElementById("inputInterestPercentage").value = formatDecimalValues(this.selectedItem["Percentage"]);
-                    }
-                });
-
-                document.getElementById("inputInterestPercentage").value = formatDecimalValues(wijmoComboboxInterest.selectedItem["Percentage"]);
-                computeAmouont();
-            }
-        });
     }
 
     function buttonClickOpenLoan() {
@@ -441,28 +335,12 @@
         });
 
         createWijmoComboboxTerm(true);
+    }
 
-        wijmoCollectionViewLoanList.editItem(wijmoCollectionViewLoanList.currentItem);
-        var currentLoan = wijmoCollectionViewLoanList.currentEditItem;
-        wijmoComboboxTerm.selectedValue = currentLoan.TermId;
-        document.getElementById("inputNumberOfDays").value = formatDecimalValues(currentLoan.TermNumberOfDays);
-        document.getElementById("inputPrincipalAmount").value = formatDecimalValues(currentLoan.PrincipalAmount);
-        wijmoComboboxInterest.selectedValue = currentLoan.InterestId;
-        document.getElementById("inputInterestPercentage").value = formatDecimalValues(currentLoan.InterestPercentage);
-        document.getElementById("inputInterestAmount").value = formatDecimalValues(currentLoan.InterestAmount);
-        document.getElementById("inputLoanAmount").value = formatDecimalValues(currentLoan.LoanAmount);
-        document.getElementById("inputPreviousLoanAmount").value = formatDecimalValues(currentLoan.PreviousBalanceAmount);
-        document.getElementById("inputCollectibleAmount").value = formatDecimalValues(currentLoan.CollectibleAmount);
-        document.getElementById("inputClaimAmount").value = formatDecimalValues(currentLoan.ClaimAmount);
-        document.getElementById("inputIsAdvanceInterestDeduction").checked = currentLoan.IsAdvanceInterestDeduction;
-        document.getElementById("inputLoanRemarks").value = currentLoan.Remarks;
-
-        document.getElementById("inputPrincipalAmount").disabled = true;
-        document.getElementById("inputIsAdvanceInterestDeduction").disabled = true;
-        document.getElementById("inputLoanRemarks").disabled = true;
-
-        document.getElementById("buttonClickApplyLoan").style.display = "none";
-
+    function buttonGetData() {
+        wijmoCollectionViewLoanList = new wijmo.collections.CollectionView(getDataLoanList());
+        wijmoCollectionViewLoanList.canFilter = true;
+        wijmoGridLoanList.itemsSource = wijmoCollectionViewLoanList;
     }
 
     window.onload = function () {
@@ -470,20 +348,12 @@
 
         wijmoInputDateStartDate = new wijmo.input.InputDate('#wijmoInputDateStartDate', {
             format: 'MM-dd-yyyy',
-            value: new Date(date.getFullYear(), date.getMonth() + 1, 0),
-            onValueChanged: function () {
-                wijmoCollectionViewLoanList = new wijmo.collections.CollectionView(getDataLoanList());
-                wijmoCollectionViewLoanList.canFilter = true;
-                wijmoGridLoanList.itemsSource = wijmoCollectionViewLoanList;
-            }
+            value: new Date(date.getFullYear(), date.getMonth(), 1)
         });
 
         wijmoInputDateEndDate = new wijmo.input.InputDate('#wijmoInputDateEndDate', {
             format: 'MM-dd-yyyy',
-            value: new Date(date.getFullYear(), date.getMonth() + 1, 0),
-            onValueChanged: function () {
-
-            }
+            value: new Date(date.getFullYear(), date.getMonth() + 1, 0)
         });
 
         var statusObservableArray = new wijmo.collections.ObservableArray();
@@ -491,20 +361,15 @@
         statusObservableArray.push("Open");
         statusObservableArray.push("Close");
 
-        wijmoComboboxStatus = new wijmo.input.ComboBox('#wijmoComboboxStatus', {
-            placeholder: "Select Status",
-            itemsSource: statusObservableArray,
-            onSelectedIndexChanged: function () {
-                wijmoCollectionViewLoanList = new wijmo.collections.CollectionView(getDataLoanList());
-                wijmoCollectionViewLoanList.canFilter = true;
-                wijmoGridLoanList.itemsSource = wijmoCollectionViewLoanList;
-            }
+        wijmoComboboxTransactionType = new wijmo.input.ComboBox('#wijmoComboboxTransactionType', {
+            placeholder: "Select Transaction Type",
+            itemsSource: statusObservableArray
         });
+
+        wijmoComboboxTransactionType.text = "Open";
 
         createWijmoGridLoanList();
         wijmoComboboxTerm = new wijmo.input.ComboBox('#wijmoComboboxTerm');
-        wijmoComboboxInterest = new wijmo.input.ComboBox('#wijmoComboboxInterest');
 
-        wijmoComboboxStatus.text = "Pending";
     }
 </script>
