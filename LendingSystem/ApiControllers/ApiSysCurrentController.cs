@@ -25,6 +25,22 @@ namespace LendingSystem.ApiControllers
             return result;
         }
 
+        [Authorize, HttpGet, Route("api/current/loan/dropdown/list/term")]
+        public List<ApiModels.MstTermModel> DropdownListLoanTerm()
+        {
+            var terms = from d in db.MstTerms
+                        select new ApiModels.MstTermModel
+                        {
+                            Id = d.Id,
+                            Term = d.Term,
+                            NumberOfMonths = d.NumberOfMonths,
+                            DefaultInterestId = d.DefaultInterestId,
+                            LimitAmount = d.LimitAmount
+                        };
+
+            return terms.ToList();
+        }
+
         [Authorize, HttpGet, Route("api/current/detail")]
         public ApiModels.MstCustomerModel GetCurrentUserCustomerDetail()
         {
@@ -97,9 +113,9 @@ namespace LendingSystem.ApiControllers
                                     Remarks = d.Remarks,
                                     Status = d.Status,
                                     IsSubmitted = d.IsSubmitted,
-                                    IsApproved = d.IsApproved,
-                                    IsFullyPaid = d.IsFullyPaid,
                                     IsCancelled = d.IsCancelled,
+                                    IsApproved = d.IsApproved,
+                                    IsDeclined = d.IsDeclined,
                                     IsClosed = d.IsClosed,
                                     IsLocked = d.IsLocked,
                                     CreatedByUserId = d.CreatedByUserId,
@@ -107,7 +123,7 @@ namespace LendingSystem.ApiControllers
                                     CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                                     UpdatedByUserId = d.UpdatedByUserId,
                                     UpdatedByUser = d.MstUser1.FullName,
-                                    UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                                    UpdatedDateTime = d.UpdatedDateTime.ToShortDateString()
                                 };
 
                     return loans.OrderByDescending(d => d.Id).ToList();
@@ -142,9 +158,9 @@ namespace LendingSystem.ApiControllers
                                     Remarks = d.Remarks,
                                     Status = d.Status,
                                     IsSubmitted = d.IsSubmitted,
-                                    IsApproved = d.IsApproved,
-                                    IsFullyPaid = d.IsFullyPaid,
                                     IsCancelled = d.IsCancelled,
+                                    IsApproved = d.IsApproved,
+                                    IsDeclined = d.IsDeclined,
                                     IsClosed = d.IsClosed,
                                     IsLocked = d.IsLocked,
                                     CreatedByUserId = d.CreatedByUserId,
@@ -152,7 +168,7 @@ namespace LendingSystem.ApiControllers
                                     CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                                     UpdatedByUserId = d.UpdatedByUserId,
                                     UpdatedByUser = d.MstUser1.FullName,
-                                    UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                                    UpdatedDateTime = d.UpdatedDateTime.ToShortDateString()
                                 };
 
                     return loans.OrderByDescending(d => d.Id).ToList();
@@ -171,6 +187,18 @@ namespace LendingSystem.ApiControllers
         [Authorize, HttpGet, Route("api/current/loan/detail/{id}")]
         public ApiModels.TrnLoanModel LoanDetail(String id)
         {
+            var declineLoan = from d in db.TrnLoans
+                              where d.Id == Convert.ToInt32(id)
+                              && d.IsDeclined == true
+                              select d;
+
+            if (declineLoan.Any())
+            {
+                var closeLoan = declineLoan.FirstOrDefault();
+                closeLoan.IsClosed = true;
+                db.SubmitChanges();
+            }
+
             var loan = from d in db.TrnLoans
                        where d.Id == Convert.ToInt32(id)
                        select new ApiModels.TrnLoanModel
@@ -198,9 +226,9 @@ namespace LendingSystem.ApiControllers
                            Remarks = d.Remarks,
                            Status = d.Status,
                            IsSubmitted = d.IsSubmitted,
-                           IsApproved = d.IsApproved,
-                           IsFullyPaid = d.IsFullyPaid,
                            IsCancelled = d.IsCancelled,
+                           IsApproved = d.IsApproved,
+                           IsDeclined = d.IsDeclined,
                            IsClosed = d.IsClosed,
                            IsLocked = d.IsLocked,
                            CreatedByUserId = d.CreatedByUserId,
@@ -208,7 +236,7 @@ namespace LendingSystem.ApiControllers
                            CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                            UpdatedByUserId = d.UpdatedByUserId,
                            UpdatedByUser = d.MstUser1.FullName,
-                           UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                           UpdatedDateTime = d.UpdatedDateTime.ToShortDateString()
                        };
 
             return loan.FirstOrDefault();
@@ -295,11 +323,11 @@ namespace LendingSystem.ApiControllers
                     Remarks = "Your loan application is ready to process. To continue this transaction, please click the Submit button to proceed.",
                     Status = "Open",
                     IsSubmitted = false,
-                    IsApproved = false,
-                    IsFullyPaid = false,
                     IsCancelled = false,
+                    IsApproved = false,
+                    IsDeclined = false,
                     IsClosed = false,
-                    IsLocked = true,
+                    IsLocked = false,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
                     CreatedDateTime = DateTime.Now,
                     UpdatedByUserId = currentUser.FirstOrDefault().Id,
@@ -364,17 +392,32 @@ namespace LendingSystem.ApiControllers
                 {
                     if (loan.FirstOrDefault().IsSubmitted == true)
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot update submitted loan application.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot change submitted loan application.");
                     }
 
                     if (loan.FirstOrDefault().IsCancelled == true)
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot update cancelled loan application.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot change cancelled loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsApproved == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot change approved loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsDeclined == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot change declined loan application.");
                     }
 
                     if (loan.FirstOrDefault().IsClosed == true)
                     {
                         return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
+                    }
+
+                    if (loan.FirstOrDefault().IsLocked == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is locked.");
                     }
 
                     var submitLoan = loan.FirstOrDefault();
@@ -422,23 +465,14 @@ namespace LendingSystem.ApiControllers
                 {
                     if (loan.FirstOrDefault().IsSubmitted == true)
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already submitted.");
-                    }
-
-                    if (loan.FirstOrDefault().IsCancelled == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot submit cancelled loan application.");
-                    }
-
-                    if (loan.FirstOrDefault().IsClosed == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Your loan application was already submitted. Please wait for an approval.");
                     }
 
                     var submitLoan = loan.FirstOrDefault();
                     submitLoan.IsSubmitted = true;
                     submitLoan.Status = "Submitted";
-                    submitLoan.Remarks = "Your loan application has been successfully submitted for an approval. You will receive an email once your loan application has been approved.";
+                    submitLoan.Remarks = "Your loan application has been successfully submitted for an approval. You will receive a text or an email once your loan application has been approved.";
+                    submitLoan.IsLocked = true;
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);
@@ -469,14 +503,19 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    if (loan.FirstOrDefault().IsSubmitted != true)
+                    if (loan.FirstOrDefault().IsSubmitted == false)
                     {
                         return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot cancel unsubmitted loan application.");
                     }
 
                     if (loan.FirstOrDefault().IsCancelled == true)
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Your loan application was already cancelled.");
+                    }
+
+                    if (loan.FirstOrDefault().IsDeclined == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot cancel declined loan application.");
                     }
 
                     if (loan.FirstOrDefault().IsClosed == true)
@@ -522,12 +561,27 @@ namespace LendingSystem.ApiControllers
 
                     if (loan.FirstOrDefault().IsCancelled == true)
                     {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Already cancelled.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot delete cancelled loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsApproved == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot delete approved loan application.");
+                    }
+
+                    if (loan.FirstOrDefault().IsDeclined == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "You cannot delete declined loan application.");
                     }
 
                     if (loan.FirstOrDefault().IsClosed == true)
                     {
                         return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
+                    }
+
+                    if (loan.FirstOrDefault().IsLocked == true)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is locked.");
                     }
 
                     var deleteLoan = loan.FirstOrDefault();
@@ -545,22 +599,6 @@ namespace LendingSystem.ApiControllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
-        }
-
-        [Authorize, HttpGet, Route("api/current/loan/dropdown/list/term")]
-        public List<ApiModels.MstTermModel> DropdownListLoanTerm()
-        {
-            var terms = from d in db.MstTerms
-                        select new ApiModels.MstTermModel
-                        {
-                            Id = d.Id,
-                            Term = d.Term,
-                            NumberOfMonths = d.NumberOfMonths,
-                            DefaultInterestId = d.DefaultInterestId,
-                            LimitAmount = d.LimitAmount
-                        };
-
-            return terms.ToList();
         }
     }
 }

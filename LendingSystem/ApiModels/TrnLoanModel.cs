@@ -30,9 +30,9 @@ namespace LendingSystem.ApiModels
         public String Remarks { get; set; }
         public String Status { get; set; }
         public Boolean IsSubmitted { get; set; }
-        public Boolean IsApproved { get; set; }
-        public Boolean IsFullyPaid { get; set; }
         public Boolean IsCancelled { get; set; }
+        public Boolean IsApproved { get; set; }
+        public Boolean IsDeclined { get; set; }
         public Boolean IsClosed { get; set; }
         public Boolean IsLocked { get; set; }
         public Int32 CreatedByUserId { get; set; }

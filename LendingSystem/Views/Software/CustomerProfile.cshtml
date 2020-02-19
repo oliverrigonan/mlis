@@ -314,9 +314,7 @@
         wijmoCollectionViewCurrentLoanList.editItem(wijmoCollectionViewCurrentLoanList.currentItem);
         var loanId = wijmoCollectionViewCurrentLoanList.currentEditItem.Id;
 
-        setTimeout(function () {
-            window.location = "/Software/CustomerLoanDetail?loanId=" + loanId;
-        }, 1000);
+        window.location = "/Software/CustomerLoanDetail?loanId=" + loanId;
     }
 
     function buttonClickDeleteLoan() {

@@ -29,9 +29,9 @@
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
       <Column Name="Status" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="IsSubmitted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IsApproved" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IsFullyPaid" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsCancelled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsApproved" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsDeclined" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsClosed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsLocked" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CreatedByUserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -126,7 +126,7 @@
     <Type Name="MstPayType">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="PayType" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
-      <Association Name="MstPayType_TrnCollectionLine" Member="TrnCollectionLines" ThisKey="Id" OtherKey="PayTypeId" Type="TrnCollectionLine" />
+      <Association Name="MstPayType_TrnCollection" Member="TrnCollections" ThisKey="Id" OtherKey="PayTypeId" Type="TrnCollection" />
     </Type>
   </Table>
   <Table Name="dbo.MstTerm" Member="MstTerms">
@@ -167,6 +167,7 @@
       <Column Name="ManualCollectionNumber" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="CustomerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="LoanId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PayTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PaidAmount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Column Name="PenaltyAmount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
@@ -175,22 +176,11 @@
       <Column Name="CreatedDateTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="UpdatedByUserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="UpdatedDateTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="TrnCollection_TrnCollectionLine" Member="TrnCollectionLines" ThisKey="Id" OtherKey="CollectionId" Type="TrnCollectionLine" />
       <Association Name="MstCustomer_TrnCollection" Member="MstCustomer" ThisKey="CustomerId" OtherKey="Id" Type="MstCustomer" IsForeignKey="true" />
+      <Association Name="MstPayType_TrnCollection" Member="MstPayType" ThisKey="PayTypeId" OtherKey="Id" Type="MstPayType" IsForeignKey="true" />
       <Association Name="MstUser_TrnCollection" Member="MstUser" ThisKey="CreatedByUserId" OtherKey="Id" Type="MstUser" IsForeignKey="true" />
       <Association Name="MstUser_TrnCollection1" Member="MstUser1" ThisKey="UpdatedByUserId" OtherKey="Id" Type="MstUser" IsForeignKey="true" />
       <Association Name="TrnLoan_TrnCollection" Member="TrnLoan" ThisKey="LoanId" OtherKey="Id" Type="TrnLoan" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TrnCollectionLine" Member="TrnCollectionLines">
-    <Type Name="TrnCollectionLine">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CollectionId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PayTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PaidAmount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="PenaltyAmount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Association Name="MstPayType_TrnCollectionLine" Member="MstPayType" ThisKey="PayTypeId" OtherKey="Id" Type="MstPayType" IsForeignKey="true" />
-      <Association Name="TrnCollection_TrnCollectionLine" Member="TrnCollection" ThisKey="CollectionId" OtherKey="Id" Type="TrnCollection" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

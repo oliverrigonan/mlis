@@ -66,9 +66,6 @@ namespace LendingSystem.Data
     partial void InsertTrnCollection(TrnCollection instance);
     partial void UpdateTrnCollection(TrnCollection instance);
     partial void DeleteTrnCollection(TrnCollection instance);
-    partial void InsertTrnCollectionLine(TrnCollectionLine instance);
-    partial void UpdateTrnCollectionLine(TrnCollectionLine instance);
-    partial void DeleteTrnCollectionLine(TrnCollectionLine instance);
     #endregion
 		
 		public lendingsystemDataContext() : 
@@ -194,14 +191,6 @@ namespace LendingSystem.Data
 			get
 			{
 				return this.GetTable<TrnCollection>();
-			}
-		}
-		
-		public System.Data.Linq.Table<TrnCollectionLine> TrnCollectionLines
-		{
-			get
-			{
-				return this.GetTable<TrnCollectionLine>();
 			}
 		}
 	}
@@ -366,11 +355,11 @@ namespace LendingSystem.Data
 		
 		private bool _IsSubmitted;
 		
+		private bool _IsCancelled;
+		
 		private bool _IsApproved;
 		
-		private bool _IsFullyPaid;
-		
-		private bool _IsCancelled;
+		private bool _IsDeclined;
 		
 		private bool _IsClosed;
 		
@@ -440,12 +429,12 @@ namespace LendingSystem.Data
     partial void OnStatusChanged();
     partial void OnIsSubmittedChanging(bool value);
     partial void OnIsSubmittedChanged();
-    partial void OnIsApprovedChanging(bool value);
-    partial void OnIsApprovedChanged();
-    partial void OnIsFullyPaidChanging(bool value);
-    partial void OnIsFullyPaidChanged();
     partial void OnIsCancelledChanging(bool value);
     partial void OnIsCancelledChanged();
+    partial void OnIsApprovedChanging(bool value);
+    partial void OnIsApprovedChanged();
+    partial void OnIsDeclinedChanging(bool value);
+    partial void OnIsDeclinedChanged();
     partial void OnIsClosedChanging(bool value);
     partial void OnIsClosedChanged();
     partial void OnIsLockedChanging(bool value);
@@ -883,6 +872,26 @@ namespace LendingSystem.Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCancelled", DbType="Bit NOT NULL")]
+		public bool IsCancelled
+		{
+			get
+			{
+				return this._IsCancelled;
+			}
+			set
+			{
+				if ((this._IsCancelled != value))
+				{
+					this.OnIsCancelledChanging(value);
+					this.SendPropertyChanging();
+					this._IsCancelled = value;
+					this.SendPropertyChanged("IsCancelled");
+					this.OnIsCancelledChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsApproved", DbType="Bit NOT NULL")]
 		public bool IsApproved
 		{
@@ -903,42 +912,22 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsFullyPaid", DbType="Bit NOT NULL")]
-		public bool IsFullyPaid
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeclined", DbType="Bit NOT NULL")]
+		public bool IsDeclined
 		{
 			get
 			{
-				return this._IsFullyPaid;
+				return this._IsDeclined;
 			}
 			set
 			{
-				if ((this._IsFullyPaid != value))
+				if ((this._IsDeclined != value))
 				{
-					this.OnIsFullyPaidChanging(value);
+					this.OnIsDeclinedChanging(value);
 					this.SendPropertyChanging();
-					this._IsFullyPaid = value;
-					this.SendPropertyChanged("IsFullyPaid");
-					this.OnIsFullyPaidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCancelled", DbType="Bit NOT NULL")]
-		public bool IsCancelled
-		{
-			get
-			{
-				return this._IsCancelled;
-			}
-			set
-			{
-				if ((this._IsCancelled != value))
-				{
-					this.OnIsCancelledChanging(value);
-					this.SendPropertyChanging();
-					this._IsCancelled = value;
-					this.SendPropertyChanged("IsCancelled");
-					this.OnIsCancelledChanged();
+					this._IsDeclined = value;
+					this.SendPropertyChanged("IsDeclined");
+					this.OnIsDeclinedChanged();
 				}
 			}
 		}
@@ -2924,7 +2913,7 @@ namespace LendingSystem.Data
 		
 		private string _PayType;
 		
-		private EntitySet<TrnCollectionLine> _TrnCollectionLines;
+		private EntitySet<TrnCollection> _TrnCollections;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2938,7 +2927,7 @@ namespace LendingSystem.Data
 		
 		public MstPayType()
 		{
-			this._TrnCollectionLines = new EntitySet<TrnCollectionLine>(new Action<TrnCollectionLine>(this.attach_TrnCollectionLines), new Action<TrnCollectionLine>(this.detach_TrnCollectionLines));
+			this._TrnCollections = new EntitySet<TrnCollection>(new Action<TrnCollection>(this.attach_TrnCollections), new Action<TrnCollection>(this.detach_TrnCollections));
 			OnCreated();
 		}
 		
@@ -2982,16 +2971,16 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstPayType_TrnCollectionLine", Storage="_TrnCollectionLines", ThisKey="Id", OtherKey="PayTypeId")]
-		public EntitySet<TrnCollectionLine> TrnCollectionLines
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstPayType_TrnCollection", Storage="_TrnCollections", ThisKey="Id", OtherKey="PayTypeId")]
+		public EntitySet<TrnCollection> TrnCollections
 		{
 			get
 			{
-				return this._TrnCollectionLines;
+				return this._TrnCollections;
 			}
 			set
 			{
-				this._TrnCollectionLines.Assign(value);
+				this._TrnCollections.Assign(value);
 			}
 		}
 		
@@ -3015,13 +3004,13 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		private void attach_TrnCollectionLines(TrnCollectionLine entity)
+		private void attach_TrnCollections(TrnCollection entity)
 		{
 			this.SendPropertyChanging();
 			entity.MstPayType = this;
 		}
 		
-		private void detach_TrnCollectionLines(TrnCollectionLine entity)
+		private void detach_TrnCollections(TrnCollection entity)
 		{
 			this.SendPropertyChanging();
 			entity.MstPayType = null;
@@ -3716,6 +3705,8 @@ namespace LendingSystem.Data
 		
 		private int _LoanId;
 		
+		private int _PayTypeId;
+		
 		private decimal _PaidAmount;
 		
 		private decimal _PenaltyAmount;
@@ -3732,9 +3723,9 @@ namespace LendingSystem.Data
 		
 		private System.DateTime _UpdatedDateTime;
 		
-		private EntitySet<TrnCollectionLine> _TrnCollectionLines;
-		
 		private EntityRef<MstCustomer> _MstCustomer;
+		
+		private EntityRef<MstPayType> _MstPayType;
 		
 		private EntityRef<MstUser> _MstUser;
 		
@@ -3758,6 +3749,8 @@ namespace LendingSystem.Data
     partial void OnCustomerIdChanged();
     partial void OnLoanIdChanging(int value);
     partial void OnLoanIdChanged();
+    partial void OnPayTypeIdChanging(int value);
+    partial void OnPayTypeIdChanged();
     partial void OnPaidAmountChanging(decimal value);
     partial void OnPaidAmountChanged();
     partial void OnPenaltyAmountChanging(decimal value);
@@ -3778,8 +3771,8 @@ namespace LendingSystem.Data
 		
 		public TrnCollection()
 		{
-			this._TrnCollectionLines = new EntitySet<TrnCollectionLine>(new Action<TrnCollectionLine>(this.attach_TrnCollectionLines), new Action<TrnCollectionLine>(this.detach_TrnCollectionLines));
 			this._MstCustomer = default(EntityRef<MstCustomer>);
+			this._MstPayType = default(EntityRef<MstPayType>);
 			this._MstUser = default(EntityRef<MstUser>);
 			this._MstUser1 = default(EntityRef<MstUser>);
 			this._TrnLoan = default(EntityRef<TrnLoan>);
@@ -3910,6 +3903,30 @@ namespace LendingSystem.Data
 					this._LoanId = value;
 					this.SendPropertyChanged("LoanId");
 					this.OnLoanIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PayTypeId", DbType="Int NOT NULL")]
+		public int PayTypeId
+		{
+			get
+			{
+				return this._PayTypeId;
+			}
+			set
+			{
+				if ((this._PayTypeId != value))
+				{
+					if (this._MstPayType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPayTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._PayTypeId = value;
+					this.SendPropertyChanged("PayTypeId");
+					this.OnPayTypeIdChanged();
 				}
 			}
 		}
@@ -4082,19 +4099,6 @@ namespace LendingSystem.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TrnCollection_TrnCollectionLine", Storage="_TrnCollectionLines", ThisKey="Id", OtherKey="CollectionId")]
-		public EntitySet<TrnCollectionLine> TrnCollectionLines
-		{
-			get
-			{
-				return this._TrnCollectionLines;
-			}
-			set
-			{
-				this._TrnCollectionLines.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstCustomer_TrnCollection", Storage="_MstCustomer", ThisKey="CustomerId", OtherKey="Id", IsForeignKey=true)]
 		public MstCustomer MstCustomer
 		{
@@ -4125,6 +4129,40 @@ namespace LendingSystem.Data
 						this._CustomerId = default(int);
 					}
 					this.SendPropertyChanged("MstCustomer");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstPayType_TrnCollection", Storage="_MstPayType", ThisKey="PayTypeId", OtherKey="Id", IsForeignKey=true)]
+		public MstPayType MstPayType
+		{
+			get
+			{
+				return this._MstPayType.Entity;
+			}
+			set
+			{
+				MstPayType previousValue = this._MstPayType.Entity;
+				if (((previousValue != value) 
+							|| (this._MstPayType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MstPayType.Entity = null;
+						previousValue.TrnCollections.Remove(this);
+					}
+					this._MstPayType.Entity = value;
+					if ((value != null))
+					{
+						value.TrnCollections.Add(this);
+						this._PayTypeId = value.Id;
+					}
+					else
+					{
+						this._PayTypeId = default(int);
+					}
+					this.SendPropertyChanged("MstPayType");
 				}
 			}
 		}
@@ -4227,258 +4265,6 @@ namespace LendingSystem.Data
 						this._LoanId = default(int);
 					}
 					this.SendPropertyChanged("TrnLoan");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_TrnCollectionLines(TrnCollectionLine entity)
-		{
-			this.SendPropertyChanging();
-			entity.TrnCollection = this;
-		}
-		
-		private void detach_TrnCollectionLines(TrnCollectionLine entity)
-		{
-			this.SendPropertyChanging();
-			entity.TrnCollection = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TrnCollectionLine")]
-	public partial class TrnCollectionLine : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private int _CollectionId;
-		
-		private int _PayTypeId;
-		
-		private decimal _PaidAmount;
-		
-		private decimal _PenaltyAmount;
-		
-		private EntityRef<MstPayType> _MstPayType;
-		
-		private EntityRef<TrnCollection> _TrnCollection;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnCollectionIdChanging(int value);
-    partial void OnCollectionIdChanged();
-    partial void OnPayTypeIdChanging(int value);
-    partial void OnPayTypeIdChanged();
-    partial void OnPaidAmountChanging(decimal value);
-    partial void OnPaidAmountChanged();
-    partial void OnPenaltyAmountChanging(decimal value);
-    partial void OnPenaltyAmountChanged();
-    #endregion
-		
-		public TrnCollectionLine()
-		{
-			this._MstPayType = default(EntityRef<MstPayType>);
-			this._TrnCollection = default(EntityRef<TrnCollection>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CollectionId", DbType="Int NOT NULL")]
-		public int CollectionId
-		{
-			get
-			{
-				return this._CollectionId;
-			}
-			set
-			{
-				if ((this._CollectionId != value))
-				{
-					if (this._TrnCollection.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCollectionIdChanging(value);
-					this.SendPropertyChanging();
-					this._CollectionId = value;
-					this.SendPropertyChanged("CollectionId");
-					this.OnCollectionIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PayTypeId", DbType="Int NOT NULL")]
-		public int PayTypeId
-		{
-			get
-			{
-				return this._PayTypeId;
-			}
-			set
-			{
-				if ((this._PayTypeId != value))
-				{
-					if (this._MstPayType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnPayTypeIdChanging(value);
-					this.SendPropertyChanging();
-					this._PayTypeId = value;
-					this.SendPropertyChanged("PayTypeId");
-					this.OnPayTypeIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaidAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal PaidAmount
-		{
-			get
-			{
-				return this._PaidAmount;
-			}
-			set
-			{
-				if ((this._PaidAmount != value))
-				{
-					this.OnPaidAmountChanging(value);
-					this.SendPropertyChanging();
-					this._PaidAmount = value;
-					this.SendPropertyChanged("PaidAmount");
-					this.OnPaidAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PenaltyAmount", DbType="Decimal(18,2) NOT NULL")]
-		public decimal PenaltyAmount
-		{
-			get
-			{
-				return this._PenaltyAmount;
-			}
-			set
-			{
-				if ((this._PenaltyAmount != value))
-				{
-					this.OnPenaltyAmountChanging(value);
-					this.SendPropertyChanging();
-					this._PenaltyAmount = value;
-					this.SendPropertyChanged("PenaltyAmount");
-					this.OnPenaltyAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MstPayType_TrnCollectionLine", Storage="_MstPayType", ThisKey="PayTypeId", OtherKey="Id", IsForeignKey=true)]
-		public MstPayType MstPayType
-		{
-			get
-			{
-				return this._MstPayType.Entity;
-			}
-			set
-			{
-				MstPayType previousValue = this._MstPayType.Entity;
-				if (((previousValue != value) 
-							|| (this._MstPayType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MstPayType.Entity = null;
-						previousValue.TrnCollectionLines.Remove(this);
-					}
-					this._MstPayType.Entity = value;
-					if ((value != null))
-					{
-						value.TrnCollectionLines.Add(this);
-						this._PayTypeId = value.Id;
-					}
-					else
-					{
-						this._PayTypeId = default(int);
-					}
-					this.SendPropertyChanged("MstPayType");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TrnCollection_TrnCollectionLine", Storage="_TrnCollection", ThisKey="CollectionId", OtherKey="Id", IsForeignKey=true)]
-		public TrnCollection TrnCollection
-		{
-			get
-			{
-				return this._TrnCollection.Entity;
-			}
-			set
-			{
-				TrnCollection previousValue = this._TrnCollection.Entity;
-				if (((previousValue != value) 
-							|| (this._TrnCollection.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._TrnCollection.Entity = null;
-						previousValue.TrnCollectionLines.Remove(this);
-					}
-					this._TrnCollection.Entity = value;
-					if ((value != null))
-					{
-						value.TrnCollectionLines.Add(this);
-						this._CollectionId = value.Id;
-					}
-					else
-					{
-						this._CollectionId = default(int);
-					}
-					this.SendPropertyChanged("TrnCollection");
 				}
 			}
 		}

@@ -273,22 +273,35 @@
                         document.getElementById("inputStatus").value = results.Status;
                         document.getElementById("spanRemarks").innerHTML = results.Remarks;
 
-                        if (results.IsCancelled == true) {
+                        if (results.IsClosed) {
                             document.getElementById("buttonClickSubmit").disabled = true;
                             document.getElementById("buttonClickCancel").disabled = true;
                             document.getElementById("buttonClickPrint").disabled = true;
                             document.getElementById("buttonClickEdit").disabled = true;
                         } else {
-                            if (results.IsSubmitted == true) {
+                            if (results.IsDeclined) {
                                 document.getElementById("buttonClickSubmit").disabled = true;
-                                document.getElementById("buttonClickEdit").disabled = true;
-                            }
-                            else {
                                 document.getElementById("buttonClickCancel").disabled = true;
                                 document.getElementById("buttonClickPrint").disabled = true;
+                                document.getElementById("buttonClickEdit").disabled = true;
+                            } else {
+                                if (results.IsCancelled == true) {
+                                    document.getElementById("buttonClickSubmit").disabled = true;
+                                    document.getElementById("buttonClickCancel").disabled = true;
+                                    document.getElementById("buttonClickPrint").disabled = true;
+                                    document.getElementById("buttonClickEdit").disabled = true;
+                                } else {
+                                    if (results.IsSubmitted == true) {
+                                        document.getElementById("buttonClickSubmit").disabled = true;
+                                        document.getElementById("buttonClickEdit").disabled = true;
+                                    }
+                                    else {
+                                        document.getElementById("buttonClickCancel").disabled = true;
+                                        document.getElementById("buttonClickPrint").disabled = true;
+                                    }
+                                }
                             }
                         }
-
                     } else {
                         alert("No Data");
                         window.location = "/Software/CustomerProfile";
