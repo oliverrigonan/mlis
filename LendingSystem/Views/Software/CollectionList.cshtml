@@ -1,11 +1,524 @@
-﻿@{
-    ViewBag.Title = "Collection List";
-}
+﻿<h2>Collection List</h2>
 
-<h2>@ViewBag.Title</h2>
 <div>
     <h4>List of all payments</h4>
     <hr />
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/Software" class="btn btn-default">Back</a>
+            <button class="btn btn-primary" onclick="buttonClickAddCreate()">Create</button>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabActivity">Payments (Loan Transactions)</a></li>
+    </ul>
+
+    <br />
+
+    <div class="tab-content">
+        <div id="tabActivity" class="tab-pane fade in active">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Filters
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label>Date Start</label>
+                                <div id="wijmoInputDateStartDate"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Date End</label>
+                                <div id="wijmoInputDateEndDate"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Filter</label>
+                                <input class="form-control" id="filterText" placeholder="Filter text" />
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-success btn-block" onclick="buttonGetData()">Refresh (Get Data)</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div id="wijmoGridCollectionList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div class="modal fae" id="modalCollectionDetailForm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Collection Detail</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 49%">
+                                    <label>Collection Date:</label>
+                                    <div id="wijmoComboboxCollectionDate"></div>
+                                </td>
+                                <td style="width: 2%"></td>
+                                <td style="width: 49%">
+                                    <label>Pay Type:</label>
+                                    <div id="wijmoComboboxPayType"></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="form-group">
+                        <label>Customer:</label>
+                        <div id="wijmoComboboxCustomer"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Loan Number:</label>
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 49%">
+                                    <div id="wijmoComboboxLoanNumber"></div>
+                                </td>
+                                <td style="width: 2%"></td>
+                                <td style="width: 49%">
+                                    <input id="inputBalalnceAmount" class="form-control text-right number" readonly />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 49%">
+                                    <label>Paid Amount:</label>
+                                    <input id="inputPaidAmount" class="form-control text-right number" />
+                                </td>
+                                <td style="width: 2%"></td>
+                                <td style="width: 49%">
+                                    <label>Penalty Amount:</label>
+                                    <input id="inputPenaltyAmount" class="form-control text-right number" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea id="inputRemarks" class="form-control" rows="7"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="buttonClickCreateCollection" onclick="buttonClickCreateCollection()">Save</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var wijmoInputDateStartDate;
+    var wijmoInputDateEndDate;
+
+    var wijmoCollectionViewCollectionList;
+    var wijmoGridCollectionList;
+
+    var collectionId = 0;
+    var wijmoComboboxCollectionDate;
+    var wijmoComboboxCustomer;
+    var isCustomerSelected = false;
+    var wijmoComboboxLoanNumber;
+    var wijmoComboboxPayType;
+
+    function getDataCollectionList() {
+        var collectionListObservableArray = new wijmo.collections.ObservableArray;
+
+        var startDate = wijmoInputDateStartDate.value.toLocaleDateString().replace(/\//g, '-');
+        var endDate = wijmoInputDateEndDate.value.toLocaleDateString().replace(/\//g, '-');
+        var filterText = document.getElementById("filterText").value;
+
+        $.ajax({
+            url: "/api/collection/list/" + startDate + "/ " + endDate + "?filterText=" + filterText,
+            cache: false,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (results) {
+                if (results.length > 0) {
+                    for (var i = 0; i < results.length; i++) {
+                        collectionListObservableArray.push({
+                            ButtonEidt: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickEdit()'>Edit</button>",
+                            ButtonDelete: "<button class='btn btn-danger btn-xs btn-block' onclick='buttonClickDelete()'>Delete</button>",
+                            Id: results[i]["Id"],
+                            CollectionNumber: results[i]["CollectionNumber"],
+                            CollectionDate: results[i]["CollectionDate"],
+                            CustomerId: results[i]["CustomerId"],
+                            Customer: results[i]["Customer"],
+                            LoanId: results[i]["LoanId"],
+                            LoanNumber: results[i]["LoanNumber"],
+                            PayTypeId: results[i]["PayTypeId"],
+                            PayType: results[i]["PayType"],
+                            PaidAmount: results[i]["PaidAmount"],
+                            PaidAmountDisplay: parseFloat(results[i]["PaidAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            PenaltyAmount: results[i]["PenaltyAmount"],
+                            PenaltyAmountDisplay: parseFloat(results[i]["PenaltyAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                            Remarks: results[i]["Remarks"],
+                            Status: results[i]["Status"],
+                            IsLocked: results[i]["IsLocked"],
+                        });
+                    }
+                }
+            }
+        });
+
+        return collectionListObservableArray;
+    }
+
+    function createWijmoGridCollectionList() {
+        wijmoCollectionViewCollectionList = new wijmo.collections.CollectionView(getDataCollectionList());
+        wijmoCollectionViewCollectionList.canFilter = true;
+
+        wijmoGridCollectionList = new wijmo.grid.FlexGrid("#wijmoGridCollectionList");
+        wijmoGridCollectionList.initialize({
+            columns: [
+                {
+                    "header": "Edit",
+                    "binding": "ButtonEidt",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Delete",
+                    "binding": "ButtonDelete",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Col. No.",
+                    "binding": "CollectionNumber",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Date",
+                    "binding": "CollectionDate",
+                    "allowSorting": true,
+                    "width": 90
+                },
+                {
+                    "header": "Customer",
+                    "binding": "Customer",
+                    "allowSorting": true,
+                    "width": 200
+                },
+                {
+                    "header": "Loan No.",
+                    "binding": "LoanNumber",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Pay Type",
+                    "binding": "PayType",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Paid",
+                    "binding": "PaidAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Penalty",
+                    "binding": "PenaltyAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Remarks",
+                    "binding": "Remarks",
+                    "allowSorting": true,
+                    "width": 200
+                }
+            ],
+            autoGenerateColumns: false,
+            itemsSource: wijmoCollectionViewCollectionList,
+            isReadOnly: true,
+            autoSizeMode: wijmo.grid.AutoSizeMode.Both,
+            allowDragging: wijmo.grid.AllowDragging.None,
+            selectionMode: wijmo.grid.SelectionMode.Row,
+            frozenColumns: 2
+        });
+    }
+
+    function buttonClickEdit() {
+        document.getElementById("modalTitle").innerHTML = "Edit Collection";
+
+        $("#modalCollectionDetailForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+
+        wijmoCollectionViewCollectionList.editItem(wijmoCollectionViewCollectionList.currentItem);
+        var currentCollection = wijmoCollectionViewCollectionList.currentEditItem;
+
+        collectionId = currentCollection.Id;
+        createWijmoComboboxCustomer(currentCollection.CustomerId, currentCollection.LoanId, currentCollection.PayTypeId);
+        document.getElementById("inputPaidAmount").value = formatDecimalValues(currentCollection.PaidAmount);
+        document.getElementById("inputPenaltyAmount").value = formatDecimalValues(currentCollection.PenaltyAmount);
+        document.getElementById("inputRemarks").value = currentCollection.Remarks;
+    }
+
+    function buttonClickAddCreate() {
+        document.getElementById("modalTitle").innerHTML = "Create Collection";
+
+        $("#modalCollectionDetailForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+
+        collectionId = 0;
+        createWijmoComboboxCustomer(0, 0, 0);
+        document.getElementById("inputPaidAmount").value = formatDecimalValues(0);
+        document.getElementById("inputPenaltyAmount").value = formatDecimalValues(0);
+        document.getElementById("inputRemarks").value = "";
+    }
+
+    function buttonClickDelete() {
+        wijmoCollectionViewCollectionList.editItem(wijmoCollectionViewCollectionList.currentItem);
+        var id = wijmoCollectionViewCollectionList.currentEditItem.Id;
+
+    }
+
+    function buttonClickCreateCollection() {
+        var collectionObject = new Object();
+        collectionObject.CollectionDate = wijmoComboboxCollectionDate.value;
+        collectionObject.CustomerId = wijmoComboboxCustomer.selectedValue;
+        collectionObject.LoanId = wijmoComboboxLoanNumber.selectedValue;
+        collectionObject.PayTypeId = wijmoComboboxPayType.selectedValue;
+        collectionObject.PaidAmount = document.getElementById("inputPaidAmount").value;
+        collectionObject.PenaltyAmount = document.getElementById("inputPenaltyAmount").value;
+        collectionObject.Remarks = document.getElementById("inputRemarks").value;
+        var collectionData = JSON.stringify(collectionObject);
+
+        if (collectionId == 0) {
+            $.ajax({
+                url: "/api/collection/add",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: collectionData,
+                statusCode: {
+                    200: function (id) {
+                        $("#modalCollectionDetailForm").modal("hide");
+                        toastr.success("Create Successful");
+
+                        buttonGetData();
+                    },
+                    404: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        } else {
+            $.ajax({
+                url: "/api/collection/update/" + collectionId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: collectionData,
+                statusCode: {
+                    200: function (id) {
+                        $("#modalCollectionDetailForm").modal("hide");
+                        toastr.success("Update Successful");
+
+                        buttonGetData();
+                    },
+                    404: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        }
+    }
+
+    function createWijmoComboboxCustomer(customerId, loanId, payTypeId) {
+        var customerObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/collection/dropdown/list/customer',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        customerObservableArray.push({
+                            Id: results[i]["Id"],
+                            FullName: results[i]["FullName"]
+                        });
+                    }
+                }
+
+                wijmoComboboxCustomer.dispose();
+                wijmoComboboxCustomer = new wijmo.input.ComboBox('#wijmoComboboxCustomer', {
+                    itemsSource: customerObservableArray,
+                    displayMemberPath: "FullName",
+                    selectedValuePath: "Id",
+                    selectedValue: customerId,
+                    onSelectedIndexChanged: function () {
+                        createWijmoComboboxLoanNumber(loanId);
+                        isCustomerSelected = true;
+                    }
+                });
+
+                createWijmoComboboxLoanNumber(loanId);
+            }
+        });
+    }
+
+    function createWijmoComboboxLoanNumber(loanId, payTypeId) {
+        if (wijmoComboboxCustomer.selectedValue != null) {
+            var customerId = wijmoComboboxCustomer.selectedValue;
+
+            var loanNumberObservableArray = new wijmo.collections.ObservableArray();
+            $.ajax({
+                url: '/api/collection/dropdown/list/loanNumber/' + customerId,
+                cache: false,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                success: function (results) {
+                    var isDisabled = true;
+
+                    if (results.length > 0) {
+                        for (i = 0; i < results.length; i++) {
+                            loanNumberObservableArray.push({
+                                Id: results[i]["Id"],
+                                LoanNumber: results[i]["LoanNumber"],
+                                BalanceAmount: results[i]["BalanceAmount"]
+                            });
+                        }
+
+                        isDisabled = false;
+                    }
+
+                    wijmoComboboxLoanNumber.dispose();
+                    wijmoComboboxLoanNumber = new wijmo.input.ComboBox('#wijmoComboboxLoanNumber', {
+                        disabled: isDisabled,
+                        itemsSource: loanNumberObservableArray,
+                        displayMemberPath: "LoanNumber",
+                        selectedValuePath: "Id",
+                        selectedValue: loanId,
+                        onSelectedIndexChanged: function () {
+                            document.getElementById("inputBalalnceAmount").value = formatDecimalValues(this.selectedItem["BalanceAmount"]);
+                        }
+                    });
+
+                    document.getElementById("inputBalalnceAmount").value = formatDecimalValues(wijmoComboboxLoanNumber.selectedItem["BalanceAmount"]);
+
+                    if (isCustomerSelected == false) {
+                        createWijmoComboboxPayType(payTypeId);
+                    }
+                }
+            });
+        } else {
+            wijmoComboboxLoanNumber.dispose();
+            wijmoComboboxLoanNumber = new wijmo.input.ComboBox('#wijmoComboboxLoanNumber', {
+                disabled: true,
+                itemsSource: loanNumberObservableArray,
+                displayMemberPath: "LoanNumber",
+                selectedValuePath: "Id"
+            });
+
+            document.getElementById("inputBalalnceAmount").value = formatDecimalValues(0);
+
+            if (isCustomerSelected == false) {
+                createWijmoComboboxPayType(payTypeId);
+            }
+        }
+    }
+
+    function createWijmoComboboxPayType(payTypeId) {
+        var payTypeObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/collection/dropdown/list/payType',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        payTypeObservableArray.push({
+                            Id: results[i]["Id"],
+                            PayType: results[i]["PayType"]
+                        });
+                    }
+                }
+
+                wijmoComboboxPayType.dispose();
+                wijmoComboboxPayType = new wijmo.input.ComboBox('#wijmoComboboxPayType', {
+                    itemsSource: payTypeObservableArray,
+                    displayMemberPath: "PayType",
+                    selectedValuePath: "Id",
+                    selectedValue: payTypeId
+                });
+            }
+        });
+    }
+
+    function buttonGetData() {
+        wijmoCollectionViewCollectionList = new wijmo.collections.CollectionView(getDataCollectionList());
+        wijmoCollectionViewCollectionList.canFilter = true;
+        wijmoGridCollectionList.itemsSource = wijmoCollectionViewCollectionList;
+    }
+
+    window.onload = function () {
+        var date = new Date();
+
+        wijmoComboboxCollectionDate = new wijmo.input.InputDate('#wijmoComboboxCollectionDate', {
+            format: 'MM-dd-yyyy',
+            value: date
+        });
+
+        wijmoInputDateStartDate = new wijmo.input.InputDate('#wijmoInputDateStartDate', {
+            format: 'MM-dd-yyyy',
+            value: new Date(date.getFullYear(), date.getMonth(), 1)
+        });
+
+        wijmoInputDateEndDate = new wijmo.input.InputDate('#wijmoInputDateEndDate', {
+            format: 'MM-dd-yyyy',
+            value: new Date(date.getFullYear(), date.getMonth() + 1, 0)
+        });
+
+        createWijmoGridCollectionList();
+        wijmoComboboxCustomer = new wijmo.input.ComboBox('#wijmoComboboxCustomer');
+        wijmoComboboxLoanNumber = new wijmo.input.ComboBox('#wijmoComboboxLoanNumber');
+        wijmoComboboxPayType = new wijmo.input.ComboBox('#wijmoComboboxPayType');
+    }
+</script>

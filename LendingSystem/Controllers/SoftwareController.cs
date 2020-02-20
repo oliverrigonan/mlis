@@ -98,5 +98,10 @@ namespace LendingSystem.Controllers
         {
             return View();
         }
+
+        public ActionResult Reports()
+        {
+            return View();
+        }
     }
 }
