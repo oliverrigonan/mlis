@@ -420,7 +420,7 @@
                         for (i = 0; i < results.length; i++) {
                             loanNumberObservableArray.push({
                                 Id: results[i]["Id"],
-                                LoanNumber: results[i]["LoanNumber"],
+                                LoanNumber: results[i]["LoanNumber"] + " - (" + results[i]["LoanDate"] + ")",
                                 BalanceAmount: results[i]["BalanceAmount"]
                             });
                         }
@@ -436,11 +436,19 @@
                         selectedValuePath: "Id",
                         selectedValue: loanId,
                         onSelectedIndexChanged: function () {
-                            document.getElementById("inputBalalnceAmount").value = formatDecimalValues(this.selectedItem["BalanceAmount"]);
+                            if (this.selectedValue != null) {
+                                document.getElementById("inputBalalnceAmount").value = formatDecimalValues(this.selectedItem["BalanceAmount"]);
+                            } else {
+                                document.getElementById("inputBalalnceAmount").value = formatDecimalValues(0);
+                            }
                         }
                     });
 
-                    document.getElementById("inputBalalnceAmount").value = formatDecimalValues(wijmoComboboxLoanNumber.selectedItem["BalanceAmount"]);
+                    if (wijmoComboboxLoanNumber.selectedValue != null) {
+                        document.getElementById("inputBalalnceAmount").value = formatDecimalValues(wijmoComboboxLoanNumber.selectedItem["BalanceAmount"]);
+                    } else {
+                        document.getElementById("inputBalalnceAmount").value = formatDecimalValues(0);
+                    }
 
                     if (isCustomerSelected == false) {
                         createWijmoComboboxPayType(payTypeId);

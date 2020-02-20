@@ -136,7 +136,7 @@
 
     <div class="tab-content">
         <div id="tabPayments" class="tab-pane fade in active">
-            <div id=""></div>
+            <div id="wijmoGridCollectionListFlexGrid"></div>
         </div>
     </div>
 </div>
@@ -233,6 +233,9 @@
 <script type="text/javascript">
     var wijmoComboboxTerm;
 
+    var wijmoGridCollectionListCollectionView;
+    var wijmoGridCollectionListFlexGridFlexGrid;
+
     function getURLParameterValue(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 
@@ -306,6 +309,8 @@
                         alert("No Data");
                         window.location = "/Software/CustomerProfile";
                     }
+
+                    createWijmoGridCollectionList();
                 }
             });
         } else {
@@ -479,6 +484,114 @@
                     selectedValuePath: "Id"
                 });
             }
+        });
+    }
+
+    function getDataCollectionList() {
+        var collectionListObservableArray = new wijmo.collections.ObservableArray;
+
+        if (document.location.search.length > 0) {
+            var loanId = getURLParameterValue("loanId");
+
+            $.ajax({
+                url: "/api/collection/customerPayment/list/" + loanId,
+                cache: false,
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                success: function (results) {
+                    if (results.length > 0) {
+                        for (var i = 0; i < results.length; i++) {
+                            collectionListObservableArray.push({
+                                Id: results[i]["Id"],
+                                CollectionNumber: results[i]["CollectionNumber"],
+                                CollectionDate: results[i]["CollectionDate"],
+                                CustomerId: results[i]["CustomerId"],
+                                Customer: results[i]["Customer"],
+                                LoanId: results[i]["LoanId"],
+                                LoanNumber: results[i]["LoanNumber"],
+                                PayTypeId: results[i]["PayTypeId"],
+                                PayType: results[i]["PayType"],
+                                PaidAmount: results[i]["PaidAmount"],
+                                PaidAmountDisplay: parseFloat(results[i]["PaidAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                                PenaltyAmount: results[i]["PenaltyAmount"],
+                                PenaltyAmountDisplay: parseFloat(results[i]["PenaltyAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                                Remarks: results[i]["Remarks"],
+                                Status: results[i]["Status"],
+                                IsLocked: results[i]["IsLocked"],
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        return collectionListObservableArray;
+    }
+
+    function createWijmoGridCollectionList() {
+        wijmoGridCollectionListCollectionView = new wijmo.collections.CollectionView(getDataCollectionList());
+        wijmoGridCollectionListCollectionView.canFilter = true;
+
+        wijmoGridCollectionListFlexGrid = new wijmo.grid.FlexGrid("#wijmoGridCollectionListFlexGrid");
+        wijmoGridCollectionListFlexGrid.initialize({
+            columns: [
+                {
+                    "header": "Col. No.",
+                    "binding": "CollectionNumber",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Date",
+                    "binding": "CollectionDate",
+                    "allowSorting": true,
+                    "width": 90
+                },
+                {
+                    "header": "Customer",
+                    "binding": "Customer",
+                    "allowSorting": true,
+                    "width": 200
+                },
+                {
+                    "header": "Loan No.",
+                    "binding": "LoanNumber",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Pay Type",
+                    "binding": "PayType",
+                    "allowSorting": true,
+                    "width": 100
+                },
+                {
+                    "header": "Paid",
+                    "binding": "PaidAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Penalty",
+                    "binding": "PenaltyAmountDisplay",
+                    "allowSorting": true,
+                    "align": "right",
+                    "width": 100
+                },
+                {
+                    "header": "Remarks",
+                    "binding": "Remarks",
+                    "allowSorting": true,
+                    "width": "*"
+                }
+            ],
+            autoGenerateColumns: false,
+            itemsSource: wijmoGridCollectionListCollectionView,
+            isReadOnly: true,
+            autoSizeMode: wijmo.grid.AutoSizeMode.Both,
+            allowDragging: wijmo.grid.AllowDragging.None,
+            selectionMode: wijmo.grid.SelectionMode.Row
         });
     }
 

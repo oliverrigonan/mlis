@@ -61,7 +61,18 @@ namespace LendingSystem.Controllers
 
         public ActionResult CustomerList()
         {
-            return View();
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Customer")
+            {
+                return Redirect("/Software/CustomerProfile");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult CollectorList()
@@ -71,17 +82,50 @@ namespace LendingSystem.Controllers
 
         public ActionResult LoanList()
         {
-            return View();
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Customer")
+            {
+                return Redirect("/Software/CustomerProfile");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult LoanDetail()
         {
-            return View();
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Customer")
+            {
+                return Redirect("/Software/CustomerProfile");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult CollectionList()
         {
-            return View();
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Customer")
+            {
+                return Redirect("/Software/CustomerProfile");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult CollectionDetail()
@@ -91,7 +135,18 @@ namespace LendingSystem.Controllers
 
         public ActionResult UserList()
         {
-            return View();
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Customer")
+            {
+                return Redirect("/Software/CustomerProfile");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult UserDetail()
@@ -101,7 +156,18 @@ namespace LendingSystem.Controllers
 
         public ActionResult Reports()
         {
-            return View();
+            var currentUser = from d in db.MstUsers
+                              where d.AspNetUserId == User.Identity.GetUserId()
+                              select d;
+
+            if (currentUser.FirstOrDefault().UserType == "Customer")
+            {
+                return Redirect("/Software/CustomerProfile");
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

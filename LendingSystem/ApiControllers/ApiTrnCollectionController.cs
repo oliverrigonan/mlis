@@ -48,7 +48,7 @@ namespace LendingSystem.ApiControllers
 
                     if (loan.Any())
                     {
-                        totalBalanceAmount = loan.FirstOrDefault().PrincipalAmount - (totalPaidAmount + totalPaneltyAmount);
+                        totalBalanceAmount = (loan.FirstOrDefault().PrincipalAmount - totalPaidAmount) + totalPaneltyAmount;
 
                         var updateLoan = loan.FirstOrDefault();
                         updateLoan.PaidAmount = totalPaidAmount;
@@ -91,10 +91,12 @@ namespace LendingSystem.ApiControllers
             var loans = from d in db.TrnLoans
                         where d.CustomerId == Convert.ToInt32(customerId)
                         && d.BalanceAmount > 0
+                        && d.IsClosed == false
                         select new ApiModels.TrnLoanModel
                         {
                             Id = d.Id,
                             LoanNumber = d.LoanNumber,
+                            LoanDate = d.LoanDate.ToShortDateString(),
                             BalanceAmount = d.BalanceAmount
                         };
 
@@ -153,6 +155,39 @@ namespace LendingSystem.ApiControllers
 
             return collections.OrderByDescending(d => d.Id).ToList();
         }
+
+        [Authorize, HttpGet, Route("api/collection/customerPayment/list/{loanId}")]
+        public List<ApiModels.TrnCollectionModel> CollectionCustomerPaymentList(String loanId)
+        {
+            var collections = from d in db.TrnCollections
+                              where d.LoanId == Convert.ToInt32(loanId)
+                              select new ApiModels.TrnCollectionModel
+                              {
+                                  Id = d.Id,
+                                  CollectionNumber = d.CollectionNumber,
+                                  CollectionDate = d.CollectionDate.ToShortDateString(),
+                                  ManualCollectionNumber = d.ManualCollectionNumber,
+                                  CustomerId = d.CustomerId,
+                                  Customer = d.MstCustomer.FullName,
+                                  LoanId = d.LoanId,
+                                  LoanNumber = d.TrnLoan.LoanNumber,
+                                  PayTypeId = d.PayTypeId,
+                                  PayType = d.MstPayType.PayType,
+                                  PaidAmount = d.PaidAmount,
+                                  PenaltyAmount = d.PenaltyAmount,
+                                  Remarks = d.Remarks,
+                                  IsLocked = d.IsLocked,
+                                  CreatedByUserId = d.CreatedByUserId,
+                                  CreatedByUser = d.MstUser.FullName,
+                                  CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
+                                  UpdatedByUserId = d.UpdatedByUserId,
+                                  UpdatedByUser = d.MstUser1.FullName,
+                                  UpdatedDateTime = d.UpdatedDateTime.ToShortDateString()
+                              };
+
+            return collections.OrderByDescending(d => d.Id).ToList();
+        }
+
 
         [Authorize, HttpPost, Route("api/collection/add")]
         public HttpResponseMessage AddCollection(ApiModels.TrnCollectionModel objCollection)
