@@ -590,31 +590,6 @@ namespace LendingSystem.ApiControllers
 
                 if (loan.Any())
                 {
-                    if (loan.FirstOrDefault().IsSubmitted == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot delete submitted loan application.");
-                    }
-
-                    if (loan.FirstOrDefault().IsCancelled == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot delete cancelled loan application.");
-                    }
-
-                    if (loan.FirstOrDefault().IsApproved == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot delete approved loan application.");
-                    }
-
-                    if (loan.FirstOrDefault().IsDeclined == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot delete declined loan application.");
-                    }
-
-                    if (loan.FirstOrDefault().IsClosed == true)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is closed.");
-                    }
-
                     if (loan.FirstOrDefault().IsLocked == true)
                     {
                         return Request.CreateResponse(HttpStatusCode.BadRequest, "This transaction is locked.");

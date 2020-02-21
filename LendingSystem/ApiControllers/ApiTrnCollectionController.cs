@@ -41,29 +41,25 @@ namespace LendingSystem.ApiControllers
                 {
                     totalPaidAmount = collections.Sum(d => d.PaidAmount);
                     totalPaneltyAmount = collections.Sum(d => d.PenaltyAmount);
+                }
 
-                    var loan = from d in db.TrnLoans
-                               where d.Id == loanId
-                               select d;
+                var loan = from d in db.TrnLoans
+                           where d.Id == loanId
+                           select d;
 
-                    if (loan.Any())
-                    {
-                        totalBalanceAmount = (loan.FirstOrDefault().PrincipalAmount - totalPaidAmount) + totalPaneltyAmount;
+                if (loan.Any())
+                {
+                    totalBalanceAmount = (loan.FirstOrDefault().PrincipalAmount - totalPaidAmount) + totalPaneltyAmount;
 
-                        var updateLoan = loan.FirstOrDefault();
-                        updateLoan.PaidAmount = totalPaidAmount;
-                        updateLoan.PenaltyAmount = totalPaneltyAmount;
-                        updateLoan.BalanceAmount = totalBalanceAmount;
-                        db.SubmitChanges();
-                    }
-                    else
-                    {
-                        throw new Exception("Empty loans.");
-                    }
+                    var updateLoan = loan.FirstOrDefault();
+                    updateLoan.PaidAmount = totalPaidAmount;
+                    updateLoan.PenaltyAmount = totalPaneltyAmount;
+                    updateLoan.BalanceAmount = totalBalanceAmount;
+                    db.SubmitChanges();
                 }
                 else
                 {
-                    throw new Exception("Empty collections.");
+                    throw new Exception("Empty loans.");
                 }
             }
             catch (Exception ex)
@@ -90,6 +86,7 @@ namespace LendingSystem.ApiControllers
         {
             var loans = from d in db.TrnLoans
                         where d.CustomerId == Convert.ToInt32(customerId)
+                        && d.IsApproved == true
                         && d.BalanceAmount > 0
                         && d.IsClosed == false
                         select new ApiModels.TrnLoanModel
@@ -348,10 +345,21 @@ namespace LendingSystem.ApiControllers
 
                 if (collection.Any())
                 {
-                    db.TrnCollections.DeleteOnSubmit(collection.FirstOrDefault());
-                    db.SubmitChanges();
+                    if(collection.FirstOrDefault().TrnLoan.IsClosed == false)
+                    {
+                        Int32 loanId = collection.FirstOrDefault().LoanId;
 
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                        db.TrnCollections.DeleteOnSubmit(collection.FirstOrDefault());
+                        db.SubmitChanges();
+
+                        UpdateLoanTransaction(loanId);
+
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Cannot delete because its loan transaction is closed.");
+                    }
                 }
                 else
                 {
