@@ -254,6 +254,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Image\cover.jpg" />
+    <Content Include="Image\loan.png" />
+    <Content Include="Image\collect.png" />
+    <Content Include="Image\report.png" />
+    <Content Include="Image\collector.png" />
+    <Content Include="Image\customer.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">

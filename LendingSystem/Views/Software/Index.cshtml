@@ -2,22 +2,50 @@
     ViewBag.Title = "Dashboard";
 }
 
-<h2>@ViewBag.Title</h2>
-<div>
-    <h4>System Menu</h4>
-    <hr />
-    <div class="row">
-        <div class="col-lg-4">
-            <a href="/Software/CustomerList" class="btn btn-success btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">Customers</a>
-            <a href="/Software/CollectorList" class="btn btn-success btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">Collectors</a>
-        </div>
-        <div class="col-lg-4">
-            <a href="/Software/LoanList" class="btn btn-primary btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">Loan</a>
-            <a href="/Software/CollectionList" class="btn btn-primary btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">Collection</a>
-        </div>
-        <div class="col-lg-4">
-            <a href="/Software/Reports" class="btn btn-info btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">Reports</a>
-            @*<a href="/Software/UserList" class="btn btn-success btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">User</a>*@
+<div class="container body-content">
+    <h2>@ViewBag.Title</h2>
+    <div>
+        <h4>System Menu</h4>
+        <hr />
+        <div class="row">
+            <div class="col-lg-4">
+                <a href="/Software/CustomerList" class="btn btn-default btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">
+                    <img src="~/Image/customer.png" height="100" />
+                    <br />
+                    <br />
+                    Customers
+                </a>
+                <a href="/Software/CollectorList" class="btn btn-default btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">
+                    <img src="~/Image/collector.png" height="100" />
+                    <br />
+                    <br />
+                    Collectors
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a href="/Software/LoanList" class="btn btn-default btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">
+                    <img src="~/Image/loan.png" height="100" />
+                    <br />
+                    <br />
+                    Loan
+                </a>
+                <a href="/Software/CollectionList" class="btn btn-default btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">
+                    <img src="~/Image/collect.png" height="100" />
+                    <br />
+                    <br />
+                    Collection
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a href="/Software/Reports" class="btn btn-default btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">
+                    <img src="~/Image/report.png" height="100" />
+                    <br />
+                    <br />
+                    Reports
+                </a>
+                @*<a href="/Software/UserList" class="btn btn-success btn-lg btn-block" style="padding-top: 50px; padding-bottom: 50px;">User</a>*@
+            </div>
         </div>
     </div>
 </div>
+

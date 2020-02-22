@@ -2,18 +2,21 @@
     ViewBag.Title = "Customers List";
 }
 
-<h2>@ViewBag.Title</h2>
-<div>
-    <h4>List of all customers</h4>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="/Software" class="btn btn-default">Back</a>
-            <button class="btn btn-primary" onclick="buttonClickAddCustomer()">Add</button>
-        </div>
-        <div class="panel-body">
-            <div id="wijmoGridCustomerList"></div>
+<div class="container body-content">
+    <h2>@ViewBag.Title</h2>
+    <div>
+        <h4>List of all customers</h4>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/Software" class="btn btn-default">Back</a>
+                <button class="btn btn-primary" onclick="buttonClickAddCustomer()">Add</button>
+            </div>
+            <div class="panel-body">
+                <div id="wijmoGridCustomerList"></div>
+            </div>
         </div>
     </div>
+
 </div>
 
 <div class="modal fae" id="modalCustomerDetailForm" role="dialog">

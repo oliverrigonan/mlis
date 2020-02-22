@@ -3,140 +3,142 @@
     ViewBag.Title = "CustomerLoanDetail";
 }
 
-<h2>Loan Detail</h2>
-<div>
-    <h4>Your loan transaction</h4>
-    <hr />
+<div class="container body-content">
+    <h2>Loan Detail</h2>
+    <div>
+        <h4>Your loan transaction</h4>
+        <hr />
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="/Software/CustomerProfile" class="btn btn-default">Back</a>
-            <button class="btn btn-primary" id="buttonClickEdit" onclick="buttonClickEdit()">Change</button>
-            <button class="btn btn-success" id="buttonClickSubmit" onclick="buttonClickSubmit()">Submit</button>
-            <button class="btn btn-primary" id="buttonClickPrint" onclick="buttonClickPrint()">Print</button>
-            <button class="btn btn-warning" id="buttonClickCancel" onclick="buttonClickCancel()">Cancel</button>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/Software/CustomerProfile" class="btn btn-default">Back</a>
+                <button class="btn btn-primary" id="buttonClickEdit" onclick="buttonClickEdit()">Change</button>
+                <button class="btn btn-success" id="buttonClickSubmit" onclick="buttonClickSubmit()">Submit</button>
+                <button class="btn btn-primary" id="buttonClickPrint" onclick="buttonClickPrint()">Print</button>
+                <button class="btn btn-warning" id="buttonClickCancel" onclick="buttonClickCancel()">Cancel</button>
+            </div>
         </div>
-    </div>
 
-    <div class="alert alert-info text-center">
-        <span id="spanRemarks"></span>
-    </div>
+        <div class="alert alert-info text-center">
+            <span id="spanRemarks"></span>
+        </div>
 
-    <table class="table table-striped">
-        <tbody>
-            <tr>
-                <td class="col-md-2"><b>Loan Number:</b></td>
-                <td class="col-md-10">
-                    <span id="spanLoanNumber"></span>
-                </td>
-            </tr>
-            <tr>
-                <td><b>Customer Name:</b></td>
-                <td>
-                    <span id="spanCustomerName"></span>
-                </td>
-            </tr>
-            <tr>
-                <td><b>Term:</b></td>
-                <td>
-                    <span id="spanTerm"></span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td class="col-md-2"><b>Loan Number:</b></td>
+                    <td class="col-md-10">
+                        <span id="spanLoanNumber"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Customer Name:</b></td>
+                    <td>
+                        <span id="spanCustomerName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Term:</b></td>
+                    <td>
+                        <span id="spanTerm"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabComputations">Computations</a></li>
-    </ul>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tabComputations">Computations</a></li>
+        </ul>
 
-    <br />
+        <br />
 
-    <div class="tab-content">
-        <div id="tabComputations" class="tab-pane fade in active">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Principal Amount</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputPrincipalAmount" class="form-control text-right number" readonly />
+        <div class="tab-content">
+            <div id="tabComputations" class="tab-pane fade in active">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Principal Amount</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputPrincipalAmount" class="form-control text-right number" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Interest Percentage</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputInterestPercentage" class="form-control text-right number" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Interest Amount</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputInterestAmount" class="form-control text-right number" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Loan Amount</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputLoanAmount" class="form-control text-right number" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Net Amount</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputNetAmount" class="form-control text-right number" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Amortization</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputAmortizationAmount" class="form-control text-right number" readonly />
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Interest Percentage</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputInterestPercentage" class="form-control text-right number" readonly />
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Total Paid</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputTotalPaidAmount" class="form-control text-right number" readonly />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Interest Amount</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputInterestAmount" class="form-control text-right number" readonly />
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Total Penalty</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputTotalPenaltyAmount" class="form-control text-right number" readonly />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Loan Amount</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputLoanAmount" class="form-control text-right number" readonly />
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Ending Balance</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputEndingBalanceAmount" class="form-control text-right number" readonly />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Net Amount</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputNetAmount" class="form-control text-right number" readonly />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Amortization</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputAmortizationAmount" class="form-control text-right number" readonly />
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Status</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputStatus" class="form-control" readonly />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Total Paid</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputTotalPaidAmount" class="form-control text-right number" readonly />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Total Penalty</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputTotalPenaltyAmount" class="form-control text-right number" readonly />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Ending Balance</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputEndingBalanceAmount" class="form-control text-right number" readonly />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">Status</label>
-                                    <div class="col-sm-8">
-                                        <input id="inputStatus" class="form-control" readonly />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabPayments">Payments and Penalties</a></li>
-    </ul>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tabPayments">Payments and Penalties</a></li>
+        </ul>
 
-    <br />
+        <br />
 
-    <div class="tab-content">
-        <div id="tabPayments" class="tab-pane fade in active">
-            <div id="wijmoGridCollectionListFlexGrid"></div>
+        <div class="tab-content">
+            <div id="tabPayments" class="tab-pane fade in active">
+                <div id="wijmoGridCollectionListFlexGrid"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -297,10 +299,21 @@
                                     if (results.IsSubmitted == true) {
                                         document.getElementById("buttonClickSubmit").disabled = true;
                                         document.getElementById("buttonClickEdit").disabled = true;
+
+                                        if (results.IsApproved == true) {
+                                            document.getElementById("buttonClickPrint").disabled = false;
+                                        } else {
+                                            document.getElementById("buttonClickPrint").disabled = true;
+                                        }
                                     }
                                     else {
+                                        if (results.IsApproved == true) {
+                                            document.getElementById("buttonClickPrint").disabled = false;
+                                        } else {
+                                            document.getElementById("buttonClickPrint").disabled = true;
+                                        }
+
                                         document.getElementById("buttonClickCancel").disabled = true;
-                                        document.getElementById("buttonClickPrint").disabled = true;
                                     }
                                 }
                             }

@@ -3,30 +3,33 @@
     ViewBag.Title = "Manage";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Current User:</dt>
-        <dd>
-            @User.Identity.Name
-        </dd>
-        <dt>Password:</dt>
-        <dd>
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-        </dd>
-    </dl>
-    <hr />
-    <p class="">Go to Dashboard</p>
-    <a  href="/Software" class="btn btn-primary btn-lg" >Launch Software</a>
+<div class="container body-content">
+    <h2>@ViewBag.Title</h2>
+    <p class="text-success">@ViewBag.StatusMessage</p>
+    <div>
+        <h4>Change your account settings</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>Current User:</dt>
+            <dd>
+                @User.Identity.Name
+            </dd>
+            <dt>Password:</dt>
+            <dd>
+                @if (Model.HasPassword)
+                {
+                    @Html.ActionLink("Change your password", "ChangePassword")
+                }
+                else
+                {
+                    @Html.ActionLink("Create", "SetPassword")
+                }
+            </dd>
+        </dl>
+        <hr />
+        <p class="">Go to Dashboard</p>
+        <a href="/Software" class="btn btn-primary btn-lg">Launch Software</a>
+    </div>
 </div>
+
+

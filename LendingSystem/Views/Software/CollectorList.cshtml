@@ -2,19 +2,22 @@
     ViewBag.Title = "Collectors List";
 }
 
-<h2>@ViewBag.Title</h2>
-<div>
-    <h4>List of all collectors</h4>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="/Software" class="btn btn-default">Back</a>
-            <button class="btn btn-primary" onclick="buttonClickAddCollector()">Add</button>
-        </div>
-        <div class="panel-body">
-            <div id="wijmoGridCollectorList"></div>
+<div class="container body-content">
+    <h2>@ViewBag.Title</h2>
+    <div>
+        <h4>List of all collectors</h4>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/Software" class="btn btn-default">Back</a>
+                <button class="btn btn-primary" onclick="buttonClickAddCollector()">Add</button>
+            </div>
+            <div class="panel-body">
+                <div id="wijmoGridCollectorList"></div>
+            </div>
         </div>
     </div>
 </div>
+
 
 <div class="modal fae" id="modalCollectorDetailForm" role="dialog">
     <div class="modal-dialog">

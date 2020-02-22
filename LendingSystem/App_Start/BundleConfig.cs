@@ -30,7 +30,6 @@ namespace LendingSystem
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/bootstrap-theme.css",
                       "~/Content/wijmo.min.css",
                       "~/Content/toastr.min.css",
                       "~/Content/site.css"));

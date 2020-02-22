@@ -1,55 +1,59 @@
-﻿<h2>Collection List</h2>
+﻿<div class="container body-content">
 
-<div>
-    <h4>List of all payments</h4>
-    <hr />
+    <h2>Collection List</h2>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="/Software" class="btn btn-default">Back</a>
-            <button class="btn btn-primary" onclick="buttonClickAddCreate()">Create</button>
+    <div>
+        <h4>List of all payments</h4>
+        <hr />
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/Software" class="btn btn-default">Back</a>
+                <button class="btn btn-primary" onclick="buttonClickAddCreate()">Create</button>
+            </div>
         </div>
-    </div>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabActivity">Payments (Loan Transactions)</a></li>
-    </ul>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tabActivity">Payments (Loan Transactions)</a></li>
+        </ul>
 
-    <br />
+        <br />
 
-    <div class="tab-content">
-        <div id="tabActivity" class="tab-pane fade in active">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Filters
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label>Date Start</label>
-                                <div id="wijmoInputDateStartDate"></div>
+        <div class="tab-content">
+            <div id="tabActivity" class="tab-pane fade in active">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Filters
                             </div>
-                            <div class="form-group">
-                                <label>Date End</label>
-                                <div id="wijmoInputDateEndDate"></div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Date Start</label>
+                                    <div id="wijmoInputDateStartDate"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date End</label>
+                                    <div id="wijmoInputDateEndDate"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Filter</label>
+                                    <input class="form-control" id="filterText" placeholder="Filter text" />
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Filter</label>
-                                <input class="form-control" id="filterText" placeholder="Filter text" />
+                            <div class="panel-footer">
+                                <button class="btn btn-success btn-block" onclick="buttonGetData()">Refresh (Get Data)</button>
                             </div>
-                        </div>
-                        <div class="panel-footer">
-                            <button class="btn btn-success btn-block" onclick="buttonGetData()">Refresh (Get Data)</button>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-9">
-                    <div id="wijmoGridCollectionList"></div>
+                    <div class="col-md-9">
+                        <div id="wijmoGridCollectionList"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <div class="modal fae" id="modalCollectionDetailForm" role="dialog">
@@ -131,6 +135,7 @@
                                 <label>Pay Type:</label>
                                 <div id="wijmoComboboxPayType"></div>
                             </div>
+                            <hr />
                             <div class="form-group">
                                 <table style="width: 100%">
                                     <tr>

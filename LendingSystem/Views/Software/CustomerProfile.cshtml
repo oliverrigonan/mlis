@@ -1,48 +1,49 @@
-﻿<h2>My Loans</h2>
+﻿<div class="container body-content">
+    <h2>My Loans</h2>
+    <div>
+        <h4>Manage your loan and transactions</h4>
+        <hr />
 
-<div>
-    <h4>Manage your loan and transactions</h4>
-    <hr />
+        <h3 id="currentUserFullName"></h3>
+        <i class="glyphicon glyphicon-calendar"></i> &nbsp; <span id="currentDateOfBirth"></span><br />
+        <i class="glyphicon glyphicon-user"></i> &nbsp; <span id="currentGender"></span><br />
+        <i class="glyphicon glyphicon-map-marker"></i> &nbsp; <span id="currentAddress"></span>
 
-    <h3 id="currentUserFullName"></h3>
-    <i class="glyphicon glyphicon-calendar"></i> &nbsp; <span id="currentDateOfBirth"></span><br />
-    <i class="glyphicon glyphicon-user"></i> &nbsp; <span id="currentGender"></span><br />
-    <i class="glyphicon glyphicon-map-marker"></i> &nbsp; <span id="currentAddress"></span>
+        <br />
+        <br />
 
-    <br />
-    <br />
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tabActivity">Current Activity (Transactions)</a></li>
+        </ul>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabActivity">Current Activity (Transactions)</a></li>
-    </ul>
+        <br />
 
-    <br />
-
-    <div class="tab-content">
-        <div id="tabActivity" class="tab-pane fade in active">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <button class="btn btn-success" onclick="buttonClickAddLoan()">New Loan</button>
-                </div>
-                <div class="panel-body">
-                    <div class="alert alert-info text-center" id="emptyLoanErrorMessage">
-                        <strong>Empty!</strong> No current loan for this time.
+        <div class="tab-content">
+            <div id="tabActivity" class="tab-pane fade in active">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <button class="btn btn-success" onclick="buttonClickAddLoan()">New Loan</button>
                     </div>
-                    <div id="wijmoGridCurrentLoanList"></div>
+                    <div class="panel-body">
+                        <div class="alert alert-info text-center" id="emptyLoanErrorMessage">
+                            <strong>Empty!</strong> No current loan for this time.
+                        </div>
+                        <div id="wijmoGridCurrentLoanList"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabLoan">Loan History</a></li>
-    </ul>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tabLoan">Loan History</a></li>
+        </ul>
 
-    <br />
+        <br />
 
-    <div class="tab-content">
-        <div id="tabLoan" class="tab-pane fade in active">
-            <div id="wijmoGridLoanHistoryList"></div>
+        <div class="tab-content">
+            <div id="tabLoan" class="tab-pane fade in active">
+                <div id="wijmoGridLoanHistoryList"></div>
+            </div>
         </div>
     </div>
 </div>
