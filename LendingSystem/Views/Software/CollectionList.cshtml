@@ -59,61 +59,134 @@
                 <h4 class="modal-title" id="modalTitle">Collection Detail</h4>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 49%">
-                                    <label>Collection Date:</label>
-                                    <div id="wijmoComboboxCollectionDate"></div>
-                                </td>
-                                <td style="width: 2%"></td>
-                                <td style="width: 49%">
-                                    <label>Pay Type:</label>
-                                    <div id="wijmoComboboxPayType"></div>
-                                </td>
-                            </tr>
-                        </table>
 
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tabCollectionDetails">Collection Details</a></li>
+                    <li><a data-toggle="tab" href="#tabPaymentMethod">Payment Method</a></li>
+                </ul>
+
+                <br />
+
+                <div class="tab-content">
+                    <div id="tabCollectionDetails" class="tab-pane fade in active">
+                        <form>
+                            <div class="form-group">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 49%">
+                                            <label>Collection Date:</label>
+                                            <div id="wijmoComboboxCollectionDate"></div>
+                                        </td>
+                                        <td style="width: 2%"></td>
+                                        <td style="width: 49%"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <label>Customer:</label>
+                                <div id="wijmoComboboxCustomer"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Loan Number:</label>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 49%">
+                                            <div id="wijmoComboboxLoanNumber"></div>
+                                        </td>
+                                        <td style="width: 2%"></td>
+                                        <td style="width: 49%">
+                                            <input id="inputBalalnceAmount" class="form-control text-right number" readonly />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 49%">
+                                            <label>Paid Amount:</label>
+                                            <input id="inputPaidAmount" class="form-control text-right number" />
+                                        </td>
+                                        <td style="width: 2%"></td>
+                                        <td style="width: 49%">
+                                            <label>Penalty Amount:</label>
+                                            <input id="inputPenaltyAmount" class="form-control text-right number" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea id="inputRemarks" class="form-control" rows="7"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Collector / Pay to:</label>
+                                <div id="wijmoComboboxCollector"></div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label>Customer:</label>
-                        <div id="wijmoComboboxCustomer"></div>
+                    <div id="tabPaymentMethod" class="tab-pane fade">
+                        <form>
+                            <div class="form-group">
+                                <label>Pay Type:</label>
+                                <div id="wijmoComboboxPayType"></div>
+                            </div>
+                            <div class="form-group">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 49%">
+                                            <label>Paymaya Account Number:</label>
+                                            <input id="inputPaymayaAccountNumber" class="form-control" />
+                                        </td>
+                                        <td style="width: 2%"></td>
+                                        <td style="width: 49%">
+                                            <label>GCash Account Number:</label>
+                                            <input id="inputGCashAccountNumber" class="form-control" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <hr />
+                            <div class="form-group">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 49%">
+                                            <label>Credit Card Number:</label>
+                                            <input id="inputCreditCardNumber" class="form-control" />
+                                        </td>
+                                        <td style="width: 2%"></td>
+                                        <td style="width: 49%">
+                                            <label>Credit Card Name:</label>
+                                            <input id="inputCreditCardName" class="form-control" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <hr />
+                            <div class="form-group">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 49%">
+                                            <label>Check Number:</label>
+                                            <input id="inputCheckNumber" class="form-control" />
+                                        </td>
+                                        <td style="width: 2%"></td>
+                                        <td style="width: 49%">
+                                            <label>Check Date:</label>
+                                            <div id="wijmoInputDateCheckDate"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <label>Check Bank:</label>
+                                <input id="inputCheckBank" class="form-control" />
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label>Loan Number:</label>
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 49%">
-                                    <div id="wijmoComboboxLoanNumber"></div>
-                                </td>
-                                <td style="width: 2%"></td>
-                                <td style="width: 49%">
-                                    <input id="inputBalalnceAmount" class="form-control text-right number" readonly />
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="form-group">
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 49%">
-                                    <label>Paid Amount:</label>
-                                    <input id="inputPaidAmount" class="form-control text-right number" />
-                                </td>
-                                <td style="width: 2%"></td>
-                                <td style="width: 49%">
-                                    <label>Penalty Amount:</label>
-                                    <input id="inputPenaltyAmount" class="form-control text-right number" />
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="form-group">
-                        <label>Remarks</label>
-                        <textarea id="inputRemarks" class="form-control" rows="7"></textarea>
-                    </div>
-                </form>
+                </div>
+
+
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" id="buttonClickCreateCollection" onclick="buttonClickCreateCollection()">Save</button>
@@ -153,6 +226,8 @@
     var isCustomerSelected = false;
     var wijmoComboboxLoanNumber;
     var wijmoComboboxPayType;
+    var wijmoComboboxCollector;
+    var wijmoInputDateCheckDate;
 
     function getDataCollectionList() {
         var collectionListObservableArray = new wijmo.collections.ObservableArray;
@@ -162,7 +237,7 @@
         var filterText = document.getElementById("filterText").value;
 
         $.ajax({
-            url: "/api/collection/list/" + startDate + "/ " + endDate + "?filterText=" + filterText,
+            url: "/api/collection/list/" + startDate + "/" + endDate + "?filterText=" + filterText,
             cache: false,
             type: "GET",
             contentType: "application/json; charset=utf-8",
@@ -181,11 +256,20 @@
                             LoanNumber: results[i]["LoanNumber"],
                             PayTypeId: results[i]["PayTypeId"],
                             PayType: results[i]["PayType"],
+                            PaymayaAccountNumber: results[i]["PaymayaAccountNumber"],
+                            GCashAccountNumber: results[i]["GCashAccountNumber"],
+                            CreditCardNumber: results[i]["CreditCardNumber"],
+                            CheckNumber: results[i]["CheckNumber"],
+                            CheckDate: results[i]["CheckDate"],
+                            CheckBank: results[i]["CheckBank"],
+                            CheckBank: results[i]["CheckBank"],
                             PaidAmount: results[i]["PaidAmount"],
                             PaidAmountDisplay: parseFloat(results[i]["PaidAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             PenaltyAmount: results[i]["PenaltyAmount"],
                             PenaltyAmountDisplay: parseFloat(results[i]["PenaltyAmount"]).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             Remarks: results[i]["Remarks"],
+                            CollectorId: results[i]["CollectorId"],
+                            Collector: results[i]["Collector"],
                             Status: results[i]["Status"],
                             IsLocked: results[i]["IsLocked"],
                         });
@@ -295,7 +379,7 @@
         var currentCollection = wijmoCollectionViewCollectionList.currentEditItem;
 
         collectionId = currentCollection.Id;
-        createWijmoComboboxCustomer(currentCollection.CustomerId, currentCollection.LoanId, currentCollection.PayTypeId);
+        createWijmoComboboxCustomer(currentCollection.CustomerId, currentCollection.LoanId, currentCollection.PayTypeId, currentCollection.CollectorId);
         document.getElementById("inputPaidAmount").value = formatDecimalValues(currentCollection.PaidAmount);
         document.getElementById("inputPenaltyAmount").value = formatDecimalValues(currentCollection.PenaltyAmount);
         document.getElementById("inputRemarks").value = currentCollection.Remarks;
@@ -310,7 +394,7 @@
         });
 
         collectionId = 0;
-        createWijmoComboboxCustomer(0, 0, 0);
+        createWijmoComboboxCustomer(0, 0, 0, 0);
         document.getElementById("inputPaidAmount").value = formatDecimalValues(0);
         document.getElementById("inputPenaltyAmount").value = formatDecimalValues(0);
         document.getElementById("inputRemarks").value = "";
@@ -354,12 +438,20 @@
 
     function buttonClickCreateCollection() {
         var collectionObject = new Object();
-        collectionObject.CollectionDate = wijmoComboboxCollectionDate.value;
+        collectionObject.CollectionDate = wijmoComboboxCollectionDate.value.toLocaleDateString();
         collectionObject.CustomerId = wijmoComboboxCustomer.selectedValue;
         collectionObject.LoanId = wijmoComboboxLoanNumber.selectedValue;
         collectionObject.PayTypeId = wijmoComboboxPayType.selectedValue;
+        collectionObject.PaymayaAccountNumber = document.getElementById("inputPaymayaAccountNumber").value;
+        collectionObject.GCashAccountNumber = document.getElementById("inputGCashAccountNumber").value;
+        collectionObject.CreditCardNumber = document.getElementById("inputCreditCardNumber").value;
+        collectionObject.CreditCardName = document.getElementById("inputCreditCardName").value;
+        collectionObject.CheckNumber = document.getElementById("inputCheckNumber").value;
+        collectionObject.CheckDate = wijmoInputDateCheckDate.value.toLocaleDateString();
+        collectionObject.CheckBank = document.getElementById("inputCheckBank").value;
         collectionObject.PaidAmount = document.getElementById("inputPaidAmount").value;
         collectionObject.PenaltyAmount = document.getElementById("inputPenaltyAmount").value;
+        collectionObject.CollectorId = wijmoComboboxCollector.selectedValue;
         collectionObject.Remarks = document.getElementById("inputRemarks").value;
         var collectionData = JSON.stringify(collectionObject);
 
@@ -416,7 +508,7 @@
         }
     }
 
-    function createWijmoComboboxCustomer(customerId, loanId, payTypeId) {
+    function createWijmoComboboxCustomer(customerId, loanId, payTypeId, collectorId) {
         var customerObservableArray = new wijmo.collections.ObservableArray();
         $.ajax({
             url: '/api/collection/dropdown/list/customer',
@@ -440,17 +532,17 @@
                     selectedValuePath: "Id",
                     selectedValue: customerId,
                     onSelectedIndexChanged: function () {
-                        createWijmoComboboxLoanNumber(loanId);
+                        createWijmoComboboxLoanNumber(loanId, payTypeId, collectorId);
                         isCustomerSelected = true;
                     }
                 });
 
-                createWijmoComboboxLoanNumber(loanId);
+                createWijmoComboboxLoanNumber(loanId, payTypeId, collectorId);
             }
         });
     }
 
-    function createWijmoComboboxLoanNumber(loanId, payTypeId) {
+    function createWijmoComboboxLoanNumber(loanId, payTypeId, collectorId) {
         if (wijmoComboboxCustomer.selectedValue != null) {
             var customerId = wijmoComboboxCustomer.selectedValue;
 
@@ -498,7 +590,7 @@
                     }
 
                     if (isCustomerSelected == false) {
-                        createWijmoComboboxPayType(payTypeId);
+                        createWijmoComboboxPayType(payTypeId, collectorId);
                     }
                 }
             });
@@ -514,12 +606,12 @@
             document.getElementById("inputBalalnceAmount").value = formatDecimalValues(0);
 
             if (isCustomerSelected == false) {
-                createWijmoComboboxPayType(payTypeId);
+                createWijmoComboboxPayType(payTypeId, collectorId);
             }
         }
     }
 
-    function createWijmoComboboxPayType(payTypeId) {
+    function createWijmoComboboxPayType(payTypeId, collectorId) {
         var payTypeObservableArray = new wijmo.collections.ObservableArray();
         $.ajax({
             url: '/api/collection/dropdown/list/payType',
@@ -542,6 +634,36 @@
                     displayMemberPath: "PayType",
                     selectedValuePath: "Id",
                     selectedValue: payTypeId
+                });
+
+                createWijmoComboboxCollector(collectorId);
+            }
+        });
+    }
+
+    function createWijmoComboboxCollector(collectorId) {
+        var collectorObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/collection/dropdown/list/collector',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        collectorObservableArray.push({
+                            Id: results[i]["Id"],
+                            Collector: results[i]["Collector"]
+                        });
+                    }
+                }
+
+                wijmoComboboxCollector.dispose();
+                wijmoComboboxCollector = new wijmo.input.ComboBox('#wijmoComboboxCollector', {
+                    itemsSource: collectorObservableArray,
+                    displayMemberPath: "Collector",
+                    selectedValuePath: "Id",
+                    selectedValue: collectorId
                 });
             }
         });
@@ -575,5 +697,11 @@
         wijmoComboboxCustomer = new wijmo.input.ComboBox('#wijmoComboboxCustomer');
         wijmoComboboxLoanNumber = new wijmo.input.ComboBox('#wijmoComboboxLoanNumber');
         wijmoComboboxPayType = new wijmo.input.ComboBox('#wijmoComboboxPayType');
+        wijmoComboboxCollector = new wijmo.input.ComboBox('#wijmoComboboxCollector');
+
+        wijmoInputDateCheckDate = new wijmo.input.InputDate('#wijmoInputDateCheckDate', {
+            format: 'MM-dd-yyyy',
+            value: date
+        });
     }
 </script>

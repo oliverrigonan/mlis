@@ -113,6 +113,19 @@ namespace LendingSystem.ApiControllers
             return payTypes.ToList();
         }
 
+        [Authorize, HttpGet, Route("api/collection/dropdown/list/collector")]
+        public List<ApiModels.MstCollectorModel> DropdownListLoanCollector()
+        {
+            var collectors = from d in db.MstCollectors
+                             select new ApiModels.MstCollectorModel
+                             {
+                                 Id = d.Id,
+                                 Collector = d.Collector
+                             };
+
+            return collectors.ToList();
+        }
+
         [Authorize, HttpGet, Route("api/collection/list/{startDate}/{endDate}")]
         public List<ApiModels.TrnCollectionModel> CollectionList(String startDate, String endDate, String filterText)
         {
@@ -138,9 +151,18 @@ namespace LendingSystem.ApiControllers
                                   LoanNumber = d.TrnLoan.LoanNumber,
                                   PayTypeId = d.PayTypeId,
                                   PayType = d.MstPayType.PayType,
+                                  PaymayaAccountNumber = d.PaymayaAccountNumber,
+                                  GCashAccountNumber = d.GCashAccountNumber,
+                                  CreditCardNumber = d.CreditCardNumber,
+                                  CreditCardName = d.CreditCardName,
+                                  CheckNumber = d.CheckNumber,
+                                  CheckDate = d.CheckDate.ToShortDateString(),
+                                  CheckBank = d.CheckBank,
                                   PaidAmount = d.PaidAmount,
                                   PenaltyAmount = d.PenaltyAmount,
                                   Remarks = d.Remarks,
+                                  CollectorId = d.CollectorId,
+                                  Collector = d.MstCollector.Collector,
                                   IsLocked = d.IsLocked,
                                   CreatedByUserId = d.CreatedByUserId,
                                   CreatedByUser = d.MstUser.FullName,
@@ -170,9 +192,18 @@ namespace LendingSystem.ApiControllers
                                   LoanNumber = d.TrnLoan.LoanNumber,
                                   PayTypeId = d.PayTypeId,
                                   PayType = d.MstPayType.PayType,
+                                  PaymayaAccountNumber = d.PaymayaAccountNumber,
+                                  GCashAccountNumber = d.GCashAccountNumber,
+                                  CreditCardNumber = d.CreditCardNumber,
+                                  CreditCardName = d.CreditCardName,
+                                  CheckNumber = d.CheckNumber,
+                                  CheckDate = d.CheckDate.ToShortDateString(),
+                                  CheckBank = d.CheckBank,
                                   PaidAmount = d.PaidAmount,
                                   PenaltyAmount = d.PenaltyAmount,
                                   Remarks = d.Remarks,
+                                  CollectorId = d.CollectorId,
+                                  Collector = d.MstCollector.Collector,
                                   IsLocked = d.IsLocked,
                                   CreatedByUserId = d.CreatedByUserId,
                                   CreatedByUser = d.MstUser.FullName,
@@ -184,7 +215,6 @@ namespace LendingSystem.ApiControllers
 
             return collections.OrderByDescending(d => d.Id).ToList();
         }
-
 
         [Authorize, HttpPost, Route("api/collection/add")]
         public HttpResponseMessage AddCollection(ApiModels.TrnCollectionModel objCollection)
@@ -223,6 +253,15 @@ namespace LendingSystem.ApiControllers
                     return Request.CreateResponse(HttpStatusCode.NotFound, "Pay type not found.");
                 }
 
+                var collector = from d in db.MstCollectors
+                                where d.Id == objCollection.CollectorId
+                                select d;
+
+                if (collector.Any() == false)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Collector not found.");
+                }
+
                 var collectionNumber = "0000000001";
                 var lastCollection = from d in db.TrnCollections.OrderByDescending(d => d.Id)
                                      select d;
@@ -241,9 +280,17 @@ namespace LendingSystem.ApiControllers
                     CustomerId = customer.FirstOrDefault().Id,
                     LoanId = loan.FirstOrDefault().Id,
                     PayTypeId = payType.FirstOrDefault().Id,
+                    PaymayaAccountNumber = objCollection.PaymayaAccountNumber,
+                    GCashAccountNumber = objCollection.GCashAccountNumber,
+                    CreditCardNumber = objCollection.CreditCardNumber,
+                    CreditCardName = objCollection.CreditCardName,
+                    CheckNumber = objCollection.CheckNumber,
+                    CheckDate = Convert.ToDateTime(objCollection.CheckDate),
+                    CheckBank = objCollection.CheckBank,
                     PaidAmount = objCollection.PaidAmount,
                     PenaltyAmount = objCollection.PenaltyAmount,
                     Remarks = objCollection.Remarks,
+                    CollectorId = collector.FirstOrDefault().Id,
                     IsLocked = true,
                     CreatedByUserId = currentUser.FirstOrDefault().Id,
                     CreatedDateTime = DateTime.Now,
@@ -301,6 +348,15 @@ namespace LendingSystem.ApiControllers
                     return Request.CreateResponse(HttpStatusCode.NotFound, "Pay type not found.");
                 }
 
+                var collector = from d in db.MstCollectors
+                                where d.Id == objCollection.CollectorId
+                                select d;
+
+                if (collector.Any() == false)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Collector not found.");
+                }
+
                 var collection = from d in db.TrnCollections
                                  where d.Id == Convert.ToInt32(id)
                                  select d;
@@ -312,9 +368,17 @@ namespace LendingSystem.ApiControllers
                     updateCollection.CustomerId = customer.FirstOrDefault().Id;
                     updateCollection.LoanId = loan.FirstOrDefault().Id;
                     updateCollection.PayTypeId = payType.FirstOrDefault().Id;
+                    updateCollection.PaymayaAccountNumber = objCollection.PaymayaAccountNumber;
+                    updateCollection.GCashAccountNumber = objCollection.GCashAccountNumber;
+                    updateCollection.CreditCardNumber = objCollection.CreditCardNumber;
+                    updateCollection.CreditCardName = objCollection.CreditCardName;
+                    updateCollection.CheckNumber = objCollection.CheckNumber;
+                    updateCollection.CheckDate = Convert.ToDateTime(objCollection.CheckDate);
+                    updateCollection.CheckBank = objCollection.CheckBank;
                     updateCollection.PaidAmount = objCollection.PaidAmount;
                     updateCollection.PenaltyAmount = objCollection.PenaltyAmount;
                     updateCollection.Remarks = objCollection.Remarks;
+                    updateCollection.CollectorId = collector.FirstOrDefault().Id;
                     updateCollection.UpdatedByUserId = currentUser.FirstOrDefault().Id;
                     updateCollection.UpdatedDateTime = DateTime.Now;
                     db.SubmitChanges();
@@ -345,7 +409,7 @@ namespace LendingSystem.ApiControllers
 
                 if (collection.Any())
                 {
-                    if(collection.FirstOrDefault().TrnLoan.IsClosed == false)
+                    if (collection.FirstOrDefault().TrnLoan.IsClosed == false)
                     {
                         Int32 loanId = collection.FirstOrDefault().LoanId;
 

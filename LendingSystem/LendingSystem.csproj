@@ -208,6 +208,8 @@
     <Compile Include="ApiControllers\ApiSysCurrentController.cs" />
     <Compile Include="ApiControllers\ApiTrnCollectionController.cs" />
     <Compile Include="ApiControllers\ApiTrnLoanController.cs" />
+    <Compile Include="ApiControllers\MstCollectorController.cs" />
+    <Compile Include="ApiModels\MstCollectorModel.cs" />
     <Compile Include="ApiModels\MstCustomerModel.cs" />
     <Compile Include="ApiModels\MstInterestModel.cs" />
     <Compile Include="ApiModels\MstPayTypeModel.cs" />
