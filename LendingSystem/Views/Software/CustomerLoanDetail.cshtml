@@ -339,6 +339,11 @@
         });
     }
 
+    function buttonClickPrint() {
+        var loanId = getURLParameterValue("loanId");
+        window.location = "/PDFRepLoanApplication/PDFRepLoanApplication?loanId=" + loanId;
+    }
+
     function buttonClickConfirmSubmitLoan() {
         if (document.location.search.length > 0) {
             var loanId = getURLParameterValue("loanId");

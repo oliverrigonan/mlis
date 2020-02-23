@@ -38,6 +38,7 @@ namespace LendingSystem.PDFReportControllers
                 String loanDate = loan.FirstOrDefault().LoanDate.ToShortDateString();
 
                 String PrincipalAmount = loan.FirstOrDefault().PrincipalAmount.ToString("#,##0.00");
+                String InterestPercentage = loan.FirstOrDefault().InterestPercentage.ToString("#,##0.00");
                 String InterestAmount = loan.FirstOrDefault().InterestAmount.ToString("#,##0.00");
                 String LoanAmount = loan.FirstOrDefault().LoanAmount.ToString("#,##0.00");
                 String NetAmount = loan.FirstOrDefault().NetAmount.ToString("#,##0.00");
@@ -81,16 +82,16 @@ namespace LendingSystem.PDFReportControllers
                 tableAmounts.AddCell(new PdfPCell(new Phrase(" ", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase("Interest", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase(InterestAmount, fontArial10)) { HorizontalAlignment = 2, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
-                tableAmounts.AddCell(new PdfPCell(new Phrase(" ", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
+                tableAmounts.AddCell(new PdfPCell(new Phrase(InterestPercentage + " % of the Principal Amount", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase("Total Loan", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase(LoanAmount, fontArial10)) { HorizontalAlignment = 2, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase(" ", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase("Net", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase(NetAmount, fontArial10)) { HorizontalAlignment = 2, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
-                tableAmounts.AddCell(new PdfPCell(new Phrase("Pricipal amount less interest", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
+                tableAmounts.AddCell(new PdfPCell(new Phrase("Pricipal less Interest", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase("Monthly Amortization", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
                 tableAmounts.AddCell(new PdfPCell(new Phrase(AmortizationAmount, fontArial10)) { HorizontalAlignment = 2, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
-                tableAmounts.AddCell(new PdfPCell(new Phrase(" ", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
+                tableAmounts.AddCell(new PdfPCell(new Phrase("Monthly payment according by term", fontArial10)) { HorizontalAlignment = 0, PaddingTop = 3f, PaddingBottom = 6f, PaddingLeft = 5f, PaddingRight = 5f });
 
                 document.Add(tableAmounts);
                 document.Add(spaceTable);
