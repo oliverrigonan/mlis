@@ -21,5 +21,6 @@ namespace LendingSystem.ApiModels
         public String CreatedDateTime { get; set; }
         public Int32 UpdatedByUserId { get; set; }
         public String UpdatedDateTime { get; set; }
+        public byte[] ImageURL { get; set; }
     }
 }

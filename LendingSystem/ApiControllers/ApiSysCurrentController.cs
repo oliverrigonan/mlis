@@ -64,12 +64,46 @@ namespace LendingSystem.ApiControllers
                                CreatedByUserId = d.CreatedByUserId,
                                CreatedDateTime = d.CreatedDateTime.ToShortDateString(),
                                UpdatedByUserId = d.UpdatedByUserId,
-                               UpdatedDateTime = d.UpdatedDateTime.ToShortDateString()
+                               UpdatedDateTime = d.UpdatedDateTime.ToShortDateString(),
+                               ImageURL = d.ImageURL != null ? d.ImageURL.ToArray() : null
                            };
 
             return customer.FirstOrDefault();
         }
 
+        [Authorize, HttpPut, Route("api/current/uploadImage")]
+        public HttpResponseMessage UploadImageCustomer(ApiModels.MstCustomerModel objCustomer)
+        {
+            try
+            {
+                var currentUser = from d in db.MstUsers
+                                  where d.AspNetUserId == User.Identity.GetUserId()
+                                  select d;
+
+                var customer = from d in db.MstCustomers
+                               where d.UserId == currentUser.FirstOrDefault().Id
+                               select d;
+
+                if (customer.Any())
+                {
+                    byte[] imgarr = objCustomer.ImageURL;
+
+                    var updateCustomer = customer.FirstOrDefault();
+                    updateCustomer.ImageURL = imgarr;
+                    db.SubmitChanges();
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Customer not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
         [Authorize, HttpGet, Route("api/current/loan/list/{transactionType}")]
         public List<ApiModels.TrnLoanModel> LoanHistoryList(String transactionType)
         {

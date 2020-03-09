@@ -2365,6 +2365,8 @@ namespace LendingSystem.Data
 		
 		private System.DateTime _UpdatedDateTime;
 		
+		private System.Data.Linq.Binary _ImageURL;
+		
 		private EntitySet<TrnLoan> _TrnLoans;
 		
 		private EntitySet<TrnCollection> _TrnCollections;
@@ -2405,6 +2407,8 @@ namespace LendingSystem.Data
     partial void OnUpdatedByUserIdChanged();
     partial void OnUpdatedDateTimeChanging(System.DateTime value);
     partial void OnUpdatedDateTimeChanged();
+    partial void OnImageURLChanging(System.Data.Linq.Binary value);
+    partial void OnImageURLChanged();
     #endregion
 		
 		public MstCustomer()
@@ -2685,6 +2689,26 @@ namespace LendingSystem.Data
 					this._UpdatedDateTime = value;
 					this.SendPropertyChanged("UpdatedDateTime");
 					this.OnUpdatedDateTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageURL", DbType="VarBinary(MAX)", UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary ImageURL
+		{
+			get
+			{
+				return this._ImageURL;
+			}
+			set
+			{
+				if ((this._ImageURL != value))
+				{
+					this.OnImageURLChanging(value);
+					this.SendPropertyChanging();
+					this._ImageURL = value;
+					this.SendPropertyChanged("ImageURL");
+					this.OnImageURLChanged();
 				}
 			}
 		}
