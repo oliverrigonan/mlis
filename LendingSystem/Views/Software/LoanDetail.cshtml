@@ -15,34 +15,43 @@
                 <button class="btn btn-primary" id="buttonClickEdit" onclick="buttonClickEdit()">Change</button>
                 <button class="btn btn-success" id="buttonClickApprove" onclick="buttonClickApprove()">Approve</button>
                 <button class="btn btn-success" id="buttonClickDecline" onclick="buttonClickDecline()">Decline</button>
-                <button class="btn btn-warning" id="buttonClickCloseTransaction" onclick="buttonClickCloseTransaction()">Close Transaction</button>
+                <button class="btn btn-danger" id="buttonClickCloseTransaction" onclick="buttonClickCloseTransaction()">Block (Close Transaction)</button>
                 <button class="btn btn-primary" id="buttonClickPrint" onclick="buttonClickPrint()">Print</button>
             </div>
         </div>
 
-        <table class="table table-striped">
-            <tbody>
-                <tr>
-                    <td class="col-md-2"><b>Loan Number:</b></td>
-                    <td class="col-md-10">
-                        <span id="spanLoanNumber"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Customer Name:</b></td>
-                    <td>
-                        <span id="spanCustomerName"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Term:</b></td>
-                    <td>
-                        <span id="spanTerm"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-md-2">
+                <img id="imageDisplay2" src="#" class="img-responsive img-thumbnail" />
+            </div>
+            <div class="col-md-10">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="col-md-2"><b>Loan Number:</b></td>
+                            <td class="col-md-10">
+                                <span id="spanLoanNumber"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Customer Name:</b></td>
+                            <td>
+                                <span id="spanCustomerName"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Term:</b></td>
+                            <td>
+                                <span id="spanTerm"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
+        <br />
+        
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tabComputations">Computations</a></li>
         </ul>
@@ -127,13 +136,17 @@
         </div>
 
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tabPayments">Payments and Penalties</a></li>
+            <li class="active"><a data-toggle="tab" href="#tabChecklist" onclick="loadChecklist()">Checklist</a></li>
+            <li><a data-toggle="tab" href="#tabPayments" onclick="loadPaymentsAndPenalties()">Payments and Penalties</a></li>
         </ul>
 
         <br />
 
         <div class="tab-content">
-            <div id="tabPayments" class="tab-pane fade in active">
+            <div id="tabChecklist" class="tab-pane fade in active">
+                <div id="wijmoGridLoanChecklistList"></div>
+            </div>
+            <div id="tabPayments" class="tab-pane fade">
                 <div id="wijmoGridCollectionListFlexGrid"></div>
             </div>
         </div>
@@ -232,11 +245,197 @@
     </div>
 </div>
 
+<div class="modal fae" id="modalLoanChecklistForm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Check List</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Checklist:</label>
+                    <input id="inputChecklist" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Remarks:</label>
+                    <textarea id="inputRemarks" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Attachment</label>
+                    <input type="file" onchange="previewFile()" class="form-control" />
+                    <br />
+                    <div>
+                        <img id="imageDisplay" src="#" class="img-responsive img-thumbnail" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="buttonClickUpdateLoanChecklist" onclick="buttonClickUpdateLoanChecklist()">Update</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     var wijmoComboboxTerm;
 
     var wijmoGridCollectionListCollectionView;
     var wijmoGridCollectionListFlexGridFlexGrid;
+
+    var wijmoGridLoanChecklistList;
+    var wijmoCollectionViewLoanChecklistList;
+
+    var imageDataURL;
+
+    function buttonClickEditLoanChecklist() {
+        wijmoCollectionViewLoanChecklistList.editItem(wijmoCollectionViewLoanChecklistList.currentItem);
+        var currentChecklist = wijmoCollectionViewLoanChecklistList.currentEditItem;
+
+        document.getElementById("inputChecklist").value = currentChecklist.CheckList;
+        document.getElementById("inputRemarks").value = currentChecklist.Remarks;
+        document.getElementById("imageDisplay").src = "data:image/jpeg;base64," + currentChecklist.ImageAttachment;
+
+        $("#modalLoanChecklistForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+    }
+
+    function buttonClickUpdateLoanChecklist() {
+        wijmoCollectionViewLoanChecklistList.editItem(wijmoCollectionViewLoanChecklistList.currentItem);
+        var id = wijmoCollectionViewLoanChecklistList.currentEditItem.Id;
+
+        var objLoanCheckList = new Object();
+        objLoanCheckList.Remarks = document.getElementById("inputRemarks").value;
+        objLoanCheckList.ImageAttachment = document.getElementById("imageDisplay").src.replace(/^data:image\/(png|jpeg);base64,/, "");
+        var imageData = JSON.stringify(objLoanCheckList);
+
+        $.ajax({
+            url: "/api/loanChecklist/update/" + id,
+            type: "PUT",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: imageData,
+            statusCode: {
+                200: function () {
+                    toastr.success("Upload Successful");
+                    location.reload();
+                },
+                404: function (message) {
+                    toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                },
+                400: function (message) {
+                    toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                },
+                500: function (message) {
+                    toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                }
+            }
+        });
+    }
+
+    function previewFile() {
+        var preview = document.querySelector("img");
+        var file = document.querySelector("input[type=file]").files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+            imageDataURL = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+
+        } else {
+            preview.src = "";
+        }
+    }
+
+    function loadChecklist() {
+        setTimeout(function () {
+            wijmoCollectionViewLoanChecklistList = new wijmo.collections.CollectionView(getDataLoanChecklistList());
+            wijmoCollectionViewLoanChecklistList.canFilter = true;
+
+            wijmoGridLoanChecklistList.itemsSource = wijmoCollectionViewLoanChecklistList;
+        }, 500)
+    }
+
+    function loadPaymentsAndPenalties() {
+        setTimeout(function () {
+            wijmoGridCollectionListCollectionView = new wijmo.collections.CollectionView(getDataCollectionList());
+            wijmoGridCollectionListCollectionView.canFilter = true;
+
+            wijmoGridCollectionListFlexGrid.itemsSource = wijmoGridCollectionListCollectionView;
+        }, 500)
+    }
+
+    function getDataLoanChecklistList() {
+        var loanListObservableArray = new wijmo.collections.ObservableArray;
+        var loanId = getURLParameterValue("id");
+
+        $.ajax({
+            url: "/api/loanChecklist/list/" + loanId,
+            cache: false,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (results) {
+                if (results.length > 0) {
+                    for (var i = 0; i < results.length; i++) {
+                        loanListObservableArray.push({
+                            ButtonEdit: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickEditLoanChecklist()'>Edit</button>",
+                            Id: results[i]["Id"],
+                            CheckList: results[i]["CheckList"],
+                            Remarks: results[i]["Remarks"],
+                            ImageAttachment: results[i]["ImageAttachment"]
+                        });
+                    }
+                }
+            }
+        });
+
+        return loanListObservableArray;
+    }
+
+    function createWijmoGridLoanChecklistList() {
+        wijmoCollectionViewLoanChecklistList = new wijmo.collections.CollectionView(getDataLoanChecklistList());
+        wijmoCollectionViewLoanChecklistList.canFilter = true;
+
+        wijmoGridLoanChecklistList = new wijmo.grid.FlexGrid("#wijmoGridLoanChecklistList");
+        wijmoGridLoanChecklistList.initialize({
+            columns: [
+                {
+                    "header": "Edit",
+                    "binding": "ButtonEdit",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Checklist",
+                    "binding": "CheckList",
+                    "allowSorting": true,
+                    "width": 500
+                },
+                {
+                    "header": "Remarks",
+                    "binding": "Remarks",
+                    "allowSorting": true,
+                    "width": "*"
+                }
+            ],
+            autoGenerateColumns: false,
+            itemsSource: wijmoCollectionViewLoanChecklistList,
+            isReadOnly: true,
+            autoSizeMode: wijmo.grid.AutoSizeMode.Both,
+            allowDragging: wijmo.grid.AllowDragging.None,
+            selectionMode: wijmo.grid.SelectionMode.Row,
+            frozenColumns: 1
+        });
+    }
 
     function getURLParameterValue(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -263,6 +462,8 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (results) {
                     if (results != null) {
+                        document.getElementById("imageDisplay2").src = "data:image/jpeg;base64," + results.ImageURL;
+
                         document.getElementById("spanLoanNumber").innerHTML = results.LoanNumber;
                         document.getElementById("spanCustomerName").innerHTML = results.Customer;
                         document.getElementById("spanTerm").innerHTML = results.Term;
@@ -307,6 +508,7 @@
                         window.location = "/Software/CustomerProfile";
                     }
 
+                    createWijmoGridLoanChecklistList();
                     createWijmoGridCollectionList();
                 }
             });

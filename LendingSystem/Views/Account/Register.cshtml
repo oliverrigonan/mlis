@@ -14,9 +14,21 @@
                 <hr />
                 @Html.ValidationSummary("", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(m => m.FullName, new { @class = "col-md-4 control-label" })
+                    @Html.LabelFor(m => m.LastName, new { @class = "col-md-4 control-label" })
                     <div class="col-md-8">
-                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MiddleName, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="form-group">

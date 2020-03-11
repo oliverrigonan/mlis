@@ -159,6 +159,8 @@ namespace LendingSystem.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
+                    String fullname = model.LastName + ", " + model.FirstName + " " + model.MiddleName;
+
                     Data.lendingsystemDataContext db = new Data.lendingsystemDataContext();
 
                     Data.MstUser newUser = new Data.MstUser()
@@ -166,7 +168,7 @@ namespace LendingSystem.Controllers
                         AspNetUserId = user.Id,
                         Username = model.UserName,
                         Password = model.Password,
-                        FullName = model.FullName,
+                        FullName = fullname,
                         IsLocked = true,
                         UserType = "Customer"
                     };
@@ -176,7 +178,7 @@ namespace LendingSystem.Controllers
 
                     Data.MstCustomer newCustomer = new Data.MstCustomer()
                     {
-                        FullName = model.FullName,
+                        FullName = fullname,
                         BirthDate = Convert.ToDateTime(model.BirthDate),
                         Gender = model.Gender,
                         Address = model.Address,

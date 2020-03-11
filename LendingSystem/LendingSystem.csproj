@@ -210,8 +210,10 @@
     <Compile Include="ApiControllers\ApiRepReportsController.cs" />
     <Compile Include="ApiControllers\ApiSysCurrentController.cs" />
     <Compile Include="ApiControllers\ApiTrnCollectionController.cs" />
+    <Compile Include="ApiControllers\ApiTrnLoanChecklistController.cs" />
     <Compile Include="ApiControllers\ApiTrnLoanController.cs" />
     <Compile Include="ApiControllers\MstCollectorController.cs" />
+    <Compile Include="ApiModels\MstChecklistModel.cs" />
     <Compile Include="ApiModels\MstCollectorModel.cs" />
     <Compile Include="ApiModels\MstCustomerModel.cs" />
     <Compile Include="ApiModels\MstInterestModel.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="ApiModels\MstTermModel.cs" />
     <Compile Include="ApiModels\MstUserModel.cs" />
     <Compile Include="ApiModels\TrnCollectionModel.cs" />
+    <Compile Include="ApiModels\TrnLoanChecklistModel.cs" />
     <Compile Include="ApiModels\TrnLoanModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

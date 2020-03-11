@@ -13,6 +13,7 @@ namespace LendingSystem.ApiModels
         public String ManualLoanNumber { get; set; }
         public Int32 CustomerId { get; set; }
         public String Customer { get; set; }
+        public byte[] ImageURL { get; set; }
         public Int32 TermId { get; set; }
         public String Term { get; set; }
         public Decimal TermNumberOfMonths { get; set; }

@@ -176,6 +176,7 @@ namespace LendingSystem.ApiControllers
                            LoanNumber = d.LoanNumber,
                            LoanDate = d.LoanDate.ToShortDateString(),
                            ManualLoanNumber = d.ManualLoanNumber,
+                           ImageURL = d.MstCustomer.ImageURL != null ? d.MstCustomer.ImageURL.ToArray() : null,
                            CustomerId = d.CustomerId,
                            Customer = d.MstCustomer.FullName,
                            TermId = d.TermId,

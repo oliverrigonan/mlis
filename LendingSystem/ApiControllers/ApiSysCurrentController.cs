@@ -104,6 +104,7 @@ namespace LendingSystem.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
         [Authorize, HttpGet, Route("api/current/loan/list/{transactionType}")]
         public List<ApiModels.TrnLoanModel> LoanHistoryList(String transactionType)
         {
@@ -370,6 +371,26 @@ namespace LendingSystem.ApiControllers
 
                 db.TrnLoans.InsertOnSubmit(newLoan);
                 db.SubmitChanges();
+
+                var checkLists = from d in db.MstChecklists select d;
+                if (checkLists.Any())
+                {
+                    List<Data.TrnLoanChecklist> newLoanChecklists = new List<Data.TrnLoanChecklist>();
+
+                    foreach (var checkList in checkLists)
+                    {
+                        newLoanChecklists.Add(new Data.TrnLoanChecklist()
+                        {
+                            LoanId = newLoan.Id,
+                            CheckListId = checkList.Id,
+                            Remarks = "",
+                            ImageAttachment = null
+                        });
+                    }
+
+                    db.TrnLoanChecklists.InsertAllOnSubmit(newLoanChecklists);
+                    db.SubmitChanges();
+                }
 
                 return Request.CreateResponse(HttpStatusCode.OK, newLoan.Id);
             }
